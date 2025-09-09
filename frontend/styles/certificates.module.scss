@@ -1,0 +1,27 @@
+.certificate {
+    @apply w-45 md:w-48;
+
+    .photo {
+        height: 230px;
+        @apply w-full relative border border-solid border-black;
+        
+        img {
+            @apply transition-all;
+        }
+    }
+}
+
+.certificate:hover {
+    cursor: pointer;
+
+    .photo {
+        img {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.certificate.opened .photo {
+    position: absolute;
+    @apply max-w-screen-lg;
+}

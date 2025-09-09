@@ -1,0 +1,38 @@
+services:
+  cache:
+    container_name: cache
+    image: redis:6.0-alpine
+
+  frontend:
+    container_name: frontend
+#     depends_on:
+#       - proxy
+    build:
+      context: ./frontend
+      args:
+        NODE_ENV: 'production'
+        NEXT_PUBLIC_URL: 'http://localhost/'
+        BACKEND_URL: 'http://10.10.10.21/backend/'
+        SERVICE_USER_TOKEN: '89xxkKXkc9'
+    command: [ 'start' ]
+    environment:
+      SERVICE_USER_TOKEN: '89xxkKXkc9'
+    volumes:
+      - ./frontend:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+
+  proxy:
+    container_name: proxy
+    build: 
+      context: ./proxy
+      args:
+        PROXY_CONF_FILE: './proxy_production.conf'
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./proxy/certs:/etc/nginx/certs
+volumes:
+  directus_uploads:
+  node_modules:
+  pg_database:

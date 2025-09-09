@@ -1,0 +1,22 @@
+$dks-breadcrumb-font-gray: #868e96;
+
+.breadcrumb {
+  @apply w-full;
+  background-color: #e9ecef;
+  padding: .75rem 1rem;
+  
+  ol {
+    li:first-child a {
+      color: #cf2626
+    }
+    li {
+      a {
+        text-transform: lowercase;
+        color: $dks-breadcrumb-font-gray;
+      }
+      span {
+        color: $dks-breadcrumb-font-gray;
+      }
+    }
+  }
+}

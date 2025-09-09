@@ -1,0 +1,54 @@
+.section {
+    @apply py-24 bg-dks-medium-gray w-full;
+}
+
+.container {
+    @apply flex sm:overflow-y-hidden md:mx-auto md:items-end md:justify-between md:max-w-screen-xl;
+
+    .item {
+        width: 135px;
+        height: 135px;
+        position: relative;
+        display: flex;
+    
+        @apply w-44;
+    }
+
+    @media only screen and (max-width: 767px) {
+        .item {
+            flex: 0 0 50%;
+        }
+        
+        .item:first-of-type {
+            margin-left: 5rem;
+        }
+    }
+}
+
+.dots {
+    @apply text-center pt-4 ;
+
+    li {
+        position: relative;
+        display: inline-block;
+        height: 20px;
+        width: 20px;
+        margin: 0 5px;
+        padding: 0;
+        cursor: pointer;
+
+        button {
+            border: none;
+            display: inline-block;
+            padding: 0;
+            width: 8px;
+            height: 8px;
+            border-radius: 100px;
+            background: #ababab;
+        }
+    }
+
+    li.active button {
+        @apply bg-dks-red;
+    }
+}

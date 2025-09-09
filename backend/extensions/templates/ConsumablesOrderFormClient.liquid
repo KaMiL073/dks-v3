@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>Zgłoszenie DKS</title>
+
+    <style type="text/css">
+        #outlook a {
+            padding: 0;
+        }
+
+        .ExternalClass {
+            width: 100%;
+        }
+
+        .ExternalClass,
+        .ExternalClass p,
+        .ExternalClass span,
+        .ExternalClass font,
+        .ExternalClass td,
+        .ExternalClass div {
+            line-height: 100%;
+        }
+
+        body, table, td, a, li {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f1f1f1">
+    <tbody>
+        <tr>
+            <td>
+                <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#fff">
+                    <tbody>
+                        <tr>
+                            <td height="100" valign="middle" align="center" style="padding-left: 30px;">
+                                <a href="#" target="_blank" border="0">
+                                    <img src="http://www.dks.pl/storage/newsletter/dks-newslleter.png" width="86" height="49" border="0" alt="DKS" style="display: block;" />
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f1f1f1">
+    <tbody>
+        <tr>
+            <td>
+                <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff">
+                    <tbody>
+                        <tr>
+                            <td valign="top" align="left" style="padding-right: 30px; padding-left: 30px;">
+                             
+                             <span align="center" style="display: block; font-family: Tahoma, Helvetica; font-weight: bold; font-size: 18px; text-transform: uppercase; color: #53545e;">Zamówienie zostało wysłane</span>
+                                 <span align="center" style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #bfc0c3;">Dziękujemy</span>
+                                <hr style="height: 1px; margin-top: 30px; margin-bottom: 0; border: none; border-top-width: 1px; border-top-color: #eaeaea; border-top-style: solid; background: none;" />
+
+                                <br />
+
+                                <table width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Osoba kontaktowa:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.name }}</span> </td>
+                                            <td style="padding:15px;"><strong>NIP:</strong><span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.nip }}</span>
+                                            <td style="padding:15px;"><strong>Województwo:</strong><span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.province }}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding:15px 15px 15px 0px;"><strong>E-mail:</strong><span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.email }}</span>
+                                            </td>
+                                            <td style="padding:15px;"><strong>Telefon:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.phone }}</span></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                         <tr>
+                                            <td style="padding:15px 15px 15px 0px"><strong>Model:</strong><span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.model }}</span>
+                                            </td>
+                                            <td style="padding:15px;"><strong>Numer seryjny:</strong><span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.serialNumber }}</span></td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr>
+                                            <td style="padding:15px 15px 15px 0px"><strong>Wiadomość:</strong>
+                                                <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">{{ data.message }}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                {% if data.type == "W ramach umowy" %}
+
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr>
+                                            <td style="padding:15px 15px 15px 0px"><strong>Rodzaj zamówieia:</strong>
+                                                <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">W ramach umowy</span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px;"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Cyjan</span> </td>
+
+                                                <td style="padding:15px;"><strong>Obecny stan tonera %:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.cyjan }}</span> </td>
+
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.cyjanQty }}</span> </td>
+                                            </tr>
+                                             <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px;"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Magenta</span> </td>
+
+                                                <td style="padding:15px;"><strong>Obecny stan tonera %:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.magenta }}</span> </td>
+
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.magentaQty }}</span> </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Yellow</span> </td>
+
+                                                <td style="padding:15px;"><strong>Obecny stan tonera %:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.yellow }}</span> </td>
+
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.yellowQty }}</span> </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Black</span> </td>
+
+                                                <td style="padding:15px;"><strong>Obecny stan tonera %:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.black }}</span> </td>
+
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.blackQty }}</span> </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% elsif data.type == "Bez umowy" %}
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr>
+                                            <td style="padding:15px 15px 15px 0px"><strong>Rodzaj zamówieia:</strong>
+                                                <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3C3C3D;">Bez umowy</span>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <table width="100%">
+                                        <tbody>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Cyjan</span> </td>
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.cyjanQty }}</span> </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Magenta</span> </td>
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.magentaQty }}</span> </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Yellow</span> </td>
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.yellowQty }}</span> </td>
+                                            </tr>
+                                            <tr style="border-bottom: 1px solid #000000; background-color: #eeeeee">
+                                                <td style="padding:15px"><strong>Kolor:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">Black</span> </td>
+
+                                                <td style="padding:15px;"><strong>Ilość:</strong> <span style="display: block; font-family: Tahoma, Helvetica; font-weight: normal; font-size: 14px; line-height: 20px; color: #3c3c3d;">{{ data.blackQty }}</span> </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                {% endif %}
+                
+                                <hr style="height: 1px; margin-top: 30px; margin-bottom: 0; border: none; border-top-width: 1px; border-top-color: #eaeaea; border-top-style: solid; background: none;" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                 <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff">
+                    <tbody>
+                        <tr>
+                            <td valign="top" style="padding-right: 30px; padding-left: 30px; font-size: 10px">
+                                <p style="font-size: 8px;"><b>UWAGA: Ta wiadomość została wygenerowana automatycznie, prosimy na nią nie odpowiadać</b>
+                                </p>
+                                <p class="s4"><a style="color: black; font-size: 8;" href="http://www.dks.pl/dks/privacy-policy.html">Polityka prywatności DKS Sp. z o.o.</a></p>
+                                <p><span class="s1" style="font-size: 6px;">Niniejsza wiadomość elektroniczna lub jej załączniki mogą zawierać poufne lub chronione prawem informacje, które są przeznaczone wyłącznie dla wskazanego w nich adresata. Jeżeli nie jesteś adresatem wiadomości, prosimy o jej nieujawnianie, zawiadomienie nadawcy o jej otrzymaniu oraz usunięcie wraz ze wszystkimi załącznikami. Dziękujemy.<br />
+                                DKS Spółka z ograniczoną odpowiedzialnoącią z siedzibą w Kowalach (80-180) przy ulicy Energetyczna 15, wpisana do Rejestru Przedsiębiorców prowadzonego przez Sąd Rejonowy Gdańsk-Północ w Gdańsku VII Wydział Gospodarczy pod numerem KRS 0000099557, REGON 190917946. NIP 583-27-90-417. Wysokość kapitału zakładowego 1 025 000 zł.</span></p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#e1e1e1">
+    <tbody>
+        <tr>
+            <td>
+                <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#f1f1f1">
+                    <tbody>
+                        <tr>
+                            <td valign="middle" align="left" style="padding-top: 20px; padding-bottom: 16px; padding-left: 30px;">
+                                <span style="display: block; font-family: Tahoma, Helvetica; font-weight: bold; font-size: 18px; text-transform: uppercase; color: #53545e;">Śledź nas</span>
+                            </td>
+                            <td valign="middle" align="right" style="padding-top: 20px; padding-right: 30px; padding-bottom: 16px;">
+                                <a href="https://www.facebook.com/DKS-Sp-z-oo-543244635854931/" target="_blank" border="0" style="margin-right: 2px; margin-left: 2px; text-decoration: none;">
+                                    <img src="http://konferencja.dks.pl/img/facebook.png"" width="34" height="34" border="0" alt="Facebook-DKS" />
+                                </a>        
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

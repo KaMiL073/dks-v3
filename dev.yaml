@@ -1,0 +1,117 @@
+services:
+  database:
+    container_name: database
+    image: postgres:13.1-alpine
+    volumes:
+      - pg_database:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'directus'
+      POSTGRES_PASSWORD: 'directus'
+      POSTGRES_DB: 'directus'
+    ports:
+      - '5555:5432'
+
+  cache:
+    container_name: cache
+    image: redis:6.0-alpine
+
+  directus:
+    container_name: directus
+    entrypoint: ['./dev/start_dev.sh']
+    build:
+      context: ./backend
+      args:
+        NODE_ENV: 'development'
+        LOG_LEVEL: 'debug'
+        LOG_STYLE: 'pretty'
+    volumes:
+      - ./backend/extensions:/directus/extensions
+      - directus_uploads:/directus/uploads
+    depends_on:
+      - cache
+      - database
+    environment:
+      KEY: '8f448f36-8da5-4b20-ba87-e53929aac61b'
+      SECRET: '3f0e09d8-63a7-406f-94af-34973ea77113'
+      PUBLIC_URL: 'http://localhost/backend'
+      PASSWORD_RESET_URL_ALLOW_LIST: 'http://localhost/password/reset/confirm'
+
+      DB_CLIENT: 'pg'
+      DB_HOST: 'database'
+      DB_PORT: '5432'
+      DB_DATABASE: 'directus'
+      DB_USER: 'directus'
+      DB_PASSWORD: 'directus'
+
+      CACHE_ENABLED: 'true'
+      CACHE_TTL: '10s'
+      CACHE_STORE: 'redis'
+      CACHE_REDIS: 'redis://cache:6379'
+
+      ADMIN_EMAIL: 'admin@example.com'
+      ADMIN_PASSWORD: 'admin'
+
+      # OAUTH_PROVIDERS: 'facebook,google'
+      # OAUTH_FACEBOOK_KEY: '559028735062090'
+      # OAUTH_FACEBOOK_SECRET: 'secret'
+      # OAUTH_FACEBOOK_SCOPE: 'public_profile,email'
+      # OAUTH_FACEBOOK_PROFILE_URL: 'https://graph.facebook.com/me?fields=name,email,first_name,last_name,picture'
+
+      # OAUTH_GOOGLE_KEY: 'key'
+      # OAUTH_GOOGLE_SECRET:  'secret'
+      # OAUTH_GOOGLE_SCOPE: 'openid email profile'
+
+      # FRESHMAIL_API_TOKEN: 'secret'
+      # FRESHMAIL_API_BASE_URL: 'https://api.freshmail.com/rest'
+      # FRESHMAIL_TEST_NEWSLETTER: 'key'
+
+      EMAIL_TRANSPORT: 'smtp'
+      EMAIL_SMTP_HOST: 'smtp.mailtrap.io'
+      EMAIL_SMTP_PORT: '587'
+      EMAIL_SMTP_USER: 'b7865fb6935a14'
+      EMAIL_SMTP_PASSWORD: 'd1ff7307fd87cb'
+      EMAIL_FROM: 'email@dks.pl'
+
+      # NODE_OPTIONS: '--inspect=0.0.0.0:4444'
+      # NODE_OPTIONS: '--inspect-brk=0.0.0.0:4444'
+
+    # ports:
+    #   - '4444:4444'
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      args:
+        NODE_ENV: 'development'
+        # NODE_ENV: 'production'
+        #NODE_ENV: 'production-archive'
+        NEXT_PUBLIC_URL: 'http://localhost/'
+        BACKEND_URL: 'http://directus:8055/backend/'
+    command: [ 'dev' ]
+    environment:
+      SERVICE_USER_TOKEN: '89xxkKXkc9'
+      RECAPTCHA_SECRET: '6Lcw4bkfAAAAAFvdS6PRm5d7UDobanmKuQyD5Q18'
+      RECAPTCHA_SITE: '6Lcw4bkfAAAAAAt--gbQGn2TTS9twvXPh6wTt9NM'
+    depends_on:
+      - directus
+    volumes:
+      - ./frontend:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+
+  proxy:
+    container_name: proxy
+    build: 
+      context: ./proxy
+      args:
+        PROXY_CONF_FILE: './proxy_dev.conf'
+    ports:
+      - 80:80
+    depends_on:
+      - directus
+      - frontend
+
+volumes:
+  directus_uploads:
+  node_modules:
+  pg_database:

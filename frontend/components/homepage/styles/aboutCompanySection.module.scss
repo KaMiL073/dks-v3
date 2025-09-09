@@ -1,0 +1,57 @@
+$backgroundColor: #20292f;
+$borderColor: #415566;
+
+.section {
+    @apply md:h-screen w-full relative;
+}
+
+@mixin colors {
+    background: $backgroundColor;
+    color: #fff;
+}
+
+.mainBox {
+    width: 430px;
+    @include colors;
+    box-shadow: 0 5px 23px 0 rgb(0 0 0 / 30%);
+    @apply px-12 py-5 2xl:py-16 sm:w-full;
+
+    li:before {
+        content: '✓';
+        display: inline-block;
+        margin-right: 10px;
+        font-size: 22px;
+        line-height: 1.5;
+        vertical-align: middle;
+        @apply text-dks-red;
+    }
+
+    .button {
+        @apply w-44 uppercase text-xs font-bold border-2 rounded p-3 transition-all duration-300;
+    }
+
+    .button:hover {
+        @apply bg-dks-red border-dks-red;
+    }
+
+    .button .arrow {
+        font-weight: 400;
+        @apply text-dks-red ml-2;
+    }
+
+    .button:hover .arrow {
+        color: #fff;
+    }
+}
+
+.counters {
+    width: 170px;
+    box-shadow: 0 5px 13px 0 rgb(0 0 0 / 20%);
+    @include colors;
+    @apply flex flex-col text-center sm:w-full;
+
+    .bordered {
+        border-color: $borderColor;
+        @apply border-t border-b;
+    }
+}
