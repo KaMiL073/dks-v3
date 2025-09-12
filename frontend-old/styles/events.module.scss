@@ -1,0 +1,683 @@
+.eventBgColor {
+    // @apply bg-black w-full;
+    height: 80vh;
+
+    @media only screen and (max-width: 768px) {
+        height: 100vh;
+    }
+}
+
+.eventBgColorLDN {
+    height: 80vh;
+
+    @media only screen and (max-width: 768px) {
+        height: 70vh;
+    }
+}
+.eventbg {
+    @apply bg-no-repeat bg-right-top;
+    width: 100vw;
+    height: 80vh;
+    top: 22%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 768px) {
+        transform: rotate(180deg);
+        transform: scale(1, -1);
+        bottom: 0;
+        right: 0;
+        width: 70vw;
+        height: 100vh;
+    }
+}
+.contentLDN {
+    ul {
+        li {
+            @apply pl-4 py-2;
+            
+            :before {
+                content: "\2022";
+                color: #345f88;
+                font-weight: bold;
+                display: inline-block; 
+                width: 1em;
+                margin-left: -1em;
+              }
+        }
+    }
+}
+.eventbgLDNH {
+    @apply bg-no-repeat bg-left-bottom;
+    width: 100vw;
+    height: 70vh;
+    top: 100%;
+    left: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 1024px) {
+        width: 70vw;
+    }
+
+    @media only screen and (max-width: 768px) {
+        width: 52vw;
+    }
+
+    @media only screen and (max-width: 460px) {
+        width: 80vw;
+    }
+}
+
+.eventbgLDN {
+    @apply bg-no-repeat bg-right-bottom;
+    width: 100vw;
+    height: 70vh;
+    top: 100%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+
+    @media only screen and (max-width: 1024px) {
+        @apply bg-no-repeat;
+        background-position: center right;
+        width: 52vw;
+        height: 100vh;
+    }
+}
+
+.eventContent {
+    @apply 
+    absolute 
+    w-full 
+    md:max-w-screen-xl 
+    md:top-40 
+    px-4 
+    xl:px-0 
+    lg:left-0
+    xl:left-36
+    2xl:left-72 
+    z-10;
+    // left: 15%;
+    // top: 25%;
+    
+    .eventDetails {
+        @apply xl:flex py-6;
+        
+        @media only screen and (max-width: 786px) {
+            @apply flex flex-row py-4;
+        
+        }
+        @media only screen and (max-width: 400px) {
+            @apply flex flex-col py-4;
+        
+        }
+
+    }
+
+    p {
+        @apply text-base;
+    }
+}
+
+.eventContentLDN {
+    @apply 
+    absolute 
+    w-full 
+    md:max-w-screen-xl 
+    sm:top-10 
+    lg:top-48
+    xl:top-40
+    xl:px-0 
+    lg:left-0
+    xl:left-20
+    2xl:left-72 
+    z-10;
+    // left: 15%;
+    // top: 25%;
+    
+    .eventDetails {
+        @apply xl:flex py-6;
+ 
+        @media only screen and (max-width: 786px) {
+            @apply flex flex-row py-4;
+        }
+
+        @media only screen and (max-width: 400px) {
+            @apply flex flex-col py-4;
+        }
+
+    }
+
+    p {
+        @apply text-base;
+    }
+}
+.eventContentLDNH {
+    @apply 
+    absolute 
+    w-full 
+    md:max-w-screen-xl 
+    sm:top-10 
+    lg:top-48
+    xl:top-40
+    xl:px-0 
+    lg:right-0
+    xl:right-36
+    2xl:right-72 
+    z-10
+    flex
+    justify-end;
+    // left: 15%;
+    // top: 25%;
+    
+    .eventDetails {
+        @apply xl:flex py-6;
+        
+        @media only screen and (max-width: 786px) {
+            @apply flex flex-row py-4;
+        
+        }
+        @media only screen and (max-width: 400px) {
+            @apply flex flex-col py-4;
+        
+        }
+
+    }
+
+    p {
+        @apply text-base;
+    }
+}
+
+
+.eventInfo {
+    @apply flex relative w-full; 
+    height: 32rem;
+    @media only screen and (max-width: 640px) {
+        height: 20rem;
+    }
+}
+.speakerItems {
+    height: 13rem;
+    width: 100%;
+}
+.eventProductImg {
+    height: 20rem;
+    width: 100%;
+}
+.eventProductImgLDN {
+    // height: 34rem;
+    // width: 100%;
+    @apply w-full h-60 md:h-52; 
+}
+.eventProductImgctaLDN {
+    @apply w-full; 
+    height: 34rem;
+    // width: 100%;
+    
+    @media only screen and (max-width: 640px) {
+        @apply h-60; 
+    }
+}
+
+// eko-optymalizacja-w-praktyce
+
+.eowpEventbg {
+    @apply bg-no-repeat bg-right-top;
+    width: 100vw;
+    height: 80vh;
+    top: 22%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 768px) {
+        background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 70vw;
+        height: 100vh;
+    }
+}
+.PresentedSolutionClass {
+    background-color: rgba(22, 163, 74, 0.30);
+    @apply text-center;
+    
+    h3 {
+        color: #000;
+        text-align: center;
+        font-family: Nunito Sans;
+        font-size: 40px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        text-transform: uppercase;
+    }
+    
+}
+// eko-optymalizacja-w-praktyce
+
+
+// Gala 30 lat
+.g30LatEventbg {
+    @apply bg-no-repeat bg-right-top;
+    width: 100vw;
+    height: 80vh;
+    top: 22%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 768px) {
+        background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        top: 100%;
+        width: 100vw;
+        height: 100vh;
+    }
+}
+// Gala 30 lat
+
+// RemaDays 2024
+.heroRemaDays {
+    @apply bg-black w-full h-screen bg-no-repeat bg-contain xl:bg-cover bg-center;
+    // height: 80vh;
+    // height: 100vw;
+
+    @media only screen and (max-width: 1536px) {
+        height: 80vh;
+    }
+    @media only screen and (max-width: 1280px) {
+        height: 60vh;
+    }
+    @media only screen and (max-width: 1024px) {
+        height: 50vh;
+    }
+    @media only screen and (max-width: 768px) {
+        height: 40vh;
+    }
+    @media only screen and (max-width: 640px) {
+        height: 30vh;
+    }
+}
+// RemaDays 2024
+
+
+// JEDEN DOSTAWCA, WIELE MOŻLIWOŚCI - DKS
+.eventContentJDWM {
+    @apply 
+    absolute 
+    w-full 
+    md:max-w-screen-xl 
+    md:top-10 
+    px-4 
+    xl:px-0 
+    lg:left-0
+    xl:left-0
+    2xl:left-32
+    z-10;
+    // left: 15%;
+    // top: 25%;
+    @media only screen and (min-width: 1458px) {
+        @apply xl:left-32;
+    }
+    
+    .eventDetails {
+        @apply xl:flex py-6;
+        
+        @media only screen and (max-width: 786px) {
+            @apply flex flex-row py-4;
+        
+        }
+        @media only screen and (max-width: 400px) {
+            @apply flex flex-col py-4;
+        
+        }
+    }
+
+    p {
+        @apply text-base;
+    }
+}
+
+.eventbgJDWM {
+    @apply bg-no-repeat bg-right-top;
+    width: 100vw;
+    height: 70vh;
+    top: 30%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 1024px) {
+        background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 60vw;
+        height: 60vh;
+    }
+
+    @media only screen and (max-width: 768px) {
+        background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+}
+// JEDEN DOSTAWCA, WIELE MOŻLIWOŚCI - DKS
+
+// Akademia DKS
+.eventBgColorAD {
+    // @apply bg-black w-full;
+    background-color: #3C7C7C;
+    height: 70vh;
+
+    
+    @media only screen and (max-width: 1280px) {
+        height: 70vh;
+    }
+    @media only screen and (max-width: 1024px) {
+        height: 60vh;
+    }
+    @media only screen and (max-width: 768px) {
+        height: 100vh;
+    }
+}
+.eventbgAD {
+    @apply bg-no-repeat bg-right-top;
+    width: 100vw;
+    height: 60vh;
+    top: 30%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 1024px) {
+        background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 60vw;
+        height: 60vh;
+    }
+
+    @media only screen and (max-width: 768px) {
+        background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+}
+
+// Akademia DKS
+
+// „DRUKOWANIE NA WŁASNE POTRZEBY JEST łatwe” – Firmowy Print Room  od podstaw
+
+.eventBgColorDNWPJL {
+    // @apply bg-black w-full;
+    background-color: #EFEFEF;
+    height: 70vh;
+
+    
+    @media only screen and (max-width: 1280px) {
+        height: 70vh;
+    }
+    @media only screen and (max-width: 1024px) {
+        height: 60vh;
+    }
+    @media only screen and (max-width: 768px) {
+        height: 100vh;
+    }
+}
+
+// „DRUKOWANIE NA WŁASNE POTRZEBY JEST łatwe” – Firmowy Print Room  od podstaw
+
+// zOptymalizuj! – od outsourcingu do centralnego wydruku
+.eventBgColorZOODCw {
+    // @apply bg-black w-full;
+    background-color: #EFEFEF;
+    height: 60vh;
+
+    
+    @media only screen and (max-width: 1280px) {
+        height: 60vh;
+    }
+    @media only screen and (max-width: 1024px) {
+        height: 60vh;
+    }
+    @media only screen and (max-width: 768px) {
+        height: 100vh;
+    }
+}
+// zOptymalizuj! – od outsourcingu do centralnego wydruku
+
+// RemaDeys2025
+.eventContentRemaDeys2025 {
+    @apply 
+    absolute 
+    w-full 
+    md:max-w-screen-xl 
+    md:top-96
+    px-4 
+    mt-8
+    md:mt-0
+    xl:px-0 
+    lg:left-0
+    xl:left-0
+    z-10;
+    // 2xl:top-96
+    // 2xl:left-32
+    // left: 15%;
+    // top: 25%;
+    
+    @media only screen and (max-width: 1536px) {
+        top:2rem;
+        width: 50%;
+        left: 8%;
+    }
+    @media only screen and (max-width: 1458px) {
+        top: 24rem;
+        width: 50%;
+        left: 5%;
+    }
+    @media only screen and (max-width: 1280px) {
+        top: 24rem;
+        left: 5%;
+    }
+    @media only screen and (max-width: 1024px) {
+        top:21rem;
+        width: 80%;
+
+    }
+    @media only screen and (max-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        // flex-wrap: nowrap;
+        width: 50%;
+        top: 20rem;
+        left: 5%;
+    }
+    @media only screen and (max-width: 640px) {
+        display: flex;
+        flex-direction: column;
+        // flex-wrap: nowrap;
+        width: 50%;
+        top: 2.5rem;
+        padding: 0 2rem 0 2rem;
+    }
+
+    @media only screen and (max-width: 460px) {
+        display: flex;
+        flex-direction: column;
+        // flex-wrap: nowrap;
+        width: 95%;
+        top: 2.5rem;
+        padding: 0 2rem 0 2rem;
+    }
+
+    .eventDetails {
+        @apply xl:flex py-6;
+        
+        @media only screen and (max-width: 786px) {
+            @apply flex flex-col py-4;
+        
+        }
+        @media only screen and (max-width: 400px) {
+            @apply flex flex-col py-4;
+        
+        }
+    }
+
+    p {
+        @apply text-base;
+    }
+}
+.eventbgRemaDeys2025 {
+    @apply bg-no-repeat bg-right-bottom bg-right-top;
+    width: 100vw;
+    height: 60vh;
+    // top: 30%;
+    right: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 1024px) {
+        @apply bg-no-repeat bg-right-top;
+        // background-position: bottom;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 69vw;
+        height: 58vh;
+    }
+
+    @media only screen and (max-width: 768px) {
+        @apply bg-no-repeat bg-right-top;
+        // background-position: bottom;
+        position: absolute;
+        // bottom: 0;
+        right: 0;
+        width: 66vw;
+        // height: 75vh;
+        opacity: 0.5;
+    }
+    @media only screen and (max-width: 640px) {
+        @apply bg-no-repeat bg-right-top;
+        height: 57vh;
+        opacity: 0.5;
+    }
+    @media only screen and (max-width: 460px) {
+        @apply bg-no-repeat bg-right-bottom;
+        opacity: 0.5;
+    }
+}
+.eventBgColorRemaDeys2025 {
+    // @apply bg-black w-full;
+    // background-color: #EFEFEF;
+    height: 60vh;
+
+    
+        @media only screen and (max-width: 1280px) {
+            height: 70vh;
+        }
+        @media only screen and (max-width: 1024px) {
+            height: 60vh;
+        }
+        @media only screen and (max-width: 768px) {
+            height: 55vh;
+        }
+}
+
+.eventInfoRemaDeys2025 {
+    @apply flex relative w-full; 
+    height: 32rem;
+    @media only screen and (max-width: 768px) {
+        @apply overflow-hidden;
+
+        height: 12rem;
+    }
+    @media only screen and (max-width: 640px) {
+        @apply overflow-hidden;
+
+        height: 9rem;
+    }
+}
+// RemaDeys
+
+// akademia-dks-vol-3
+
+.eventInfoAkademiav3 {
+    @apply flex relative w-full; 
+    height: 32rem;
+    @media only screen and (max-width: 768px) {
+        @apply overflow-hidden;
+
+        height: 42rem;
+    }
+    @media only screen and (max-width: 640px) {
+        @apply overflow-hidden;
+
+        height: 36rem;
+    }
+}
+
+// akademia-dks-vol-3
+
+
+// promocje/tablice-interaktywne-dla-szkol-i-biznesu
+
+.eventBgColorTIDSIB {
+    // height: 80vh;
+
+    @media only screen and (max-width: 768px) {
+        // height: 45vh;
+    }
+}
+
+.eventbgTIDSIB {
+    @apply bg-no-repeat bg-left-bottom;
+    width: 100vw;
+    height: 70vh;
+    top: 100%;
+    left: 0;
+    z-index: 5;
+    position: absolute;
+    background-size: contain;
+
+    @media only screen and (max-width: 1024px) {
+        @apply bg-no-repeat bg-bottom;
+        width: 100vw;
+    }
+
+    @media only screen and (max-width: 768px) {
+        @apply bg-no-repeat bg-bottom;
+        width: 75vw;
+    }
+
+    @media only screen and (max-width: 460px) {
+        @apply bg-no-repeat bg-bottom;
+        width: 100vw;
+    }
+}
+
+
+// promocje/tablice-interaktywne-dla-szkol-i-biznesu

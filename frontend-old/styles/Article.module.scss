@@ -1,0 +1,27 @@
+.mainImage {
+    height: 30rem;
+    @apply w-full sm:h-64 md:w-1/2 md:mr-4 mb-4 relative float-left;
+}
+.articleContainer {
+    @apply py-10 text-sm text-dks-font sm:px-2;
+    h2 {
+        @apply font-bold text-black pb-2;
+    }
+    p {
+        @apply text-dks-font text-base pt-2;
+    }
+    a {
+        @apply text-dks-red underline;
+    }
+    ul {
+        @apply mr-4 pl-4;   
+    }
+    li {
+        @apply pt-4;   
+        &:before {
+            content: '•';
+            @apply text-dks-red mx-0 mr-3 relative; 
+            margin-left: -16px;
+        }
+    }
+}

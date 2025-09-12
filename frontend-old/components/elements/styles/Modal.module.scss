@@ -1,0 +1,20 @@
+.overlay {
+  @apply flex flex-col justify-center items-center fixed inset-0 z-50 w-full h-screen bg-black overflow-hidden;
+  
+  svg {
+    font-size: 48px;
+  }
+
+  animation-name: show;
+  animation-duration: 0.5s;
+}
+
+.photo {
+  @apply relative w-full;
+  height: 75vh;
+}
+
+@keyframes show {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}

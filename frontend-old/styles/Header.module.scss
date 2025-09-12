@@ -1,0 +1,256 @@
+.logoDks {
+  width: 150px;
+  height: 100%;
+  position: relative;
+}
+
+.logoUE {
+  width: 50px;
+  height: 100%;
+  position: relative;
+}
+
+.topMenu {
+  background: linear-gradient(to right, #882a2d 0%, #882a2d 39%, #da251d 62%, #da251d 62%, #da251d 100%);
+  box-shadow: 0px 4px 8px 0px rgb(0 0 0 / 25%);
+  color: #fff;
+  height: 56px;
+  font-size: 14px;
+}
+
+.topMenu span {
+  min-height: 25px;
+}
+
+.topMenu span.bordered {
+  border-bottom: 1px solid #fff;
+  padding-bottom: 0.3rem;
+  z-index: 100;
+}
+
+.topMenu span.bordered:hover {
+  cursor: pointer;
+}
+
+.topMenu li {
+  background: #da251d;
+}
+
+.topMenu li:hover {
+  background: #fff;
+  color: #000
+}
+.sizeIcon {
+  @apply w-6 h-6 mr-2 mb-2;
+} 
+
+/* Hamburger */
+.hamburger span,
+.hamburger span:after,
+.hamburger span:before {
+  width: 24px;
+  height: 4px;
+  background-color: #000;
+  backface-visibility: hidden;
+  border-radius: 2px;
+}
+
+.hamburger span:before{
+  top: 8px;
+}
+
+.hamburger span:after{
+  top: -8px;
+}
+
+.hamburger span:after, .hamburger span:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  transition: .3s all ease;
+}
+.hamburger span {
+  position: relative;
+  display: block;
+  margin: auto;
+  transition: .3s all ease;
+  transform: rotate(180deg);
+}
+
+.hamburger.active span {
+  transform: rotate(360deg);
+}
+
+.hamburger.active span:before,
+.hamburger.active span:after {
+  top: 0;
+  width: 15px;
+  transform-origin: 1.71429px center;
+}
+
+.hamburger.active span::before {
+  transform: rotate3d(0, 0, 1, 40deg);
+}
+
+.hamburger.active span::after {
+  transform: rotate3d(0, 0, 1, -40deg);
+}
+
+/* Hamburger end */
+
+.navigation {
+  height: 80px;
+  box-shadow: 0px 4px 8px 0px rgb(0 0 0 / 25%);
+
+  .dropdown {
+    position: relative;
+
+    ul {
+      @apply px-8 py-4 bg-white;
+      transition: all 0.3s ease-in-out;
+      font-weight: 400;
+      text-transform: none;
+
+      li {
+        font-size: 14px;
+
+        .navLink {
+          transition: .33s all ease;
+          @apply block relative mt-4;
+        }
+
+        .navLink:before {
+          transition: .33s all ease;
+        }
+
+        .navLink:after {
+          @apply ml-6;
+        }
+
+        .navLink:hover {
+          @apply text-dks-orange-link-hover ml-4;
+        }
+      
+        .AngleRight {
+          @apply text-dks-orange-link-hover absolute opacity-0;
+        }
+
+        .linavLinknk .AngleRight {
+          @apply text-dks-orange-link-hover ;
+        }
+        
+        .navLink:hover .AngleRight {
+          @apply opacity-100 -ml-4;
+          
+        }
+      }
+    }
+
+    .arrow {
+      position: absolute;
+      right: 0;
+      top: 0;
+      text-align: center;
+      transition: 0.4s all ease;
+      z-index: 2;
+      color: #fff;
+      margin-left: 5px;
+    }
+  }
+
+  .dropdown:hover {
+    cursor: pointer;
+  }
+
+  .dropdown:not(.opened) .arrow {
+    position: absolute;
+    right: 0;
+    top: 0;
+    text-align: center;
+    transition: 0.4s all ease;
+    z-index: 2;
+    margin-left: 5px;
+  
+    @apply text-dks-red;
+  }
+}
+
+.submenu {
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #e5e7e9;
+  border-left: none;
+  margin-left: 0 !important;
+  overflow-x: hidden;
+}
+
+.submenu > li {
+  padding: 0.8rem 1rem;
+}
+
+.submenu ul {
+  margin: 0.8rem -1rem -0.8rem;
+}
+
+.submenu ul li {
+  background: #fff;
+}
+
+@media only screen and (min-width: 1280px) {
+  .logoDks {
+    width: 210px;
+  }
+
+  .navigation {
+    .dropdown {
+      ul{
+        width: 235px;
+        color: #686868;
+        background: #fff;
+        box-shadow: 0 0 13px 0 rgb(0 0 0 / 13%);
+        border-radius: 3px;
+        transition: all 0.3s ease-in-out;
+        left: 50%;
+        transform: translate(-50%, 0);
+    
+        @apply border-t-2 border-solid border-dks-red;
+      }
+    }
+
+    .dropdown.wide {
+      .container {
+        box-shadow: 0 0 13px 0 rgb(0 0 0 / 13%);
+        left: 70%;
+        transform: translate(-70%, 0);
+        transition: all 0.3s ease-in-out;
+        @apply pb-16 bg-white;
+      }
+
+      ul {
+        width: 260px;
+        @apply rounded-none;
+        box-shadow: none;
+        left: initial;
+        transform: none;
+      }
+
+      ul:first-child{
+        color: #686868;
+        background: #fff;
+        transition: all 0.3s ease-in-out;
+    
+        @apply border-t-2 border-solid border-dks-red rounded-r-none;
+      }
+    }
+
+    .dropdown .arrow,
+    .dropdown:not(.opened) .arrow{
+      position: relative;
+      text-align: center;
+      transition: 0.4s all ease;
+      z-index: 2;
+      margin-left: 5px;
+
+      @apply text-dks-red;
+    }
+  }
+}

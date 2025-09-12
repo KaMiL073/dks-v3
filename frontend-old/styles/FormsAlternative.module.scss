@@ -1,0 +1,49 @@
+.form {
+    @apply flex flex-wrap gap-1;
+    
+    .field {
+        @apply md:pr-8 w-49 my-4 text-sm;
+
+        label {
+            @apply block text-sm pb-2 pt-4 text-dks-darker-gray;
+        }
+        
+        input {
+            @apply w-full outline-none py-1 border-b border-dks-red;
+        }
+
+        select {
+            @apply w-full outline-none py-1.5 border-b border-dks-red;
+        }
+
+        textarea { 
+            @apply w-full outline-none py-1 border-b border-dks-red;
+            background: url('/static/textarea-pattern-light.png') repeat;
+        }
+    }
+
+    .field.full {
+        flex-basis: 100%;
+    }
+
+    .field.checkbox {
+        @apply leading-3 mb-8;
+
+        label {
+            @apply inline text-tiny ml-8 leading-3;
+        }
+
+        input {
+            @apply inline w-8 absolute;
+        }
+    }
+
+    .captcha {
+        @apply w-49;
+    }
+
+    button {
+        @apply bg-dks-footer h-12 rounded w-3/4 uppercase text-white font-bold mx-auto block;
+    }
+
+}

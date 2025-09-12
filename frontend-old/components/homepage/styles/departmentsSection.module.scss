@@ -1,0 +1,25 @@
+.section {
+    @apply pb-4 md:py-24 bg-dks-medium-gray w-full px-4 xl:px-0;
+
+    .column {
+        @apply md:w-1/2 sm:overflow-y-hidden sm:border sm:border-dks-font-gray sm:px-2;
+    }
+    
+    td {
+        @apply py-2 sm:whitespace-nowrap sm:px-1;
+    }
+
+    tr {
+        @apply sm:text-left;
+    }
+
+    .dot{
+        width: 5px;
+        height: 5px;
+        display: inline-block;
+        border-radius: 5rem;
+        margin-right: 0.5rem;
+
+        @apply bg-dks-red;
+    }
+}

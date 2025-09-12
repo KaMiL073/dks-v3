@@ -1,0 +1,45 @@
+.input {
+    @apply rounded border-dks-form-border border p-4 mt-2;
+        label {
+            @apply block pb-2 pt-4 text-dks-darker-gray font-bold;
+        }
+        
+        input {
+            @apply bg-dks-form-bg w-full rounded border-dks-form-border border outline-none px-4 py-1;
+        }
+        
+    }
+    .selectDropdown {
+        @apply rounded border-dks-form-border border p-4 mt-2;
+
+        label {
+            @apply block pb-2 pt-4 text-dks-darker-gray font-bold;
+        }
+    }
+
+.checkbox, .radio {
+    @apply rounded border-dks-form-border border p-4 mt-2;
+
+    h4 {
+        @apply inline py-8 text-dks-darker-gray font-bold;
+
+    }
+    label {
+        @apply inline pl-8; 
+        
+    }
+    input {
+        @apply inline top-0	left-0 w-6 h-6 bg-dks-form-bg absolute px-4 py-1;
+    }
+}
+
+
+
+.captcha {
+    @apply w-49;
+}
+
+.btn button {
+    @apply bg-dks-footer h-12 rounded w-3/4 uppercase text-white font-bold mx-auto block;
+}
+
