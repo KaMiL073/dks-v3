@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Header } from "./_components/navigation/Header";
 import { Montserrat } from 'next/font/google'
-import Footer from "./_components/Footer";
+import { Header } from "./_components/navigation/Header";
+import Footer from "./_components/navigation/Footer";
 
 
 const montserrat = Montserrat({
