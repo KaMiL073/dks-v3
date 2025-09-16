@@ -17,7 +17,7 @@ export const Button: React.FC<ButtonProps> = ({
   className = "",
 }) => {
   const baseClasses =
-    "inline-flex items-center justify-center gap-2 px-4 py-4 rounded-[64px] font-montserrat font-semibold text-base leading-tight transition-colors";
+    "inline-flex items-center justify-center gap-2 px-4 py-4 rounded-lg font-montserrat font-semibold text-base leading-tight transition-colors";
 
   const variants: Record<string, string> = {
     action:
