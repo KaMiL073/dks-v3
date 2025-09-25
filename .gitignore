@@ -134,6 +134,8 @@ temp/
 
 compose.yaml
 .DS_Store
+backend/data/*
 backend/uploads/
 proxy/certs
 frontend/public/storage/
+data/*
