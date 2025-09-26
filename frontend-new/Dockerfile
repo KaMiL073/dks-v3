@@ -1,21 +1,25 @@
-# 1. Etap build
-FROM node:18-alpine AS builder
-WORKDIR /app
+FROM node:20-alpine AS builder
 
+# Zainstaluj git
+RUN apk add --no-cache git
+
+# Ustaw katalog roboczy
+WORKDIR /directus
+
+# Skopiuj package.json i package-lock.json
 COPY package*.json ./
+
+# Zmień właściciela katalogu na node
+RUN chown -R node:node /directus
+
+# Przełącz się na użytkownika node
+USER node
+
+# Instalacja dependencies (dev + prod)
 RUN npm install
-COPY . .
-RUN npm run build
 
-# 2. Etap produkcyjny
-FROM node:18-alpine AS runner
-WORKDIR /app
+# Skopiuj cały kod i ustaw właściciela na node
+COPY --chown=node:node . .
 
-COPY package*.json ./
-RUN npm install --omit=dev --ignore-scripts
-
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/public ./public
-
-EXPOSE 3000
-CMD ["npm", "start"]
+# Build, jeśli masz np. TypeScript w extensions
+CMD ["npm", "run", "dev"]

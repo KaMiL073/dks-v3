@@ -1,38 +1,36 @@
-# Docker and Node.js Best Practices:
-# https://github.com/nodejs/docker-node/blob/main/docs/BestPractices.md
+FROM node:20-alpine AS builder
 
-#
-# Builder
-#
-
-FROM node:16-alpine AS builder
-
-RUN apk --no-cache add git
-USER node
+RUN apk add --no-cache git
 WORKDIR /directus
-COPY package*.json .
-ARG NODE_ENV=production
-ENV NODE_ENV=$NODE_ENV
+COPY package*.json ./
+
+# Install all deps to build extensions
 RUN npm install
 
-#
-# Image
-#
+# Copy full code
+COPY . .
 
-FROM node:16-alpine
+# Build extensions (Directus CLI)
+RUN npx directus extensions build
 
-USER node
-ENV TZ='Europe/Warsaw'
+#
+# Final image
+#
+FROM node:20-alpine
 WORKDIR /directus
+ENV TZ='Europe/Warsaw'
+
+# Copy node_modules and built extensions
 COPY --from=builder --chown=node:node /directus/node_modules ./node_modules
-COPY --chown=node:node . .
-ARG NODE_ENV=production
-ARG LOG_LEVEL=warn
-ARG LOG_STYLE=raw
-ENV NODE_ENV=$NODE_ENV \
-    LOG_LEVEL=$LOG_LEVEL \
-    LOG_STYLE=$LOG_STYLE
+COPY --from=builder --chown=node:node /directus/extensions/.registry ./extensions/.registry
+COPY --from=builder --chown=node:node /directus ./
+
+ENV NODE_ENV=production \
+    LOG_LEVEL=warn \
+    LOG_STYLE=raw
+
 EXPOSE 8055
-RUN ["chmod", "+x", "./dev/start_dev.sh"]
-RUN ["chmod", "+x", "./dev/start.sh"]
+
+RUN chmod +x ./dev/start.sh ./dev/start_dev.sh
+USER node
 ENTRYPOINT ["./dev/start.sh"]
