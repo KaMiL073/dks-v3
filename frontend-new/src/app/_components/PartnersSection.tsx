@@ -4,18 +4,18 @@ import { Heading2 } from "./Typography/Heading2";
 import Image from "next/image";
 
 const partners = [
-  { src: "static/homepage/logos/konica-minolta.svg", alt: "Konica Minolta", w: 150, h: 50 },
+  { src: "static/homepage/logos/konica-minolta.svg", alt: "Konica Minolta", w: 170, h: 80 },
   { src: "static/homepage/logos/lexmark.svg", alt: "Lexmark", w: 150, h: 50 },
   { src: "static/homepage/logos/canon.svg", alt: "Canon", w: 150, h: 50 },
   { src: "static/homepage/logos/hp.svg", alt: "HP", w: 60, h: 60 },
-  // { src: "static/homepage/logos/epson.svg", alt: "", w: 25, h: 25 },
-  { src: "static/homepage/logos/contex.svg", alt: "", w: 150, h: 50 },
-  // { src: "static/homepage/logos/kip.svg", alt: "", w: 150, h: 50 },
-  { src: "static/homepage/logos/lenovo.svg", alt: "", w: 150, h: 50 },
-  // { src: "static/homepage/logos/dell.svg", alt: "", w: 150, h: 50 },
-  { src: "static/homepage/logos/brother.svg", alt: "", w: 150, h: 50 },
-  // { src: "static/homepage/logos/y-soft.svg", alt: "", w: 150, h: 50 },
-  { src: "static/homepage/logos/ricoh.svg", alt: "", w: 150, h: 50 },
+  { src: "static/homepage/logos/epson.svg", alt: "Epson", w: 150, h: 25 },
+  { src: "static/homepage/logos/contex.svg", alt: "Contex", w: 150, h: 50 },
+  { src: "static/homepage/logos/kip.svg", alt: "KIP", w: 100, h: 100 },
+  { src: "static/homepage/logos/lenovo.svg", alt: "Lenovo", w: 150, h: 50 },
+  { src: "static/homepage/logos/dell.svg", alt: "Dell", w: 80, h: 80 },
+  { src: "static/homepage/logos/brother.svg", alt: "Brother", w: 150, h: 50 },
+  { src: "static/homepage/logos/y-soft.svg", alt: "Y Soft", w: 150, h: 50 },
+  { src: "static/homepage/logos/ricoh.svg", alt: "Ricoh", w: 150, h: 50 },
 ];
 export default function PartnersSection() {
   const containerRef = useRef<HTMLDivElement | null>(null);
