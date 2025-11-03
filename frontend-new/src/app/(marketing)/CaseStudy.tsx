@@ -1,8 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
 import Image from "next/image";
-import { Heading3 } from "./Typography/Heading3";
-import { Button } from "./Button";
+import { Heading3 } from "@/components/ui/Typography/Heading3";
+import { Button } from "@/components/ui/Button";
 
 type Slide = {
   title: string;
