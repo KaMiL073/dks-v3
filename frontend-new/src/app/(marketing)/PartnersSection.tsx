@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState, useEffect, useCallback } from "react";
-import { Heading2 } from "./Typography/Heading2";
+import { Heading2 } from "@/components/ui/Typography/Heading2";
 import Image from "next/image";
 
 const partners = [

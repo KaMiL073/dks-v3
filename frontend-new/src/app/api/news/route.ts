@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import backend from "../../../../lib/directus";
+import { directus } from "../../../lib/directus";
+import { readItems } from "@directus/sdk";
 
 interface NewsItemResponse {
   id: string;
@@ -9,33 +10,28 @@ interface NewsItemResponse {
   image: string | null;
 }
 
-interface NewsApiResponse {
-  data: NewsItemResponse[];
-}
-
 export async function GET() {
   try {
-    const resp = await backend.get<NewsApiResponse>("/items/news", {
-      params: { sort: "-date_created", limit: 5 },
-    });
+    // Pobranie maks. 5 newsów
+    const items = await directus.request(
+      readItems<NewsItemResponse>("news", {
+        limit: 5,
+        sort: ["-date_created"],
+        fields: ["id", "title", "lead", "slug", "image"],
+      })
+    );
 
-    const items = resp.data.data.map((item) => ({
-      id: item.id,
-      title: item.title,
-      lead: item.lead,
-      slug: item.slug,
+    // Mapowanie danych i dodanie pełnego URL dla obrazów
+    const mapped = items.map((item) => ({
+      ...item,
       image: item.image
         ? `https://dks.pl/backend/assets/${item.image}?imwidth=1920`
         : null,
     }));
 
-    return NextResponse.json(items);
-  } catch (_err) {
-    // eslint-disable-next-line no-console
-    console.error("Błąd pobierania newsów:", _err);
-    return NextResponse.json(
-      { error: "Błąd pobierania newsów" },
-      { status: 500 }
-    );
+    return NextResponse.json(mapped);
+  } catch (err) {
+    console.error("❌ Błąd pobierania newsów:", err);
+    return NextResponse.json({ error: "Błąd pobierania newsów" }, { status: 500 });
   }
 }

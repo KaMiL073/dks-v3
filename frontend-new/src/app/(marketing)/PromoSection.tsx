@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { Heading2 } from "./Typography/Heading2";
+import { Heading2 } from "@/components/ui/Typography/Heading2";
+
 import Link from "next/link";
 
 type Offer = {
