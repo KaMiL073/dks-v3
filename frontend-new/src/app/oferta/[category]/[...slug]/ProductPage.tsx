@@ -47,9 +47,25 @@ export default function ProductPage({
     process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "") ||
     "http://localhost:8055";
 
-  // 🔹 Inicjalizacja Directus Visual Editor
+  // 🔹 Inicjalizacja Directus Visual Editor (bezpieczna wersja)
   useEffect(() => {
-    initializeVisualEditor();
+    let isMounted = true;
+
+    async function init() {
+      try {
+        if (isMounted) {
+          await initializeVisualEditor();
+        }
+      } catch (err) {
+        console.error("Directus init error:", err);
+      }
+    }
+
+    init();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // 🔹 Wykrywanie trybu Visual Editora przez nasłuchiwanie postMessage
@@ -72,14 +88,17 @@ export default function ProductPage({
       }
 
       // 🟠 Starsze wersje
-      if (typeof data === "object" && data?.type === "directus-visual-editor-init") {
+      if (
+        typeof data === "object" &&
+        data?.type === "directus-visual-editor-init"
+      ) {
         setIsVisualEditor(true);
       }
     };
 
     window.addEventListener("message", handleMessage);
 
-    // 🔸 fallback
+    // 🔸 fallback dla starszych wersji Directusa
     const globalAny = window as unknown as {
       DirectusVisualEditor?: unknown;
       __DirectusVisualEditor?: unknown;

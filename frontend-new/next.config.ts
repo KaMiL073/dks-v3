@@ -3,10 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // ?? produkcja
       {
         protocol: "https",
         hostname: "www.dks.pl",
-        port: "", // ðŸ”¹ musimy jawnie podaÄ‡ pusty port dla https
+        port: "",
         pathname: "/**",
       },
       {
@@ -15,11 +16,13 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+
+      // ?? lokalne œrodowisko backendu Directus
       {
         protocol: "http",
-        hostname: "localhost",
-        port: "8055",
-        pathname: "/assets/**",
+        hostname: "192.168.1.83",
+        port: "",
+        pathname: "/backend/assets/**", // uwzglêdniamy prefix /backend
       },
       {
         protocol: "http",
@@ -28,16 +31,39 @@ const nextConfig: NextConfig = {
         pathname: "/assets/**",
       },
       {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8055",
+        pathname: "/assets/**",
+      },
+
+      // ??? zewnêtrzne placeholdery
+      {
         protocol: "https",
         hostname: "placehold.co",
-        port: "", // ðŸ”¹ wymagane przy Next.js 14+
+        port: "",
         pathname: "/**",
       },
     ],
-    formats: ["image/avif", "image/webp"], // ðŸ”¹ lepsza optymalizacja
+    formats: ["image/avif", "image/webp"],
+    // ?? alternatywnie (w razie proxy) mo¿na wy³¹czyæ optymalizacjê:
+    // unoptimized: process.env.NODE_ENV === "development",
   },
-  // (opcjonalnie) pozwala Å‚adowaÄ‡ obrazy z dowolnych domen przy dev/test
-  // experimental: { images: { allowFutureImage: true } },
+  // ? dodatkowo (opcjonalnie) dla stabilnoœci edytora wizualnego
+  headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, max-age=0",
+          },
+        ],
+      },
+    ];
+  },
+  reactStrictMode: true,
 };
 
 export default nextConfig;

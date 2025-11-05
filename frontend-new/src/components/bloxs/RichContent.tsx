@@ -4,7 +4,7 @@ import Image from "next/image";
 import { setAttr } from "@/lib/visual-editor";
 import { Heading } from "@/components/ui/Typography/Heading";
 import "@/styles/rich-content.scss";
-import Button from "../ui/Button"; // ✅ poprawny import (default)
+import Button from "../ui/Button";
 
 interface RichContentItem {
   id: string | number;
@@ -19,7 +19,7 @@ interface RichContentItem {
   layout?: "text_left" | "text_right";
   text_button?: string;
   url_button?: string;
-  [key: string]: unknown; // pozwala na dodatkowe pola
+  [key: string]: unknown;
 }
 
 export default function RichContent({ item }: { item: RichContentItem }) {
@@ -38,7 +38,7 @@ export default function RichContent({ item }: { item: RichContentItem }) {
       className="bg-surface-page flex flex-col justify-center items-start gap-6 py-18"
       data-directus={setAttr({
         collection: "rich_content",
-        item: item.id,
+        item: String(item.id),
         fields: ["layout"],
         mode: "popover",
       })}
@@ -48,7 +48,7 @@ export default function RichContent({ item }: { item: RichContentItem }) {
           isTextRight ? "md:flex-row" : "md:flex-row-reverse"
         } items-start md:items-center justify-between gap-8 md:gap-12 w-full`}
       >
-        {/* 🖼 KOLUMNA Z OBRAZEM */}
+        {/* 🖼️ OBRAZ */}
         <div className="w-full md:w-1/2">
           <Image
             src={imageUrl}
@@ -58,19 +58,19 @@ export default function RichContent({ item }: { item: RichContentItem }) {
             className="w-full h-auto object-cover rounded-lg"
             data-directus={setAttr({
               collection: "rich_content",
-              item: item.id,
+              item: String(item.id),
               fields: ["image"],
               mode: "modal",
             })}
           />
         </div>
 
-        {/* 📝 KOLUMNA Z TEKSTEM */}
+        {/* 📄 TEKST */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-start gap-6 py-4"
           data-directus={setAttr({
             collection: "rich_content",
-            item: item.id,
+            item: String(item.id),
             fields: [
               "title",
               "header_type",
@@ -84,13 +84,12 @@ export default function RichContent({ item }: { item: RichContentItem }) {
           })}
         >
           <div className="flex flex-col justify-start items-start gap-9">
-            {/* 🔹 Tytuł */}
             {item.title && (
               <div
                 className="w-full"
                 data-directus={setAttr({
                   collection: "rich_content",
-                  item: item.id,
+                  item: String(item.id),
                   fields: ["title", "header_type", "heading_styles"],
                   mode: "popover",
                 })}
@@ -104,13 +103,12 @@ export default function RichContent({ item }: { item: RichContentItem }) {
               </div>
             )}
 
-            {/* 🔹 Podtytuł */}
             {item.subtitle && (
               <div
                 className="w-full"
                 data-directus={setAttr({
                   collection: "rich_content",
-                  item: item.id,
+                  item: String(item.id),
                   fields: ["subtitle", "subtitle_type", "subtitle_styles"],
                   mode: "popover",
                 })}
@@ -124,14 +122,13 @@ export default function RichContent({ item }: { item: RichContentItem }) {
               </div>
             )}
 
-            {/* 🔹 Treść */}
             {item.content && (
               <div
                 className="rich-content"
                 dangerouslySetInnerHTML={{ __html: item.content }}
                 data-directus={setAttr({
                   collection: "rich_content",
-                  item: item.id,
+                  item: String(item.id),
                   fields: ["content"],
                   mode: "modal",
                 })}
@@ -139,12 +136,11 @@ export default function RichContent({ item }: { item: RichContentItem }) {
             )}
           </div>
 
-          {/* 🔘 Przycisk CTA */}
           {item.text_button && (
             <div
               data-directus={setAttr({
                 collection: "rich_content",
-                item: item.id,
+                item: String(item.id),
                 fields: ["text_button", "url_button"],
                 mode: "popover",
               })}

@@ -20,10 +20,16 @@ FROM node:20-alpine
 WORKDIR /directus
 ENV TZ='Europe/Warsaw'
 
-# Copy node_modules and built extensions
+# Copy node_modules and built extensions / app files
 COPY --from=builder --chown=node:node /directus/node_modules ./node_modules
 COPY --from=builder --chown=node:node /directus/extensions/.registry ./extensions/.registry
 COPY --from=builder --chown=node:node /directus ./
+
+
+# --- Katalogi, które Directus musi mieć na zapis ---
+RUN mkdir -p /directus/uploads /directus/.cache /directus/.temp \
+    && chown -R node:node /directus/uploads /directus/.cache /directus/.temp \
+    && chmod -R 775 /directus/uploads /directus/.cache /directus/.temp
 
 ENV NODE_ENV=production \
     LOG_LEVEL=warn \
@@ -32,5 +38,6 @@ ENV NODE_ENV=production \
 EXPOSE 8055
 
 RUN chmod +x ./dev/start.sh ./dev/start_dev.sh
+
 USER node
 ENTRYPOINT ["./dev/start.sh"]
