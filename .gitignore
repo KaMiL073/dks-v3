@@ -137,5 +137,6 @@ compose.yaml
 backend/data/*
 backend/uploads/
 proxy/certs
-frontend/public/storage/
+frontend/public/
 data/*
+frontend-new/public/

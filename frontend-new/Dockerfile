@@ -1,25 +1,19 @@
-FROM node:20-alpine AS builder
-
-# Zainstaluj git
-RUN apk add --no-cache git
+FROM node:20-alpine
 
 # Ustaw katalog roboczy
-WORKDIR /directus
+WORKDIR /app
+
+# Zainstaluj git (jeśli potrzebujesz np. do instalacji paczek z repo)
+RUN apk add --no-cache git
 
 # Skopiuj package.json i package-lock.json
 COPY package*.json ./
 
-# Zmień właściciela katalogu na node
-RUN chown -R node:node /directus
-
-# Przełącz się na użytkownika node
-USER node
-
 # Instalacja dependencies (dev + prod)
 RUN npm install
 
-# Skopiuj cały kod i ustaw właściciela na node
-COPY --chown=node:node . .
+# Skopiuj cały kod do kontenera
+COPY . .
 
-# Build, jeśli masz np. TypeScript w extensions
+# Domyślne polecenie - tryb dev (hot reload)
 CMD ["npm", "run", "dev"]
