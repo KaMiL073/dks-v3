@@ -125,3 +125,15 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     return null;
   }
 }
+
+export async function getProductsByBrandId(brandId: string): Promise<Product[]> {
+  const items = await directus.request(
+    readItems("products", {
+      filter: { brand: { _eq: brandId } },
+      // NIE używamy "name" ani "image", żeby uniknąć 403.
+      fields: ["id", "model", "slug", "main_image.*", "brand.id", "brand.name"],
+      limit: 100,
+    })
+  );
+  return (Array.isArray(items) ? items : []) as Product[];
+}

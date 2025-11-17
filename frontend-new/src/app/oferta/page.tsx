@@ -1,4 +1,5 @@
 import SectionHeader from "@/components/SectionHeader";
+import TopSectionHeader from "@/components/TopSectionHeader";
 
 export const metadata = {
   title: "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne",
@@ -31,7 +32,10 @@ export const metadata = {
 export default function OfferPage() {
   return (
     <>
-      <SectionHeader title="Kserokopiarki wielofunkcyjne, maszyny poligraficzne i wielkoformatowe" />
+      <TopSectionHeader 
+        title="Kserokopiarki wielofunkcyjne, maszyny poligraficzne i wielkoformatowe" 
+        img="/static/homepage/Header.webp" 
+      />
         <main className="w-full px-28 py-20 bg-white inline-flex flex-col justify-start items-start gap-12 overflow-hidden">
       {/* 1 */}
       <div className="self-stretch inline-flex justify-start items-start gap-12">
