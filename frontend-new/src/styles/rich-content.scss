@@ -1,0 +1,216 @@
+/* ============================================================
+   RICH CONTENT STYLES
+   Stylizacja opisów produktów, wpisów blogowych i artykułów
+   ============================================================ */
+
+.rich-content {
+  /* ------------------------------
+     OGÓLNE
+     ------------------------------ */
+  font-family: 'Montserrat', sans-serif;
+  color: var(--Text-body, #333);
+  line-height: 1.6;
+  word-break: break-word;
+
+  /* ------------------------------
+     NAGŁÓWKI — Desktop
+     ------------------------------ */
+  h1 {
+    font-size: 3.75rem; // 60px
+    line-height: 4rem; // 64px
+    font-weight: 400;
+    color: var(--Neutral-950, #0A0A0A);
+    margin: 2rem 0 1rem;
+  }
+
+  h2 {
+    font-size: 2.25rem; // 36px
+    line-height: 3.5rem; // 56px
+    font-weight: 400;
+    color: var(--Neutral-950, #0A0A0A);
+    margin: 1.75rem 0 1rem;
+  }
+
+  h3 {
+    font-size: 2.25rem; // 36px
+    line-height: 3rem; // 48px
+    font-weight: 400;
+    color: var(--Neutral-950, #0A0A0A);
+    margin: 1.5rem 0 1rem;
+  }
+
+  h4 {
+    font-size: 1.875rem; // 30px
+    line-height: 2.5rem; // 40px
+    font-weight: 400;
+    color: var(--Neutral-950, #0A0A0A);
+    margin: 1.25rem 0 0.75rem;
+  }
+
+  h5 {
+    font-size: 1.5rem; // 24px
+    line-height: 1.75rem; // 28px
+    font-weight: 400;
+    color: var(--Neutral-950, #0A0A0A);
+    margin: 1rem 0 0.5rem;
+  }
+
+  h6 {
+    font-size: 1.25rem; // 20px
+    line-height: 1.5rem; // 24px
+    font-weight: 400;
+    color: var(--Neutral-950, #0A0A0A);
+    margin: 1rem 0 0.5rem;
+  }
+
+  /* ------------------------------
+     BODY TEXT — Desktop
+     ------------------------------ */
+  p {
+    font-size: 1.25rem; // 20px
+    line-height: 1.5rem; // 24px
+    font-weight: 400;
+    margin-bottom: 1rem;
+    color: var(--Text-body, #333);
+  }
+
+  /* ------------------------------
+     WYRÓŻNIENIA
+     ------------------------------ */
+  strong,
+  b {
+    font-weight: 600;
+    color: var(--Neutral-950, #0A0A0A);
+  }
+
+  em,
+  i {
+    font-style: italic;
+  }
+
+  u {
+    text-decoration: underline;
+  }
+
+  /* ------------------------------
+     LISTY
+     ------------------------------ */
+  ul,
+  ol {
+    margin: 1.25rem 0 1.25rem 1.5rem;
+    padding-left: 1rem;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+
+  ul li {
+    list-style-type: disc;
+    margin-bottom: 0.5rem;
+  }
+
+  ol li {
+    list-style-type: decimal;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ------------------------------
+     LINKI
+     ------------------------------ */
+  a {
+    color: var(--Text-action, #E4002B);
+    text-decoration: underline;
+    transition: color 0.2s ease-in-out;
+
+    &:hover {
+      color: darken(#E4002B, 10%);
+    }
+  }
+
+  /* ------------------------------
+     OBRAZY
+     ------------------------------ */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+  }
+
+  /* ------------------------------
+     TABELA
+     ------------------------------ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 1rem;
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 0.75rem 1rem;
+    }
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: 600;
+    }
+  }
+
+  /* ------------------------------
+     MOBILE (max-width: 768px)
+     ------------------------------ */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 1.875rem; // 30px
+      line-height: 2.5rem; // 40px
+      font-weight: 400;
+    }
+
+    h2 {
+      font-size: 1.875rem; // 30px
+      line-height: 2.25rem; // 36px
+      font-weight: 400;
+    }
+
+    h3 {
+      font-size: 1.5rem; // 24px
+      line-height: 2rem; // 32px
+      font-weight: 400;
+    }
+
+    h4 {
+      font-size: 1.25rem; // 20px
+      line-height: 1.75rem; // 28px
+      font-weight: 400;
+    }
+
+    h5 {
+      font-size: 1.25rem; // 20px
+      line-height: 1.5rem; // 24px
+      font-weight: 400;
+    }
+
+    h6 {
+      font-size: 1rem; // 16px
+      line-height: 1.25rem; // 20px
+      font-weight: 400;
+    }
+
+    p,
+    li {
+      font-size: 1rem; // 16px
+      line-height: 1.25rem; // 20px
+    }
+
+    ul,
+    ol {
+      margin: 1rem 0 1rem 1.25rem;
+      padding-left: 0.75rem;
+    }
+
+    table {
+      font-size: 0.875rem;
+    }
+  }
+}
