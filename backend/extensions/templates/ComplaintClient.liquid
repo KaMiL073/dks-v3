@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+  <title>Reklamacja dealerska – DKS</title>
+
+  <style type="text/css">
+    body { margin: 0; padding: 0; background-color: #e1e1e1; }
+    table { border-collapse: collapse; }
+    img { display: block; }
+  </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#e1e1e1">
+  <tr>
+    <td>
+      <table width="600" align="center" bgcolor="#20292f">
+        <tr>
+          <td height="100" align="left" style="padding-left:30px;">
+            <img
+              src="https://dks.pl/storage/newsletter/dks-newslleter.png"
+              width="86"
+              height="49"
+              alt="DKS"
+            />
+          </td>
+          <td height="100" align="right" style="padding-right:30px;">
+            <span style="font-family:Tahoma, Helvetica; font-size:16px; color:#f1f1f1; font-weight:bold;">
+              Reklamacja dealerska
+            </span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- CONTENT -->
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f1f1f1">
+  <tr>
+    <td>
+      <table width="600" align="center" bgcolor="#ffffff">
+        <tr>
+          <td style="padding:30px; font-family:Tahoma, Helvetica; color:#3C3C3D; font-size:14px;">
+
+            <h2 style="text-align:center; margin-top:0;">
+              Dziękujemy za zgłoszenie reklamacyjne
+            </h2>
+
+            <p style="text-align:center;">
+              Twoje zgłoszenie zostało poprawnie przyjęte i przekazane do działu reklamacji DKS.
+            </p>
+
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eaeaea;" />
+
+            <!-- DANE ZGŁASZAJĄCEGO -->
+            <strong>Dane zgłaszającego</strong><br /><br />
+
+            <strong>Imię i nazwisko:</strong><br />
+            {{ data.full_name }}<br /><br />
+
+            <strong>Firma:</strong><br />
+            {{ data.company_name }}<br /><br />
+
+            <strong>E-mail:</strong><br />
+            {{ data.email }}<br /><br />
+
+            <strong>Telefon:</strong><br />
+            {{ data.phone }}<br />
+
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eaeaea;" />
+
+            <!-- SZCZEGÓŁY REKLAMACJI -->
+            <strong>Szczegóły reklamacji</strong><br /><br />
+
+            <strong>Producent:</strong><br />
+            {{ data.Producent }}<br /><br />
+
+            <strong>Nazwa / model urządzenia:</strong><br />
+            {{ data.device_model }}<br /><br />
+
+            <strong>Numer seryjny:</strong><br />
+            {{ data.serial_number }}<br /><br />
+
+            <strong>Numer faktury:</strong><br />
+            {{ data.purchase_invoice_number }}<br /><br />
+
+            <strong>Temat zgłoszenia:</strong><br />
+            {{ data.title }}<br /><br />
+
+            <strong>Opis problemu:</strong><br />
+            {{ data.description }}<br /><br />
+
+            <strong>Wersja firmware:</strong><br />
+            {{ data.firmware_version }}<br /><br />
+
+            <strong>Data instalacji:</strong><br />
+            {{ data.installation_date }}<br /><br />
+
+            <strong>Data wystąpienia problemu:</strong><br />
+            {{ data.issue_date }}<br />
+
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eaeaea;" />
+
+            <!-- ADRES ZWROTNY -->
+            <strong>Adres wysyłki po naprawie</strong><br /><br />
+
+            <strong>Firma:</strong><br />
+            {{ data.return_company }}<br /><br />
+
+            <strong>Osoba kontaktowa:</strong><br />
+            {{ data.return_full_name }}<br /><br />
+
+            <strong>Telefon:</strong><br />
+            {{ data.return_phone }}<br /><br />
+
+            <strong>Adres:</strong><br />
+            {{ data.return_address }}<br />
+
+            <hr style="margin:30px 0; border:0; border-top:1px solid #eaeaea;" />
+
+            <p style="font-size:13px;">
+              W przypadku dodatkowych pytań lub potrzeby uzupełnienia informacji,
+              nasz dział reklamacji skontaktuje się z Tobą bezpośrednio.
+            </p>
+
+          </td>
+        </tr>
+      </table>
+
+      <!-- FOOTER -->
+      <table width="600" align="center" bgcolor="#ffffff">
+        <tr>
+          <td style="padding:30px; font-size:10px; font-family:Tahoma, Helvetica;">
+            <p><b>UWAGA:</b> Ta wiadomość została wygenerowana automatycznie. Prosimy na nią nie odpowiadać.</p>
+            <p>
+              <a href="https://www.dks.pl/dks/privacy-policy.html" style="color:black;">
+                Polityka prywatności DKS Sp. z o.o.
+              </a>
+            </p>
+            <p style="font-size:8px;">
+              DKS Sp. z o.o., ul. Energetyczna 15, 80-180 Kowale<br />
+              KRS 0000099557 · NIP 583-27-90-417
+            </p>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

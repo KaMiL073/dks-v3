@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Button from "../ui/Button"; // ✅ poprawione — default import
-
+import Button from "../ui/Button";
 type NavItem = {
   label: string;
   href?: string;
@@ -63,7 +62,7 @@ const navItems: NavItem[] = [
           { label: "Oce", href: "/oferta/marki/oce" },
         ],
       },
-      { label: "Kamery termowizyjne", href: "/oferta/kamery-termowizyjne" },
+      { label: "Rozwiazania Video", href: "/oferta/rozwiazania-video" },
       { label: "Materiały eksploatacyjne", href: "/oferta/materialy-eksploatacyjne" },
     ],
   },
@@ -71,14 +70,24 @@ const navItems: NavItem[] = [
     label: "Serwis",
     href: "/serwis",
     submenu: [
-      { label: "Zgłoszenie serwisowe", href: "/oferta/zgloszenie-serwisowe" },
-      { label: "Serwis urządzeń wielofunkcyjnych", href: "/oferta/serwis-urzadzen-wielofunkcyjnych" },
-      { label: "Serwis urządzeń produkcyjnych", href: "/oferta/serwis-urzadzen-produkcyjnych" },
-      { label: "Serwis urządzeń wielkoformatowych", href: "/oferta/serwis-urzadzen-wielkoformatowych" },
-      { label: "Kontrakt Obsługi Serwisowej", href: "/oferta/kontrakt-obslugi-serwisowej" },
+      { label: "Zgłoszenie serwisowe", href: "/zgloszenie-serwisowe" },
+      { label: "Serwis urządzeń wielofunkcyjnych", href: "/serwis-urzadzen-wielofunkcyjnych" },
+      { label: "Serwis urządzeń produkcyjnych", href: "/serwis-urzadzen-produkcyjnych" },
+      { label: "Serwis urządzeń wielkoformatowych", href: "/serwis-urzadzen-wielkoformatowych" },
+      { label: "Kontrakt Obsługi Serwisowej", href: "/kontrakt-obslugi-serwisowej" },
     ],
   },
-  { label: "O nas", href: "/o-nas" },
+  { label: "O firmie", href: "/o-firmie",
+    submenu: [
+      { label: "DKS", href: "/o-firmie" },
+      { label: "Oddziały", href: "/oddzialy" },
+
+      { label: "Kariera", href: "/kariera" },
+      { label: "Certyfikaty", href: "/certyfikaty" },
+
+
+    ],
+  },
   { label: "Blog", href: "/blog" },
   { label: "Strefa Klienta", href: "/strefa-klienta" },
   { label: "Eksport", href: "/eksport" },

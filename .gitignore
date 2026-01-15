@@ -140,3 +140,4 @@ proxy/certs
 frontend/public/
 data/*
 frontend-new/public/
+frontend-new.zip
