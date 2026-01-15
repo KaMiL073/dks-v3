@@ -1,41 +1,123 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# ==================================================
+# GitHub help:
+# https://help.github.com/articles/ignoring-files/
+# ==================================================
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# -------------------------
+# Node / JS
+# -------------------------
+node_modules/
+**/node_modules/
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+.pnpm-store/
+.pnp
+.pnp.*
 
-# vercel
-.vercel
+# -------------------------
+# Next.js
+# -------------------------
+.next/
+out/
+build/
+.next/cache/
 
-# typescript
+# -------------------------
+# Env files
+# -------------------------
+.env
+.env.*
+!.env.example
+
+# -------------------------
+# Logs
+# -------------------------
+logs/
+*.log
+
+# -------------------------
+# OS / Editor
+# -------------------------
+.DS_Store
+._*
+Thumbs.db
+.vscode/
+.idea/
+
+# -------------------------
+# Archives / binaries
+# -------------------------
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.exe
+*.dll
+*.so
+*.dylib
+
+# -------------------------
+# Docker
+# -------------------------
+docker-data/
+docker-volumes/
+
+# -------------------------
+# Directus
+# -------------------------
+backend/uploads/
+backend/database/
+backend/cache/
+
+# artefakty rozszerzeñ Directusa (NIE wersjonujemy)
+backend/extensions/.registry/
+backend/extensions/**/node_modules/
+backend/extensions/**/dist/
+
+# lokalne / generowane rozszerzenia
+backend/extensions/remadays/
+backend/extensions/complaint/
+backend/extensions/set-canonical-url/
+
+# szablony generowane / modyfikowane runtime
+backend/extensions/templates/*.liquid
+
+# -------------------------
+# AppleDouble (czêsty problem przy Docker + macOS)
+# -------------------------
+._*
+
+# -------------------------
+# Frontend public assets (jeœli generowane)
+# -------------------------
+frontend-new/public.zip
+frontend-new/products_error.json
+
+# -------------------------
+# Vercel
+# -------------------------
+.vercel/
+
+# -------------------------
+# TypeScript
+# -------------------------
 *.tsbuildinfo
 next-env.d.ts
+
+# -------------------------
+# Coverage / tests
+# -------------------------
+coverage/
+
+# -------------------------
+# Misc
+# -------------------------
+*.pem
+*.crt
+*.key
