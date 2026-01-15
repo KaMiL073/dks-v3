@@ -137,7 +137,6 @@ compose.yaml
 backend/data/*
 backend/uploads/
 proxy/certs
-<<<<<<< HEAD
 frontend/public/storage/
 data/*
 ._*
@@ -146,7 +145,7 @@ data/*
 backend/extensions/.registry/
 backend/extensions/**/node_modules/
 backend/extensions/**/dist/
-frontend/public/
-data/*
-frontend-new/public/
-frontend-new.zip
+
+backend/extensions/remadays/
+backend/extensions/.registry/
+backend/extensions/templates/*.liquid
