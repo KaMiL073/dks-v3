@@ -139,3 +139,9 @@ backend/uploads/
 proxy/certs
 frontend/public/storage/
 data/*
+._*
+
+# Directus
+backend/extensions/.registry/
+backend/extensions/**/node_modules/
+backend/extensions/**/dist/
