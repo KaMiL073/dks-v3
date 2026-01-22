@@ -15,7 +15,7 @@ interface Product {
   slug?: string;
   main_image?: { id?: string } | string;
   brand?: { name?: string };
-  type?: DirectusRelation[] | DirectusRelation; // 🔹 typ bez `any`
+  type?: DirectusRelation[] | DirectusRelation;
 }
 
 interface FilterField {
@@ -27,13 +27,9 @@ interface FilterField {
 export default function ProductsList({
   products,
   filtersMeta = [],
-  categorySlug,
-  subcategory,
 }: {
   products: Product[];
   filtersMeta?: FilterField[];
-  categorySlug: string;
-  subcategory?: string;
 }) {
   if (!products?.length) {
     return (
@@ -47,8 +43,10 @@ export default function ProductsList({
     process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "") ||
     "http://localhost:8055";
 
-  // 🔹 Pomocnicza funkcja: pobiera wartość filtra z produktu
-  const getFilterValue = (product: Product, filterField: string): string | undefined => {
+  const getFilterValue = (
+    product: Product,
+    filterField: string
+  ): string | undefined => {
     const typeArray = Array.isArray(product.type)
       ? product.type
       : product.type
@@ -76,6 +74,11 @@ export default function ProductsList({
 
         const visibleFilters = filtersMeta.slice(0, 4);
 
+        // ✅ Jedyny poprawny adres produktu
+        const productHref = product.slug
+          ? `/oferta/produkty/${product.slug}`
+          : null;
+
         return (
           <div
             key={product.id}
@@ -100,7 +103,6 @@ export default function ProductsList({
                 </div>
               )}
 
-              {/* 🔹 Filtry — tylko pierwsze 4 */}
               <div className="text-sm text-gray-800 space-y-1">
                 {visibleFilters.map((filter) => {
                   const value = getFilterValue(product, filter.field);
@@ -117,16 +119,15 @@ export default function ProductsList({
             </div>
 
             {/* 🔘 Przycisk */}
-            <Button
-              className="mt-4"
-              href={
-                subcategory
-                  ? `/oferta/${categorySlug}/${subcategory}/${product.slug}`
-                  : `/oferta/${categorySlug}/${product.slug}`
-              }
-            >
-              Zobacz więcej
-            </Button>
+            {productHref ? (
+              <Button className="mt-4" href={productHref}>
+                Zobacz więcej
+              </Button>
+            ) : (
+              <Button className="mt-4" disabled>
+                Brak linku (brak slug)
+              </Button>
+            )}
           </div>
         );
       })}
