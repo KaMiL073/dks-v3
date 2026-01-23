@@ -27,6 +27,42 @@ const url = absUrl(canonicalPath);
 // wrzuć plik do: /public/og/serwis-urzadzen-wielkoformatowych.jpg
 const ogImage = absUrl("/og/serwis-urzadzen-wielkoformatowych.jpg");
 
+const leftHtml = `
+  <h2>Podążamy za rozwojem technologii druku wielkoformatowego</h2>
+  <p>
+    Rozwój rynku zaawansowanych i innowacyjnych technologii kopiowania, 
+    drukowania, skanowania jest niezwykle dynamiczny. 
+    Każdego roku odbywają się premiery nowych serii maszyn, 
+    nowych rozwiązań w technice druku i obróbki poligraficznej. 
+    Zdajemy sobie sprawę, że <strong>serwis sprzętu drukującego 
+    na najwyższym poziomie</strong> wymaga licznych szkoleń, poszerzania 
+    wiedzy technicznej i poznawania nowych urządzeń. Dlatego jesteśmy obecni 
+    na najważniejszych imprezach branżowych, korzystamy z wiedzy przekazywanej 
+    przez producentów sprzętu. Wymieniamy się doświadczeniami z innymi dostawcami 
+    i serwisantami sprzętu wielkoformatowego.
+  </p>
+`;
+
+const rightHtml = `
+  <p>
+    Dbałość o stały rozwój sprawia, że możemy swoim Klientom oferować skuteczne
+    wsparcie techniczne i merytoryczne. Dokonujemy napraw i przeglądów w miejscu 
+    pracy maszyn, udzielamy też licznych konsultacji telefonicznych. 
+    Zawsze możesz też odwiedzić jeden z naszych oddziałów zlokalizowanych w 
+    12 miastach wojewódzkich
+  </p>
+  <p>
+    Na kompleksowo prowadzony serwis urządzeń wielkoformatowych składają się:
+  </p>
+  <ul>
+    <li>doradztwo i wsparcie techniczne;</li>
+    <li>montaż i uruchomienie</li>
+    <li>okresowe przeglądy urządzeń;</li>
+    <li>usuwanie awarii i kalibracja;/li>
+    <li>serwis gwarancyjny i pogwarancyjny.</li>
+  </ul>
+`;
+
 export const metadata: Metadata = {
   title,
   description,
@@ -114,6 +150,9 @@ export default function SerwisUrzadzenWielkoformatowychPage() {
               Podejmujemy się naprawy dowolnego rodzaju sprzętu wielkoformatowego.
             </p>
           `}
+          expanded_columns={2}
+          expand_left={leftHtml}
+          expand_right={rightHtml}
         />
 
         <IconsSection

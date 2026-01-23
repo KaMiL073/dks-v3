@@ -33,6 +33,38 @@ const url = absUrl(canonicalPath);
 // wrzuć plik do: /public/og/o-firmie.jpg
 const ogImage = absUrl("/og/o-firmie.jpg");
 
+const leftHtml = `<div>
+  <strong >Jesteśmy blisko naszych Klientów</strong>
+  <br/>
+  <p>
+    Prowadzimy 12 oddziałów w największych miastach wojewódzkich w Polsce. Jesteśmy blisko
+    naszych Klientów. Dzięki temu możemy skrócić znacznie czas realizacji zamówień 
+    i zagwarantować błyskawiczną reakcję serwisową. Prowadzimy serwis urządzeń 
+    wielofunkcyjnych, maszyn produkcyjnych i drukarek wielkoformatowych.
+    <br/> <br />
+    Zapraszamy do kontaktu telefonicznego, mailowego i wizyt w oddziałach 
+    DKS!ądzeń drukujących, ale nie chcą ponosić kosztów ich zakupu.
+  </p>
+</div>`;
+
+const rightHtml = `<div>
+  <strong>Sprzedaż i dzierżawa nowych i używanych maszyn drukujących</strong>
+  <p>
+    Sprzedajemy nowy i używany (poleasingowy) sprzęt drukujący. Alternatywą 
+    dla zakupu jest wynajem urządzeń wielofunkcyjnych: zamieniasz kosztowną 
+    inwestycję na miesięczną opłatę czynszową.
+  </p>
+  <br />
+  <p>
+    Wszystkie używane maszyny drukujące są drobiazgowo sprawdzane, naprawiane 
+    i testowane. Oszczędzasz pieniądze i masz pewność długiej, niezawodnej 
+    pracy. W przypadku nowych maszyn zabezpieczeniem przed kosztami awarii 
+    jest gwarancja. Z myślą o użytkownikach sprzętu w okresie pogwarancyjnym 
+    stworzyliśmy Kontrakt Obsługi Serwisowej. Naszym celem jest zabezpieczenie 
+    komfortu i poczucia bezpieczeństwa ekonomicznego wszystkich użytkowników.
+  </p>
+</div>`;
+
 export const metadata: Metadata = {
   title,
   description,
@@ -143,6 +175,9 @@ export default function OfferPage() {
                 plotery atramentowe Océ, OKI, Canon, Konica Minolta.
               </p>
             `}
+          expanded_columns={2}
+          expand_left={leftHtml}
+          expand_right={rightHtml}
         />
         </div>
 
@@ -158,3 +193,6 @@ export default function OfferPage() {
     </>
   );
 }
+
+
+

@@ -76,6 +76,39 @@ export const metadata: Metadata = {
   },
 };
 
+const leftHtml = `
+  <h2>Koszty eksploatacyjne wkalkulowane w cenę pojedynczego wydruku</h2>
+  <p>
+    Istotą umowy KOS jest 
+    <strong>zamiana trudnych do przewidzenia 
+    kosztów eksploatacji sprzętu drukującego na stały koszt pojedynczego 
+    wydruku</strong>. Gwarantujemy niezmienną stawkę za jedną wydrukowaną 
+    stronę w całym okresie obowiązywania umowy. 
+    Oznacza to, że miesięczna opłata zależy od liczby wydruków: płacisz 
+    tylko za faktycznie wykonane zadania, a nie za utrzymywanie urządzenia 
+    w gotowości.
+  </p>
+  <p>
+    KOS pozwala łatwo skalkulować i zaplanować w budżecie wydatki ponoszone 
+    na drukowanie i przetwarzanie dokumentów firmowych. Oznacza też wymierną 
+    oszczędność czasu, który możesz przeznaczyć na podstawową działalność biznesową. 
+    KOS to maksymalny komfort użytkowania foty drukującej.
+  </p>
+`;
+
+const rightHtml = `
+  <p>Korzyści z umowy KOS:</p>
+  <ul>
+    <li>równomierne rozłożenie kosztów eksploatacji;</li>
+    <li>łatwa kalkulacja miesięcznych kosztów druku</li>
+    <li>stała opieka i skrócony czas reakcji serwisowej</li>
+    <li>uzupełnianie materiałów eksploatacyjnych zawsze na czas</li>
+    <li>wydłużony okres eksploatacji maszyny</li> 
+    <li>gwarancja jakości wydruków i sprzętu</li>
+    <li>wygoda i oszczędność czasu)</li>
+  </ul>
+`;
+
 export default function KontraktObslugiSerwisowejPage() {
   return (
     <>
@@ -119,6 +152,9 @@ export default function KontraktObslugiSerwisowejPage() {
               biznesową. To maksymalny komfort użytkowania floty drukującej.
             </p>
           `}
+          expanded_columns={2}
+          expand_left={leftHtml}
+          expand_right={rightHtml}
         />
 
         <IconsSection
