@@ -8,7 +8,31 @@ export interface News {
   title: string;
   lead: string;
   slug: string;
-  image: string | null;
+  image: string | null; // może być absolutny URL albo już względny
+}
+
+// Zamienia:
+// - https://dks.pl/backend/assets/<id>?imwidth=1920
+// - http://188.252.84.172/backend/assets/<id>?imwidth=1920
+// na:
+// - /backend/assets/<id>?imwidth=1920
+function normalizeDirectusImage(src: string | null) {
+  if (!src) return null;
+
+  // jeśli już jest względne — zostaw
+  if (src.startsWith("/backend/assets/")) return src;
+
+  // jeśli to absolutny URL, wyciągnij pathname + query
+  try {
+    const u = new URL(src);
+    if (u.pathname.startsWith("/backend/assets/")) {
+      return `${u.pathname}${u.search}`; // => /backend/assets/... ?imwidth=...
+    }
+    return src; // inne hosty zostaw jak są (np. placeholder)
+  } catch {
+    // jakby przyszło coś "prawie URL"
+    return src;
+  }
 }
 
 export default function NewsSection() {
@@ -16,13 +40,17 @@ export default function NewsSection() {
   const [current, setCurrent] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
-  // Pobieranie newsów z API
   useEffect(() => {
     fetch("/api/news?limit=4")
       .then((res) => res.json())
-      .then((data: News[]) => setNewsItems(data))
+      .then((data: News[]) => setNewsItems(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Błąd pobierania newsów:", err));
   }, []);
+
+  useEffect(() => {
+    // jak zmieni się lista, pilnuj indexu
+    if (current >= newsItems.length) setCurrent(0);
+  }, [newsItems.length, current]);
 
   const handlePrev = () =>
     setCurrent((prev) => (prev === 0 ? newsItems.length - 1 : prev - 1));
@@ -33,13 +61,18 @@ export default function NewsSection() {
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
+
   const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
+    if (touchStartX.current === null || newsItems.length <= 1) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
     if (diff > 50) handleNext();
     if (diff < -50) handlePrev();
     touchStartX.current = null;
   };
+
+  if (newsItems.length === 0) {
+    return null; // albo skeleton
+  }
 
   return (
     <section
@@ -64,31 +97,35 @@ export default function NewsSection() {
         <div className="flex-1 overflow-hidden">
           <div
             className="flex transition-transform duration-500 gap-6"
-            style={{
-              transform: `translateX(-${current * (592 + 24)}px)`,
-            }}
+            style={{ transform: `translateX(-${current * (592 + 24)}px)` }}
           >
-            {newsItems.map((item) => (
-              <div
-                key={item.id}
-                className="flex-shrink-0 w-full md:w-[592px] px-6 py-10 bg-gray-300 shadow"
-              >
-                <div className="flex flex-col md:flex-row gap-6">
-                  <Image
-                    src={item.image ?? "/static/default-news.jpg"}
-                    alt={item.title}
-                    width={272}
-                    height={190}
-                    className="h-48 w-full md:w-auto object-cover"
-                  />
-                  <div className="flex-1 flex flex-col justify-center">
-                    <p className="text-xl md:text-2xl font-semibold text-Text-body text-center md:text-left">
-                      {item.title}
-                    </p>
+            {newsItems.map((item) => {
+              const imgSrc =
+                normalizeDirectusImage(item.image) ?? "/static/default-news.jpg";
+
+              return (
+                <div
+                  key={item.id}
+                  className="flex-shrink-0 w-full md:w-[592px] px-6 py-10 bg-gray-300 shadow"
+                >
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <Image
+                      src={imgSrc}
+                      alt={item.title}
+                      width={272}
+                      height={190}
+                      className="h-48 w-full md:w-auto object-cover"
+                      unoptimized
+                    />
+                    <div className="flex-1 flex flex-col justify-center">
+                      <p className="text-xl md:text-2xl font-semibold text-Text-body text-center md:text-left">
+                        {item.title}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

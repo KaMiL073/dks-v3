@@ -34,7 +34,7 @@ export default function ContactSection({
           <div className="hidden lg:block lg:col-span-5">
             <Image
               className="w-full h-auto object-contain"
-              src="/static/homepage/Obraz-c.webp"
+              src="/static/homepage/Obraz-C.webp"
               alt="Kontakt"
               width={900}
               height={1200}
