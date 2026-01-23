@@ -3,7 +3,7 @@
 import Button from "@/components/ui/Button";
 import Image from "next/image";
 
-// 🧩 Typ relacji Directus M2A (many-to-any)
+// Typ relacji Directus M2A (many-to-any)
 interface DirectusRelation {
   collection: string;
   item: Record<string, unknown>;
@@ -15,7 +15,7 @@ interface Product {
   slug?: string;
   main_image?: { id?: string } | string;
   brand?: { name?: string };
-  type?: DirectusRelation[] | DirectusRelation; // 🔹 typ bez `any`
+  type?: DirectusRelation[] | DirectusRelation;
 }
 
 interface FilterField {
@@ -24,16 +24,35 @@ interface FilterField {
   options?: { text: string; value: string }[];
 }
 
+/**
+ * Zwraca URL obrazka produktu w formie:
+ * /backend/assets/<id>?imwidth=...
+ *
+ * - request idzie do nginx -> directus
+ * - nie generuje /_next/image?url=...
+ * - unoptimized=true dla directusa
+ *
+ * Jeśli brak obrazka -> lokalny placeholder z /public
+ */
+function productImageSrc(main_image: Product["main_image"], imwidth = 900) {
+  const id =
+    typeof main_image === "string"
+      ? main_image
+      : main_image?.id
+      ? main_image.id
+      : null;
+
+  if (!id) return "/static/placeholder-product.svg";
+
+  return `/backend/assets/${id}?imwidth=${imwidth}`;
+}
+
 export default function ProductsList({
   products,
   filtersMeta = [],
-  categorySlug,
-  subcategory,
 }: {
   products: Product[];
   filtersMeta?: FilterField[];
-  categorySlug: string;
-  subcategory?: string;
 }) {
   if (!products?.length) {
     return (
@@ -43,12 +62,10 @@ export default function ProductsList({
     );
   }
 
-  const backend =
-    process.env.NEXT_PUBLIC_BACKEND_URL?.replace(/\/$/, "") ||
-    "http://localhost:8055";
-
-  // 🔹 Pomocnicza funkcja: pobiera wartość filtra z produktu
-  const getFilterValue = (product: Product, filterField: string): string | undefined => {
+  const getFilterValue = (
+    product: Product,
+    filterField: string
+  ): string | undefined => {
     const typeArray = Array.isArray(product.type)
       ? product.type
       : product.type
@@ -56,8 +73,8 @@ export default function ProductsList({
       : [];
 
     for (const t of typeArray) {
-      const item = t?.item as Record<string, unknown>;
-      if (filterField in item && item[filterField]) {
+      const item = t?.item as Record<string, unknown> | undefined;
+      if (item && filterField in item && item[filterField]) {
         return String(item[filterField]);
       }
     }
@@ -67,66 +84,72 @@ export default function ProductsList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
       {products.map((product) => {
-        const imageUrl =
-          typeof product.main_image === "string"
-            ? `${backend}/assets/${product.main_image}`
-            : product.main_image?.id
-            ? `${backend}/assets/${product.main_image.id}`
-            : "https://placehold.co/368x249";
-
+        const imageUrl = productImageSrc(product.main_image, 900);
+        const isDirectus = imageUrl.startsWith("/backend/assets/");
         const visibleFilters = filtersMeta.slice(0, 4);
+
+        // ✅ JEDYNY poprawny adres produktu:
+        const productHref = product.slug
+          ? `/oferta/produkty/${product.slug}`
+          : null;
 
         return (
           <div
             key={product.id}
             className="bg-surface-page border-b border-border-primary pb-4"
           >
-            {/* 📷 Zdjęcie */}
+            {/* Zdjęcie */}
             <div className="relative w-full h-64">
               <Image
                 src={imageUrl}
                 alt={product.model || "Produkt"}
                 fill
+                sizes="(max-width: 768px) 100vw, 33vw"
                 style={{ objectFit: "contain" }}
+                unoptimized={isDirectus}
               />
             </div>
 
-            {/* 📄 Dane produktu */}
+            {/* Dane produktu */}
             <div className="flex flex-col flex-grow">
               <div className="text-2xl font-semibold mb-1">{product.model}</div>
-              {product.brand?.name && (
+
+              {product.brand?.name ? (
                 <div className="text-lg font-semibold mb-2">
                   {product.brand.name}
                 </div>
-              )}
+              ) : null}
 
-              {/* 🔹 Filtry — tylko pierwsze 4 */}
+              {/* Filtry — tylko pierwsze 4 */}
               <div className="text-sm text-gray-800 space-y-1">
                 {visibleFilters.map((filter) => {
                   const value = getFilterValue(product, filter.field);
                   if (!value) return null;
 
+                  const label =
+                    filter.options?.find((o) => o.value === value)?.text ??
+                    value;
+
                   return (
                     <div key={filter.field}>
                       <span className="font-semibold">{filter.label}:</span>{" "}
-                      <span>{value}</span>
+                      <span>{label}</span>
                     </div>
                   );
                 })}
               </div>
             </div>
 
-            {/* 🔘 Przycisk */}
-            <Button
-              className="mt-4"
-              href={
-                subcategory
-                  ? `/oferta/${categorySlug}/${subcategory}/${product.slug}`
-                  : `/oferta/${categorySlug}/${product.slug}`
-              }
-            >
-              Zobacz więcej
-            </Button>
+            {/* Przycisk */}
+            {productHref ? (
+              <Button className="mt-4" href={productHref}>
+                Zobacz więcej
+              </Button>
+            ) : (
+              <Button className="mt-4" disabled>
+                Brak linku (brak slug)
+              </Button>
+            )}
           </div>
         );
       })}
