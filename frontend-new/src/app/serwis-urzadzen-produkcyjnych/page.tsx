@@ -79,6 +79,75 @@ export const metadata: Metadata = {
   },
 };
 
+const leftHtml = `
+  <p>
+    Naszym Klientom zapewniamy fachowe doradztwo i <strong>wsparcie techniczne
+    na wszystkich etapacheksploatacji systemów druku produkcyjnego</strong>. 
+    Planując inwestycję w 
+    <a title="drukarki poligraficzne" 
+       href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii" 
+       target="_self">
+        drukarki poligraficzne
+    </a>, 
+    możesz liczyć na pomoc w wyborze optymalnego urządzenia. Oferujemy 
+    też pomoc w instalacji urządzenia i jego rozruchu. Prowadzimy też szkolenia 
+    z obsługi. W trakcie eksploatacji wykonujemy doraźne naprawy, okresowe 
+    przeglądy i remonty generalne.
+  </p>
+  <p>
+    <p>
+      Naszym Klientom zapewniamy fachowe doradztwo i <strong>wsparcie 
+      techniczne na wszystkich etapacheksploatacji systemów druku 
+      produkcyjnego</strong>. Planując inwestycję w 
+      <a 
+        title="drukarki poligraficzne" 
+        href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii" 
+        target="_self">
+          drukarki poligraficzne
+      </a>, 
+      możesz liczyć na pomoc w wyborze optymalnego urządzenia. 
+      Oferujemy też pomoc w instalacji urządzenia i jego rozruchu. 
+      Prowadzimy też szkolenia z obsługi. W trakcie eksploatacji 
+      wykonujemy doraźne naprawy, okresowe przeglądy i remonty generalne.
+    </p>
+    <p>
+      Naszym Klientom zapewniamy fachowe doradztwo i <strong>wsparcie 
+      techniczne na wszystkich etapacheksploatacji systemów druku 
+      produkcyjnego</strong>. Planując inwestycję w 
+      <a 
+        title="drukarki poligraficzne" 
+        href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii" 
+        target="_self">
+          drukarki poligraficzne
+      </a>, 
+        możesz liczyć na pomoc w wyborze optymalnego urządzenia. Oferujemy 
+        też pomoc w instalacji urządzenia i jego rozruchu. Prowadzimy też szkolenia 
+        z obsługi. W trakcie eksploatacji wykonujemy doraźne naprawy, okresowe 
+        przeglądy i remonty generalne.</p>  
+    </p>
+
+`;
+
+const rightHtml = `
+  <p>
+    Jeżeli potrzebujesz obsługi serwisowej maszyny do druku produkcyjnego, 
+    zapraszamy do telefonicznego i bezpośredniego kontaktu: prowadzimy 
+    <strong>12 punktów serwisowych w największych miastach w Polsce</strong>. 
+    Otrzymasz pełną informację na temat sprzętu, cen i możliwości 
+    zakupu – zarówno nowych, jak i używanych (poleasingowych) drukarek 
+    i systemów poligraficznych.
+  </p>
+  <p>Na kompleksowo prowadzoną działalność serwisową składają się:</p>
+  <strong>Na kompleksowo prowadzoną działalność serwisową składają się:</strong>
+    <ul>
+      <li>doradztwo i wsparcie techniczne</li>
+      <li>montaż i uruchomienie;</li>
+      <li>okresowe przeglądy urządzeń</li>
+      <li>usuwanie awarii</li>
+      <li>serwis gwarancyjny i pogwarancyjny.</li>   
+    </ul>
+  `
+;
 export default function SerwisUrzadzenProdukcyjnychPage() {
   return (
     <>
@@ -111,6 +180,9 @@ export default function SerwisUrzadzenProdukcyjnychPage() {
               przedstawicieli producentów sprzętu drukującego.
             </p>
           `}
+          expanded_columns={2}
+          expand_left={leftHtml}
+          expand_right={rightHtml}
         />
 
         <IconsSection

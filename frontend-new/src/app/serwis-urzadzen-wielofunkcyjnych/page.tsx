@@ -28,6 +28,91 @@ const url = absUrl(canonicalPath);
 // wrzuć plik do: /public/og/serwis-urzadzen-wielofunkcyjnych.jpg
 const ogImage = absUrl("/og/serwis-urzadzen-wielofunkcyjnych.jpg");
 
+const leftHtml = `
+  <p>
+    Doradzamy naszym Klientom i wspieramy ich w zakresie montażu urządzenia 
+    i jego uruchomienia. Posiadając we własnych magazynach części zamienne i
+    <a 
+      title="materiały eksploatacyjne" 
+      href="https://www.dks.pl/materialy-eksploatacyjne">
+        materiały eksploatacyjne
+    </a> 
+    do drukarek, możemy zaoferować naszym Klientom <strong> skrócony czas 
+    oczekiwania na realizację zleceń serwisowych</strong> i zamówień. 
+    Za serwisowanie i naprawy urządzeń drukujących odpowiedzialni są 
+    wykwalifikowani specjaliści, którzy mają do dyspozycji rozbudowane 
+    zaplecze techniczne. Wymienione atuty pozwalają nam świadczyć usługi 
+    zgodne z najlepszymi światowymi standardami.
+  </p>
+  <h2>12 oddziałów serwisowych</h2>
+  <p>
+    Prowadzimy <strong> 12 oddziałów serwisowych</strong> w największych
+    miastach Polski: w Gdańsku, Warszawie, Katowicach, Poznaniu, Łodzi, 
+    Krakowie, Szczecinie, Bydgoszczy, Olsztynie, Rzeszowie, Białymstoku 
+    i Wrocławiu. Dzięki temu możemy zaoferować szybki dojazd do Klienta 
+    na terenie całego kraju. Oprócz naprawy drukarek i urządzeń 
+    wielofunkcyjnych prowadzimy też 
+      <a 
+        title="serwis urządzeń produkcyjnych" 
+        href="https://www.dks.pl/serwis-urzadzen-produkcyjnych" 
+        target="_self">
+          serwis urządzeń produkcyjnych
+      </a> 
+      i drukarek wielkoformatowych. Zapraszamy do korzystania 
+      z naszych usług.
+  </p>
+    <h2>Profesjonalny serwis kserokopiarek Canon i Konica Minolta</h2>
+  <p>
+    Zapewniamy profesjonalny serwis kserokopiarek <strong>Canon</strong> 
+    i <strong>Konica Minolta</strong>, dbając o najwyższą jakość 
+    świadczonych usług. Nasz zespół specjalistów posiada szeroką wiedzę 
+    i doświadczenie w serwisowaniu urządzeń tych renomowanych marek. 
+    Dzięki temu jesteśmy w stanie szybko i skutecznie diagnozować 
+    oraz usuwać usterki, a także przeprowadzać okresowe przeglądy 
+    i konserwacje.
+  </p>
+  <p>
+    Ponadto oferujemy również wsparcie techniczne oraz doradztwo 
+    w zakresie optymalnego wykorzystania urządzeń, aby zapewnić 
+    ich długotrwałe i bezproblemowe funkcjonowanie. Współpracujemy 
+    zarówno z klientami indywidualnymi, jak i przedsiębiorstwami, 
+    dostosowując nasze usługi do indywidualnych potrzeb i wymagań. 
+    Gwarantujemy terminowe realizacje zleceń oraz konkurencyjne ceny, 
+    co sprawia, że jesteśmy godnym zaufania partnerem w dziedzinie 
+    serwisowania kserokopiarek Canon i Konica Minolta.
+  </p>
+`;
+const rightHtml = `
+  <h3>Nasze usługi serwisowe obejmują:</h3>
+  <ul>
+    <li>Diagnostykę i naprawę usterek,</li>
+    <li>Przeglądy techniczne i konserwacje,</li>
+    <li>Wymianę części eksploatacyjnych,</li>
+    <li>Aktualizację oprogramowania oraz sterowników,</li>
+    <li>Doradztwo techniczne i pomoc w doborze odpowiednich urządzeń.</li>
+  </ul>
+  <p>
+    Dbamy o stałe podnoszenie kwalifikacji naszych serwisantów, 
+    co pozwala nam na bieżąco śledzić nowinki technologiczne 
+    oraz wprowadzać innowacyjne rozwiązania. Współpracujemy również 
+    z producentami, co gwarantuje dostęp do oryginalnych części z
+    amiennych oraz materiałów eksploatacyjnych.
+  </p>
+  <p>
+    Nasza oferta serwisowa jest skierowana zarówno do klientów 
+    indywidualnych, jak i przedsiębiorstw, które posiadają urządzenia 
+    Canon i Konica Minolta. Jesteśmy elastyczni i dostosowujemy się do 
+    potrzeb naszych klientów, oferując różne formy współpracy, takie jak 
+    serwis gwarancyjny, pogwarancyjny czy umowy serwisowe.
+  </p>
+  <p>
+    Nasza oferta serwisowa jest skierowana zarówno do klientów 
+    indywidualnych, jak i przedsiębiorstw, które posiadają urządzenia 
+    Canon i Konica Minolta. Jesteśmy elastyczni i dostosowujemy się do 
+    potrzeb naszych klientów, oferując różne formy współpracy, 
+    takie jak serwis gwarancyjny, pogwarancyjny czy umowy serwisowe.
+  </p>
+`;
 export const metadata: Metadata = {
   title,
   description,
@@ -120,6 +205,9 @@ export default function SerwisUrzadzenWielofunkcyjnychPage() {
               Ponadto obsługujemy użytkowników urządzeń drukujących Ricoh i Kyocera oraz wielu innych marek.
             </p>
           `}
+          expanded_columns={2}
+          expand_left={leftHtml}
+          expand_right={rightHtml}
         />
 
         <IconsSection

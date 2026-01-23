@@ -76,6 +76,33 @@ export const metadata: Metadata = {
   },
 };
 
+const leftHtml = `
+  <p>
+    Naszym Klientom zapewniamy fachowe doradztwo i <strong>wsparcie techniczne 
+    na wszystkich etapacheksploatacji systemów druku produkcyjnego</strong>. Planując inwestycję w 
+    <a 
+      title="drukarki poligraficzne" 
+      href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii" 
+      target="_self">
+        drukarki poligraficzne
+    </a>, 
+    możesz liczyć na pomoc w wyborze optymalnego urządzenia. Oferujemy też pomoc w instalacji 
+    urządzenia i jego rozruchu. Prowadzimy też szkolenia z obsługi. W trakcie eksploatacji 
+    wykonujemy doraźne naprawy, okresowe przeglądy i remonty generalne.
+  </p>`; 
+
+const rightHtml = `
+  <p>
+    Jeżeli potrzebujesz obsługi serwisowej maszyny do druku produkcyjnego, zapraszamy 
+    do telefonicznego i bezpośredniego kontaktu: prowadzimy <strong>12 punktów serwisowych 
+    w największych miastach w Polsce</strong>. Otrzymasz pełną informację na temat sprzętu, 
+    cen i możliwości zakupu – zarówno nowych, jak i używanych (poleasingowych) drukarek 
+    i systemów poligraficznych.
+  </p>
+  <br />
+  <p>Na kompleksowo prowadzoną działalność serwisową składają się:</p>
+`;
+
 export default function SerwisUrzadzenProdukcyjnychPage() {
   return (
     <>
@@ -97,14 +124,20 @@ export default function SerwisUrzadzenProdukcyjnychPage() {
           layout="text_left"
           content={`
             <p>
-              Prowadzimy <strong>serwis produkcyjnych urządzeń drukujących.</strong>
-              W segmencie Production Printing wyspecjalizowaliśmy się w naprawach,
-              konserwacji i uruchomieniach maszyn produkcyjnych Konica Minolta i Canon.
-              Zaawansowane technologicznie systemy druku wymagają eksperckiej obsługi
-              i wsparcia. Dlatego ten segment urządzeń obsługiwany jest przez specjalny
-              zespół wysoko wykwalifikowanych techników.
+            Prowadzimy <strong>serwis produkcyjnych urządzeń drukujących</strong>. 
+            W segmencie Production Printing wyspecjalizowaliśmy się w naprawach, 
+            konserwacji i uruchomieniach maszyn produkcyjnych Konica Minolta 
+            i Canon. Zaawansowane technologicznie systemy druku wymagają eksperckiej 
+            obsługi i wsparcia. Dlatego ten segment urządzeń obsługiwany jest przez 
+            specjalny zespół wysoko wykwalifikowanych techników. Dzięki regularnym 
+            inwestycjom nieustannie podnosimy jakość świadczonych usług. Budujemy 
+            swoje kompetencje poprzez intensywny program szkoleniowy, wdrażany przy 
+            aktywnym udziale przedstawicieli producentów sprzętu drukującego. 
             </p>
           `}
+          expanded_columns={2}
+          expand_left={leftHtml}
+          expand_right={rightHtml}
         />
 
         <IconsSection
