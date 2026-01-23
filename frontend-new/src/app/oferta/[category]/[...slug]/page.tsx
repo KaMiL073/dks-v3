@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { getProductBySlug } from "@/lib/products";
 import { mapSlugToCollection } from "@/lib/directusCategoryMapper";
 
 import ClientCategoryPage from "../ClientCategoryPage";
 import { Heading1 } from "@/components/ui/Typography/Heading1";
-import ProductPage from "./ProductPage";
 
-import getDescription from "@/content/oferta"; // masz export default
+import getDescription from "@/content/oferta";
 
 /** 🔹 Typ filtru zwracanego z /api/products/filters */
 interface FilterField {
@@ -41,113 +40,93 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { category, slug } = await params;
 
-  const siteUrl = getBaseUrl();
-  const fallbackOgImage = absUrl("/og/oferta.jpg"); // ustaw sobie plik w /public/og/oferta.jpg
+  const fallbackOgImage = absUrl("/og/oferta.jpg");
 
-  // Bez slugów ta trasa i tak robi notFound, ale zostawiamy asekuracyjnie:
+  // Asekuracyjnie
   if (!slug || slug.length === 0) {
     const url = absUrl(`/oferta/${category}`);
-    const title = "Oferta – DKS";
-    const description = "Poznaj ofertę DKS – sprawdź dostępne produkty i rozwiązania.";
-
     return {
-      title,
-      description,
-      keywords: "",
+      title: "Oferta – DKS",
+      description: "Poznaj ofertę DKS – sprawdź dostępne produkty i rozwiązania.",
       openGraph: {
-        title,
-        description,
+        title: "Oferta – DKS",
+        description: "Poznaj ofertę DKS – sprawdź dostępne produkty i rozwiązania.",
         url,
         siteName: "DKS",
         locale: "pl_PL",
         type: "website",
-        images: [
-          { url: fallbackOgImage, width: 1200, height: 630, alt: title },
-        ],
+        images: [{ url: fallbackOgImage, width: 1200, height: 630, alt: "Oferta – DKS" }],
       },
       twitter: {
         card: "summary_large_image",
-        title,
-        description,
+        title: "Oferta – DKS",
+        description: "Poznaj ofertę DKS – sprawdź dostępne produkty i rozwiązania.",
         images: [fallbackOgImage],
       },
       alternates: { canonical: url },
     };
   }
 
+  // ✅ Jeśli to produkt -> ustaw canonical na /oferta/produkty/<slug>
+  // (nawet jeśli ktoś wejdzie starym adresem, canonical nie będzie duplikował)
+  const maybeProductSlug = slug.length === 1 ? slug[0] : slug.length === 2 ? slug[1] : null;
+  if (maybeProductSlug) {
+    const product = await getProductBySlug(maybeProductSlug);
+    if (product) {
+      const canonicalPath = `/oferta/produkty/${product.slug || maybeProductSlug}`;
+      const canonicalUrl = absUrl(canonicalPath);
+
+      const title =
+        (product.model as string | undefined) || (product.slug || maybeProductSlug).replaceAll("-", " ");
+      const description =
+        (product.short_description as string | undefined) ||
+        "Poznaj szczegóły produktu w ofercie DKS.";
+
+      const imgId = (product as any)?.main_image?.id as string | undefined;
+      const ogImage = imgId ? directusOgImage(imgId) : fallbackOgImage;
+
+      return {
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          url: canonicalUrl,
+          siteName: "DKS",
+          locale: "pl_PL",
+          type: "website",
+          images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title,
+          description,
+          images: [ogImage],
+        },
+        alternates: { canonical: canonicalUrl },
+      };
+    }
+  }
+
+  // ✅ To nie produkt => normalne SEO dla podkategorii/sekcji
   const pathname = `/oferta/${category}/${slug.join("/")}`;
   const url = absUrl(pathname);
 
-  // --- domyślne ---
   let title = "Oferta – DKS";
   let description = "Poznaj ofertę DKS – sprawdź dostępne produkty i rozwiązania.";
   let ogImage = fallbackOgImage;
 
-  // Helper: SEO z opisu (seoTitle/seoDescription)
-  const applyDescSeo = (desc: any, fallbackTitle?: string) => {
-    if (!desc) return;
-    title = desc.seoTitle || desc.title || fallbackTitle || title;
+  const descKey = slug.length === 1 ? slug[0] : slug[0];
+  const desc = getDescription(descKey) || getDescription(category);
+
+  if (desc) {
+    title = desc.seoTitle || desc.title || title;
     description = desc.seoDescription || description;
-  };
-
-  // 1 slug: subkategoria lub produkt
-  if (slug.length === 1) {
-    const one = slug[0];
-
-    const product = await getProductBySlug(one);
-
-    if (product) {
-      // ✅ produkt ma pierwszeństwo, ale gdy braki – fallback do opisu
-      const desc = getDescription(one) || getDescription(category);
-
-      title =
-        (product.model as string | undefined) ||
-        desc?.seoTitle ||
-        desc?.title ||
-        one.replaceAll("-", " ");
-
-      description =
-        (product.short_description as string | undefined) ||
-        desc?.seoDescription ||
-        description;
-
-      const imgId = (product as any)?.main_image?.id as string | undefined;
-      if (imgId) ogImage = directusOgImage(imgId);
-    } else {
-      // ✅ subkategoria: SEO z getDescription(subSlug)
-      const desc = getDescription(one);
-      applyDescSeo(desc, one.replaceAll("-", " "));
-    }
   }
-
-  // 2 slugi: /oferta/[category]/[subcategory]/[product]
-  if (slug.length === 2) {
-    const [subcategorySlug, productSlug] = slug;
-
-    const product = await getProductBySlug(productSlug);
-
-    // ✅ SEO z opisu subkategorii jako baza
-    const desc = getDescription(subcategorySlug) || getDescription(category);
-    applyDescSeo(desc, productSlug.replaceAll("-", " "));
-
-    // ✅ produkt nadpisuje jeśli ma dane
-    if (product) {
-      title = (product.model as string | undefined) || title;
-      description = (product.short_description as string | undefined) || description;
-
-      const imgId = (product as any)?.main_image?.id as string | undefined;
-      if (imgId) ogImage = directusOgImage(imgId);
-    }
-  }
-
-  // keywords możesz później zbudować np. z category/subcategory
-  const keywords = "";
 
   return {
     title,
     description,
-    keywords,
-
     openGraph: {
       title,
       description,
@@ -155,26 +134,15 @@ export async function generateMetadata({
       siteName: "DKS",
       locale: "pl_PL",
       type: "website",
-      images: [
-        {
-          url: ogImage,
-          width: 1200,
-          height: 630,
-          alt: title,
-        },
-      ],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
-
     twitter: {
-      card: ogImage ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title,
       description,
-      images: ogImage ? [ogImage] : undefined,
+      images: [ogImage],
     },
-
-    alternates: {
-      canonical: url,
-    },
+    alternates: { canonical: url },
   };
 }
 
@@ -188,79 +156,46 @@ export default async function DynamicOfferPage({
 
   if (!slug || slug.length === 0) return notFound();
 
-  // 1️⃣ Jeden slug → subkategoria lub produkt
+  // ✅ 1 slug: albo subkategoria, albo (stary URL produktu) -> REDIRECT
   if (slug.length === 1) {
-    const subcategorySlug = slug[0];
+    const one = slug[0];
 
-    // 🔍 Sprawdź, czy to produkt
-    const product = await getProductBySlug(subcategorySlug);
+    const product = await getProductBySlug(one);
     if (product) {
-      const baseUrl = getBaseUrl();
-
-      let filters: FilterField[] = [];
-      try {
-        const res = await fetch(
-          `${baseUrl}/api/products/filters?category=${encodeURIComponent(category)}`,
-          { cache: "no-store" }
-        );
-        if (res.ok) {
-          const data: { filters?: FilterField[] } = await res.json();
-          filters = data.filters ?? [];
-        }
-      } catch (err) {
-        console.warn("⚠️ Nie udało się pobrać filtrów:", err);
-      }
-
-      return <ProductPage product={product} filtersMeta={filters} />;
+      // ✅ Jedyny dozwolony URL produktu:
+      redirect(`/oferta/produkty/${product.slug || one}`);
     }
 
-    // 🔹 Jeśli nie produkt — traktuj jako subkategorię
-    const subcategoryCollection = await mapSlugToCollection(subcategorySlug);
+    // subkategoria
+    const subcategoryCollection = await mapSlugToCollection(one);
     if (!subcategoryCollection) return notFound();
 
-    // ✅ H1: title z getDescription (nie seoTitle)
-    const desc = getDescription(subcategorySlug);
+    const desc = getDescription(one);
 
     return (
       <div className="p-6 xl:px-28 py-20">
         <div className="self-stretch py-12">
           <Heading1 variant="semibold">
-            {desc?.title ?? subcategorySlug.replaceAll("-", " ")}
+            {desc?.title ?? one.replaceAll("-", " ")}
           </Heading1>
         </div>
 
-        <ClientCategoryPage category={category} subcategory={subcategorySlug} />
+        <ClientCategoryPage category={category} subcategory={one} />
       </div>
     );
   }
 
-  // 2️⃣ Dwa slugi → /oferta/[category]/[subcategory]/[product]
+  // ✅ 2 slugi: /oferta/[category]/[subcategory]/[product] -> jeśli produkt istnieje -> REDIRECT
   if (slug.length === 2) {
-    const [subcategorySlug, productSlug] = slug;
+    const [, productSlug] = slug;
 
     const product = await getProductBySlug(productSlug);
-    if (!product) {
-      console.warn("⚠️ Produkt nie znaleziony:", productSlug);
-      return notFound();
+    if (product) {
+      redirect(`/oferta/produkty/${product.slug || productSlug}`);
     }
 
-    const baseUrl = getBaseUrl();
-
-    let filters: FilterField[] = [];
-    try {
-      const res = await fetch(
-        `${baseUrl}/api/products/filters?category=${encodeURIComponent(subcategorySlug)}`,
-        { cache: "no-store" }
-      );
-      if (res.ok) {
-        const data: { filters?: FilterField[] } = await res.json();
-        filters = data.filters ?? [];
-      }
-    } catch (err) {
-      console.warn("⚠️ Nie udało się pobrać filtrów:", err);
-    }
-
-    return <ProductPage product={product} filtersMeta={filters} />;
+    // Jeśli nie ma produktu, to nie obsługujemy tu innych bytów
+    return notFound();
   }
 
   return notFound();
