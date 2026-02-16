@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import FiltersMenu, { FilterOption } from "@/app/oferta/components/FiltersMenu";
 import ProductsList from "@/app/oferta/components/ProductsList";
 import getDescription from "@/content/oferta";
+import JsonLd from "@/components/seo/JsonLd";
 
 interface Product {
   id: number;
@@ -56,6 +57,23 @@ function ArrowRightIcon() {
   );
 }
 
+/** ✅ Base URL (public) */
+function getBaseUrl() {
+  return (process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl").replace(/\/$/, "");
+}
+
+/** ✅ Absolutny URL */
+function absUrl(path: string) {
+  const base = getBaseUrl();
+  return path.startsWith("/") ? `${base}${path}` : `${base}/${path}`;
+}
+
+function prettyNameFromSlug(slug: string) {
+  return decodeURIComponent(slug)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (l) => l.toUpperCase());
+}
+
 export default function ClientCategoryPage({
   category,
   subcategory,
@@ -66,6 +84,7 @@ export default function ClientCategoryPage({
   initialPage?: number;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [products, setProducts] = useState<Product[]>([]);
   const [filters, setFilters] = useState<FilterOption[]>([]);
@@ -86,6 +105,36 @@ export default function ClientCategoryPage({
   }, [activeCategory]);
 
   const hasDescription = Boolean(description?.leftColumn || description?.rightColumn);
+
+  /** ✅ ItemList schema dla listingu produktów */
+  const itemListSchema = useMemo(() => {
+    if (!products || products.length === 0) return null;
+
+    // nazwa listingu: tytuł z opisu albo ostatni segment URL (fallback)
+    const lastSeg =
+      (pathname?.split("/").filter(Boolean).slice(-1)[0] as string | undefined) || activeCategory;
+
+    const name = description?.title ?? prettyNameFromSlug(lastSeg);
+
+    const itemListElement = products
+      .filter((p) => Boolean(p?.slug))
+      .map((p, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        name: p.model || p.slug,
+        url: absUrl(`/oferta/produkty/${p.slug}`),
+      }));
+
+    // Jeśli po filtrze brak slugów, to nie emituj schemy
+    if (itemListElement.length === 0) return null;
+
+    return {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name,
+      itemListElement,
+    };
+  }, [products, pathname, activeCategory, description?.title]);
 
   /** 🔹 helper do pobierania produktów */
   const fetchProducts = useCallback(
@@ -205,6 +254,9 @@ export default function ClientCategoryPage({
         <p className="mt-6 text-gray-500">Ładowanie produktów...</p>
       ) : (
         <>
+          {/* ✅ JSON-LD ItemList dla listingu produktów (punkt 5) */}
+          {itemListSchema ? <JsonLd data={itemListSchema} /> : null}
+
           <ProductsList
             products={products}
             filtersMeta={filters}

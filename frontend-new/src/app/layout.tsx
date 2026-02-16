@@ -4,6 +4,7 @@ import { Montserrat } from "next/font/google";
 
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/navigation/Footer";
+import JsonLd from "@/components/seo/JsonLd";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -37,6 +38,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pl-PL">
+      <head>
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": `${baseUrl}/#organization`,
+            name: "DKS Sp. z o.o.",
+            url: baseUrl,
+            logo: "https://dks.pl/static/logo-dks.svg",
+          }}
+        />
+      </head>
+
       <body className={`${montserrat.className} antialiased`}>
         <Header />
         {children}

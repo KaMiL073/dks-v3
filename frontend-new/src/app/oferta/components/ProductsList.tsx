@@ -2,6 +2,7 @@
 
 import Button from "@/components/ui/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 // Typ relacji Directus M2A (many-to-any)
 interface DirectusRelation {
@@ -112,13 +113,27 @@ export default function ProductsList({
 
             {/* Dane produktu */}
             <div className="flex flex-col flex-grow">
-              <div className="text-2xl font-semibold mb-1">{product.model}</div>
+              {productHref ? (
+                <h3 className="text-2xl font-semibold mb-1">
+                  <Link href={productHref}>
+                    {product.model || "Produkt"}
 
-              {product.brand?.name ? (
-                <div className="text-lg font-semibold mb-2">
-                  {product.brand.name}
-                </div>
-              ) : null}
+                    <br />
+                    {product.brand?.name ? (
+                     <span className="text-lg font-semibold mb-2">
+                        {product.brand.name}
+                      </span>
+                    ) : null}
+
+                    {/* {product.brand?.name ? ` ${product.brand.name}` : ""} */}
+                  </Link>
+                </h3>
+              ) : (
+                <h3 className="text-2xl font-semibold mb-1">
+                  {product.model || "Produkt"}
+                  {product.brand?.name ? ` ${product.brand.name}` : ""}
+                </h3>
+              )}
 
               {/* Filtry — tylko pierwsze 4 */}
               <div className="text-sm text-gray-800 space-y-1">
