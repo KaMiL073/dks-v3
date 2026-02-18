@@ -4,18 +4,14 @@ import { headers } from "next/headers";
 import { getProductBySlug } from "@/lib/products";
 import ProductPage from "./ProductPage";
 import JsonLd from "@/components/seo/JsonLd";
+import ClientCategoryPage from "@/app/oferta/[category]/ClientCategoryPage"; // <-- DODAJ
 
-/** Typ filtru zwracanego z /api/products/filters */
 export interface FilterField {
   field: string;
   label: string;
   options?: { text: string; value: string }[];
 }
 
-/**
- * SSR-safe origin (żeby nie walić po https://dks.pl na localhost)
- * Działa za nginx / reverse proxy (x-forwarded-*)
- */
 function getRequestBaseUrl() {
   const h = headers();
   const host = h.get("x-forwarded-host") ?? h.get("host");
@@ -55,21 +51,37 @@ function toPlainText(input?: unknown, maxLen = 300): string {
 export default async function ProductCatchAllPage({
   params,
 }: {
-  params: { category: string; slug: string[] };
+  params: Promise<{ category: string; slug: string[] }>; // ✅ params as Promise
 }) {
-  // ✅ guard na wypadek dziwnych edge-case
-  if (!params) return notFound();
+  const { category, slug } = await params; // ✅ await params
 
-  const { category, slug } = params;
+  if (!Array.isArray(slug) || slug.length === 0) return notFound();
 
-  // ✅ slug produktu to ostatni segment z [...slug]
-  const productSlug = Array.isArray(slug) && slug.length ? slug[slug.length - 1] : null;
+  /**
+   * ✅ SUBKATEGORIA / LISTING:
+   * /oferta/<category>/<subcategory>
+   */
+  if (slug.length === 1) {
+    const subcategory = slug[0];
+
+    // render listingu (ten sam komponent co dla /oferta/[category])
+    return (
+      <div className="p-6 xl:px-28 py-20">
+        <ClientCategoryPage category={category} subcategory={subcategory} initialPage={1} />
+      </div>
+    );
+  }
+
+  /**
+   * ✅ PRODUKT:
+   * /oferta/<category>/.../<productSlug> (ostatni segment)
+   */
+  const productSlug = slug[slug.length - 1];
   if (!productSlug) return notFound();
 
   const product = await getProductBySlug(productSlug);
   if (!product) return notFound();
 
-  // ✅ JSON-LD (opcjonalnie)
   const canonicalSlug = (product as any)?.slug || productSlug;
   const pageUrl = absUrl(`/oferta/produkty/${canonicalSlug}`);
   const productName = (product as any)?.model || canonicalSlug.replaceAll("-", " ");
@@ -91,7 +103,7 @@ export default async function ProductCatchAllPage({
     },
   };
 
-  // ✅ FILTRY: z primarycategory
+  // ✅ FILTRY: bierz z primarycategory (to pole istnieje)
   let filters: FilterField[] = [];
   try {
     const origin = getRequestBaseUrl();
@@ -102,7 +114,6 @@ export default async function ProductCatchAllPage({
         : "";
 
     const categoryKey = primary || category || "produkty";
-
     const url = `${origin}/api/products/filters?category=${encodeURIComponent(categoryKey)}`;
     const res = await fetch(url, { cache: "no-store" });
 
@@ -111,7 +122,7 @@ export default async function ProductCatchAllPage({
       filters = data.filters ?? [];
     }
   } catch (e) {
-    console.log("🟥 [catch-all] filters fetch error:", e);
+    console.log("🟠 [catch-all] filters fetch error:", e);
   }
 
   return (

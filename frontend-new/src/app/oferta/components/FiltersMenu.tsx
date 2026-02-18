@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type FilterOption = {
   field: string;
@@ -39,26 +39,41 @@ export default function FiltersMenu({
       : [...prev, value];
     const next = { ...effective, [field]: nextValues };
 
-    if (onSelectedChange) onSelectedChange(next);
+    onSelectedChange?.(next);
     if (!selected) setLocal(next);
-    if (applyOnChange && onApplyFilters) onApplyFilters(next);
+    if (applyOnChange) onApplyFilters?.(next);
   };
 
   const clear = () => {
-    if (onSelectedChange) onSelectedChange({});
+    onSelectedChange?.({});
     if (!selected) setLocal({});
     onClearFilters?.();
-    if (onApplyFilters) onApplyFilters({});
+    onApplyFilters?.({});
   };
 
   const apply = () => onApplyFilters?.(effective);
+
+  // ✅ Deduplikacja opcji, żeby nie renderować tych samych wartości dwa razy
+  const dedupedFilters = useMemo(() => {
+    return availableFilters.map((filter) => {
+      const uniq = Array.from(
+        new Map(
+          (filter.options ?? []).map((o) => [`${o.value}||${o.text}`, o] as const)
+        ).values()
+      );
+      return { ...filter, options: uniq };
+    });
+  }, [availableFilters]);
 
   return (
     <div className="w-full self-stretch bg-surface-primary border-b-2 border-border-primary inline-flex flex-col justify-start items-end gap-2.5 p-4">
       {/* 🔹 Sekcja filtrów */}
       <div className="self-stretch inline-flex justify-between items-start flex-wrap content-start gap-4">
-        {availableFilters.map((filter) => (
-          <div key={filter.field} className="w-40 inline-flex flex-col justify-start items-start">
+        {dedupedFilters.map((filter) => (
+          <div
+            key={filter.field}
+            className="w-40 inline-flex flex-col justify-start items-start"
+          >
             <div className="pt-6 pb-3 bg-surface-primary flex flex-col justify-start items-start gap-2.5 overflow-hidden">
               <div className="justify-center text-Text-body text-xl font-semibold font-['Montserrat'] leading-normal">
                 {filter.label}
@@ -67,24 +82,39 @@ export default function FiltersMenu({
 
             {filter.options.map((opt) => {
               const checked = (effective[filter.field] || []).includes(opt.value);
+              const inputId = `${filter.field}__${opt.value}__${opt.text}`;
+
               return (
                 <label
-                  key={opt.value}
+                  key={`${filter.field}:${opt.value}:${opt.text}`}
+                  htmlFor={inputId}
                   className="cursor-pointer py-1 bg-surface-primary flex flex-row justify-start items-center gap-3 select-none"
-                  onClick={() => toggle(filter.field, opt.value)}
                 >
-                  {/* ✅ własny checkbox */}
+                  {/* ✅ prawdziwy checkbox (ukryty), dla dostępności */}
+                  <input
+                    id={inputId}
+                    type="checkbox"
+                    className="sr-only"
+                    checked={checked}
+                    onChange={() => toggle(filter.field, opt.value)}
+                  />
+
+                  {/* ✅ własny checkbox UI */}
                   <div
                     className={`w-5 h-5 flex items-center justify-center rounded border-2 transition-all ${
                       checked
                         ? "border-surface-action bg-surface-action"
                         : "border-border-primary bg-surface-primary"
                     }`}
+                    aria-hidden="true"
                   >
                     {checked && (
-                      <span className="text-Text-on-action text-[14px] leading-none">✓</span>
+                      <span className="text-Text-on-action text-[14px] leading-none">
+                        ✓
+                      </span>
                     )}
                   </div>
+
                   <span className="text-Text-body text-base font-normal font-['Montserrat'] leading-tight">
                     {opt.text}
                   </span>

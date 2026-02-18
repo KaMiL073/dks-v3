@@ -1,6 +1,5 @@
 import { directus } from "@/lib/directus";
 import { readCollections, Collection } from "@directus/sdk";
-import { mapSlugToCollection } from "@/lib/directusCategoryMapper";
 
 /** Typ metadanych kolekcji w Directusie */
 interface DirectusCollectionMeta {
