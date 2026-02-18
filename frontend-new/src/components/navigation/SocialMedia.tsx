@@ -149,7 +149,7 @@ export default function SocialMedia() {
             key={i}
             href={social.href}
             target="_blank"
-            rel="noopener noreferrer"
+            rel="nofollow"
             className="p-2"
             aria-label={social.name}
           >

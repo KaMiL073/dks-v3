@@ -2,13 +2,13 @@
 
 import Button from "@/components/ui/Button";
 import Image from "next/image";
+import Link from "next/link";
 
 // Typ relacji Directus M2A (many-to-any)
 interface DirectusRelation {
   collection: string;
   item: Record<string, unknown>;
 }
-
 interface Product {
   id: number | string;
   model?: string;
@@ -16,7 +16,14 @@ interface Product {
   main_image?: { id?: string } | string;
   brand?: { name?: string };
   type?: DirectusRelation[] | DirectusRelation;
+
+  // było:
+  // primarycategoryzip?: string | null;
+
+  // ma być:
+  primarycategory?: string | null;
 }
+
 
 interface FilterField {
   field: string;
@@ -62,25 +69,24 @@ export default function ProductsList({
     );
   }
 
-  const getFilterValue = (
-    product: Product,
-    filterField: string
-  ): string | undefined => {
-    const typeArray = Array.isArray(product.type)
-      ? product.type
-      : product.type
-      ? [product.type]
-      : [];
+const getFilterValue = (product: Product, filterField: string): string | undefined => {
+  // ✅ 1) Najpierw pola root (np. primarycategoryzip)
+  const rootVal = (product as any)?.[filterField];
+  if (rootVal !== undefined && rootVal !== null && String(rootVal).trim() !== "") {
+    return String(rootVal);
+  }
 
-    for (const t of typeArray) {
-      const item = t?.item as Record<string, unknown> | undefined;
-      if (item && filterField in item && item[filterField]) {
-        return String(item[filterField]);
-      }
+  // ✅ 2) Potem szukamy w M2A type.item.*
+  const typeArray = Array.isArray(product.type) ? product.type : product.type ? [product.type] : [];
+
+  for (const t of typeArray) {
+    const item = t?.item as Record<string, unknown> | undefined;
+    if (item && filterField in item && item[filterField]) {
+      return String(item[filterField]);
     }
-    return undefined;
-  };
-
+  }
+  return undefined;
+};
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
       {products.map((product) => {
@@ -112,13 +118,27 @@ export default function ProductsList({
 
             {/* Dane produktu */}
             <div className="flex flex-col flex-grow">
-              <div className="text-2xl font-semibold mb-1">{product.model}</div>
+              {productHref ? (
+                <h3 className="text-2xl font-semibold mb-1">
+                  <Link href={productHref}>
+                    {product.model || "Produkt"}
 
-              {product.brand?.name ? (
-                <div className="text-lg font-semibold mb-2">
-                  {product.brand.name}
-                </div>
-              ) : null}
+                    <br />
+                    {product.brand?.name ? (
+                     <span className="text-lg font-semibold mb-2">
+                        {product.brand.name}
+                      </span>
+                    ) : null}
+
+                    {/* {product.brand?.name ? ` ${product.brand.name}` : ""} */}
+                  </Link>
+                </h3>
+              ) : (
+                <h3 className="text-2xl font-semibold mb-1">
+                  {product.model || "Produkt"}
+                  {product.brand?.name ? ` ${product.brand.name}` : ""}
+                </h3>
+              )}
 
               {/* Filtry — tylko pierwsze 4 */}
               <div className="text-sm text-gray-800 space-y-1">
