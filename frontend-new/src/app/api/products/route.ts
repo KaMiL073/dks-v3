@@ -1,37 +1,30 @@
 import { NextResponse } from "next/server";
 import { directus } from "@/lib/directus";
 import { mapSlugToCollection } from "@/lib/directusCategoryMapper";
-import { readItems, readFields } from "@directus/sdk";
+import { readItems } from "@directus/sdk";
 
-/** Typy pomocnicze */
 interface TypeItem {
-  [key: string]: string | number | boolean | null | undefined;
+  [key: string]: unknown;
 }
-
 interface TypeRelation {
   collection: string;
   item: TypeItem;
 }
-
 interface Product {
-  id: number;
-  model?: string;
-  slug?: string;
-  short_description?: string;
-  main_image?: { id?: string } | string;
-  price?: number;
-  brand?: { id?: string | number; name?: string };
-  state?: string;
-  status?: string;
-
-  // ✅ POTRZEBNE DO “FILTRA” PRZY KAFELKU
-  primarycategory?: string | null;
-
-  // M2A
-  type?: TypeRelation[] | TypeRelation;
-
+  id: string | number;
+  model?: string | null;
+  slug?: string | null;
+  short_description?: string | null;
+  main_image?: any;
+  price?: number | null;
+  brand?: any;
+  state?: string | null;
+  status?: string | null;
+  type?: TypeRelation[] | TypeRelation | null;
   [key: string]: unknown;
 }
+
+const FILTER_PREFIX = "f__";
 
 function toPositiveInt(value: string | null, fallback: number) {
   const n = Number(value);
@@ -40,71 +33,102 @@ function toPositiveInt(value: string | null, fallback: number) {
   return i > 0 ? i : fallback;
 }
 
-function norm(s: unknown) {
-  return String(s ?? "").trim().toLowerCase();
+function toComparable(v: unknown) {
+  if (v == null) return "";
+  return String(v).trim().toLowerCase();
 }
 
-function asArray<T>(v: T | T[] | undefined | null): T[] {
-  if (!v) return [];
-  return Array.isArray(v) ? v : [v];
+function slugifyComparable(v: unknown) {
+  return toComparable(v)
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/['"]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/_+/g, "-")
+    .replace(/-+/g, "-")
+    .trim();
 }
 
-/** Główna funkcja API */
+function extractValuesFromItemValue(val: unknown): string[] {
+  if (val == null) return [];
+
+  if (Array.isArray(val)) return val.flatMap((x) => extractValuesFromItemValue(x));
+
+  if (typeof val === "object") {
+    const obj = val as Record<string, unknown>;
+    const candidates = [obj.value, obj.id, obj.key, obj.slug, obj.name, obj.title, obj.label];
+
+    const out = candidates
+      .map((c) => (c == null ? "" : String(c)))
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (out.length) return out;
+
+    try {
+      return [JSON.stringify(obj)];
+    } catch {
+      return [];
+    }
+  }
+
+  return [String(val).trim()];
+}
+
+function valueMatches(itemValue: unknown, expectedValues: string[]) {
+  const actualList = extractValuesFromItemValue(itemValue);
+  if (!actualList.length) return false;
+
+  return expectedValues.some((expected) => {
+    const exp = toComparable(expected);
+    const expSlug = slugifyComparable(expected);
+
+    return actualList.some((actual) => {
+      const act = toComparable(actual);
+      const actSlug = slugifyComparable(actual);
+      return act === exp || actSlug === expSlug;
+    });
+  });
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    // 🔹 Parametr kategorii
     const categorySlug = searchParams.get("category");
     if (!categorySlug) {
       return NextResponse.json({ error: "Missing category parameter" }, { status: 400 });
     }
 
-    // ✅ Paginacja
     const page = toPositiveInt(searchParams.get("page"), 1);
     const perPage = toPositiveInt(searchParams.get("perPage"), 12);
 
-    // 🔹 Zamiana slug → kolekcja
-    const collection = await mapSlugToCollection(categorySlug);
-    if (!collection) {
-      return NextResponse.json(
-        { error: `Unknown category slug: ${categorySlug}` },
-        { status: 404 }
-      );
+    // slug -> kolekcja
+    const categoryCollection = await mapSlugToCollection(categorySlug);
+    if (!categoryCollection) {
+      return NextResponse.json({ error: `Unknown category slug: ${categorySlug}` }, { status: 404 });
     }
 
-    // (opcjonalnie) sprawdzenie schematu
-    await directus.request(readFields("products"));
+    const allowedCollections = [categoryCollection];
 
-    // 🔹 Bazowy filtr
-    const baseFilter: {
-      status: { _eq: string };
-      _and: Array<{
-        type: {
-          collection: { _in: string[] };
-        };
-      }>;
-    } = {
+    const subcategorySlug = searchParams.get("subcategory");
+    if (subcategorySlug) {
+      const subCol = await mapSlugToCollection(subcategorySlug);
+      if (subCol) allowedCollections.push(subCol);
+    }
+
+    // bazowy filtr
+    const baseFilter: any = {
       status: { _eq: "published" },
       _and: [
         {
           type: {
-            collection: { _in: [collection] }, // główna kategoria
+            collection: { _in: allowedCollections },
           },
         },
       ],
     };
 
-    // ✅ Subkategoria (nie nadpisuje filtra)
-    const subcategorySlug = searchParams.get("subcategory");
-    if (subcategorySlug) {
-      const subcategoryCollection = await mapSlugToCollection(subcategorySlug);
-      if (subcategoryCollection) {
-        baseFilter._and[0].type.collection._in.push(subcategoryCollection);
-      }
-    }
-
-    // 🔹 Pobranie produktów z Directusa
     const allProducts = (await directus.request(
       readItems("products", {
         fields: [
@@ -116,69 +140,58 @@ export async function GET(request: Request) {
           "price",
           "brand.*",
           "state",
-
-          // ✅ DODANE — potrzebne na kafelku
-          "primarycategory",
-
-          // M2A
+          "weight",
           "type.collection",
           "type.item.*",
         ],
         filter: baseFilter,
-        limit: 300,
+         sort: ["weight"],
+        limit: 1000,
       })
     )) as Product[];
 
-    // 🔹 Filtrowanie po query params (np. ?color=czarny&format=a4)
+    // ✅ Bierzemy TYLKO parametry zaczynające się od f__
     const filters: Record<string, string[]> = {};
-    searchParams.forEach((value, key) => {
-      // ⛔️ NIE traktuj jako filtry:
-      if (key === "category" || key === "subcategory" || key === "page" || key === "perPage") {
-        return;
-      }
+    for (const [rawKey, rawValue] of searchParams.entries()) {
+      if (!rawKey.startsWith(FILTER_PREFIX)) continue; // ✅ twarde odcięcie
+      if (!rawValue) continue;
 
-      if (!value) return;
-      if (!filters[key]) filters[key] = [];
+      const key = rawKey.slice(FILTER_PREFIX.length).trim();
+      if (!key) continue;
 
-      // wspieramy CSV: a,b,c
-      value.split(",").forEach((v) => {
-        const trimmed = v.trim();
-        if (trimmed) filters[key].push(trimmed);
-      });
-    });
+      const values = rawValue
+        .split(",")
+        .map((v) => decodeURIComponent(v).trim())
+        .filter(Boolean);
 
+      if (!values.length) continue;
+
+      filters[key] = values;
+    }
+
+    // ✅ filtrowanie tylko po type.item w allowedCollections
     const filtered = allProducts.filter((product) => {
       if (Object.keys(filters).length === 0) return true;
 
-      const typeArray = asArray(product.type);
+      const typeArray = Array.isArray(product.type) ? product.type : product.type ? [product.type] : [];
+      const relevantTypes = typeArray.filter((t) => allowedCollections.includes(t.collection));
+      if (!relevantTypes.length) return false;
 
-      return Object.entries(filters).every(([key, values]) => {
-        // ✅ 1) najpierw sprawdzamy pola ROOT produktu (np. primarycategory)
-        const rootVal = (product as any)?.[key];
-        if (rootVal !== undefined && rootVal !== null && String(rootVal).trim() !== "") {
-          const rv = norm(rootVal);
-          return values.some((v) => norm(v) === rv);
-        }
-
-        // ✅ 2) potem szukamy w M2A type.item.*
-        return typeArray.some((t) => {
-          const item = (t as any)?.item || {};
-          const val = item[key];
-          if (val === undefined || val === null || String(val).trim() === "") return false;
-          const iv = norm(val);
-          return values.some((v) => norm(v) === iv);
+      return Object.entries(filters).every(([key, expectedValues]) => {
+        return relevantTypes.some((t) => {
+          const item = t.item || {};
+          return valueMatches(item[key], expectedValues);
         });
       });
     });
 
-    // ✅ Paginacja po filtrowaniu
+    // paginacja
     const total = filtered.length;
     const totalPages = Math.max(1, Math.ceil(total / perPage));
     const safePage = Math.min(page, totalPages);
 
     const start = (safePage - 1) * perPage;
-    const end = start + perPage;
-    const paginated = filtered.slice(start, end);
+    const paginated = filtered.slice(start, start + perPage);
 
     return NextResponse.json({
       page: safePage,
@@ -187,10 +200,15 @@ export async function GET(request: Request) {
       totalPages,
       count: paginated.length,
       products: paginated,
+      appliedFilters: Object.keys(filters).length ? filters : null,
+      allowedCollections,
     });
-  } catch (error) {
-    console.error("❌ Błąd w /api/products:", error);
+  } catch (error: any) {
+    console.error("❌ Błąd w /api/products:", error?.message || error, error?.errors || "");
     const message = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json({ error: "Internal Server Error", details: message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Products endpoint failed", message, directusErrors: error?.errors || undefined },
+      { status: 502 }
+    );
   }
 }

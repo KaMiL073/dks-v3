@@ -1,219 +1,191 @@
 import { NextResponse } from "next/server";
 import { directus } from "@/lib/directus";
-import {
-  mapSlugToCollection,
-  getDisplayTemplateForCollection,
-} from "@/lib/directusCategoryMapper";
-import { readItems, readFields } from "@directus/sdk";
+import { readFields } from "@directus/sdk";
+import { resolveCategoryToCollection } from "@/lib/directusCategoryMapper";
+import { categoriesMap } from "@/lib/categories";
 
-type TypeItem = Record<string, unknown>;
-type TypeRelation = { collection: string; item: TypeItem };
-
-type Product = {
-  id: number;
-  status?: string;
-  primarycategory?: string | null;
-  type?: TypeRelation[] | TypeRelation;
-};
-
-type DirectusFieldMeta = {
-  field: string;
+type Choice = { text?: unknown; value?: unknown };
+type DirectusField = {
+  field?: string;
+  collection?: string;
   meta?: {
-    translations?: { language: string; translation: string }[] | null;
-    options?: { choices?: { text: string; value: string }[] } | null;
+    interface?: string;
+    hidden?: boolean;
+    options?: { choices?: Choice[] };
+    display?: string;
+    translations?: Array<{ translation?: string }>;
   };
 };
 
-type FieldUiMeta = {
-  label?: string;
-  choiceTextByValue: Map<string, string>;
-};
-
-const fieldMetaCache = new Map<string, Map<string, FieldUiMeta>>(); // collection -> (field -> meta)
-
-function asArray<T>(v: T | T[] | undefined | null): T[] {
-  if (!v) return [];
-  return Array.isArray(v) ? v : [v];
+function isAllowedCollection(collection: string) {
+  if (!collection) return false;
+  if (collection.startsWith("directus_")) return false; // core
+  return true;
 }
 
-function pickPlLabel(
-  translations?: { language: string; translation: string }[] | null
-) {
-  if (!translations?.length) return undefined;
-
-  const lower = (s: string) => s.toLowerCase();
-  return (
-    translations.find((t) => lower(t.language) === "pl-pl")?.translation ??
-    translations.find((t) => lower(t.language).startsWith("pl"))?.translation
-  );
+function normalizeText(v: unknown) {
+  if (v == null) return "";
+  // czasem Directus trzyma text jako obiekt (tłumaczenia) – tu tniemy do stringa
+  return String(v).trim();
 }
 
-async function getCollectionFieldUiMeta(collection: string) {
-  const cached = fieldMetaCache.get(collection);
-  if (cached) return cached;
+function isUsefulField(f: DirectusField) {
+  const field = String(f?.field ?? "").trim();
+  if (!field) return false;
 
-  const fields = (await directus.request(
-    readFields(collection)
-  )) as DirectusFieldMeta[];
+  // meta/system – nie chcemy w filtrach
+  const banned = new Set([
+    "id",
+    "status",
+    "sort",
+    "user_created",
+    "user_updated",
+    "date_created",
+    "date_updated",
+    "primarycategory",
+  ]);
+  if (banned.has(field)) return false;
 
-  const map = new Map<string, FieldUiMeta>();
+  // ukryte w Directus -> nie pokazuj
+  if (f?.meta?.hidden) return false;
 
-  for (const f of fields) {
-    const label = pickPlLabel(f.meta?.translations ?? null);
+  const iface = f?.meta?.interface;
+  const allowedIfaces = new Set(["select-dropdown", "multi-select-dropdown"]);
+  if (!allowedIfaces.has(String(iface ?? ""))) return false;
 
-    const choiceTextByValue = new Map<string, string>();
-    const choices = f.meta?.options?.choices ?? [];
-    for (const c of choices) {
-      choiceTextByValue.set(String(c.value), String(c.text));
+  const choices = f?.meta?.options?.choices;
+  if (!Array.isArray(choices) || choices.length === 0) return false;
+
+  // jeśli to typowe directusowe $t:... (np. status), to wyrzuć
+  const normalized = choices
+    .map((c) => normalizeText(c?.text))
+    .filter(Boolean);
+
+  if (normalized.length > 0 && normalized.every((t) => t.startsWith("$t:"))) return false;
+
+  return true;
+}
+
+/**
+ * Najważniejsze: pobierz pola WYŁĄCZNIE dla jednej kolekcji.
+ * W zależności od wersji @directus/sdk, readFields() ma różne sygnatury,
+ * więc robimy bezpieczne fallbacki + walidację wyniku.
+ */
+async function fetchFieldsForCollection(collection: string): Promise<DirectusField[]> {
+  // 1) Najczęstsze w SDK: readFields(collection)
+  try {
+    const res = (await directus.request(readFields(collection as any))) as any;
+    if (Array.isArray(res)) {
+      // jeśli SDK zwróciło “global listę” pól (różne kolekcje),
+      // to wywalamy i przechodzimy do fallbacku
+      const hasManyCollections =
+        res.some((x) => x?.collection && x.collection !== collection) ||
+        (res.length > 200 && res.some((x) => String(x?.collection ?? "").length > 0));
+
+      if (!hasManyCollections) return res as DirectusField[];
     }
-
-    map.set(f.field, { label, choiceTextByValue });
+  } catch {
+    // ignore -> fallback
   }
 
-  fieldMetaCache.set(collection, map);
-  return map;
-}
-
-function humanizeField(field: string) {
-  // fallbacki, gdy nie ma tłumaczeń w Directus
-  const map: Record<string, string> = {
-    primarycategory: "Kategoria",
-    brand: "Marka",
-    state: "Stan",
-  };
-  if (map[field]) return map[field];
-
-  return field.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
-}
-
-function isSkippableField(key: string) {
-  return (
-    key === "id" ||
-    key === "status" ||
-    key === "sort" ||
-    key === "user_created" ||
-    key === "date_created" ||
-    key === "user_updated" ||
-    key === "date_updated"
-  );
-}
-
-export async function GET(request: Request) {
+  // 2) Inna sygnatura: readFields({ collection })
   try {
-    const { searchParams } = new URL(request.url);
+    const res = (await directus.request(readFields({ collection } as any))) as any;
+    if (Array.isArray(res)) return res as DirectusField[];
+  } catch {
+    // ignore -> fallback
+  }
+
+  // 3) Ostateczny fallback: “surowe” REST /fields/{collection}
+  // directus.request potrafi przyjąć obiekt requesta zależnie od implementacji w Twoim "@/lib/directus"
+  const res = (await (directus as any).request({
+    method: "GET",
+    path: `/fields/${collection}`,
+  })) as any;
+
+  if (Array.isArray(res)) return res as DirectusField[];
+  if (Array.isArray(res?.data)) return res.data as DirectusField[];
+
+  return [];
+}
+
+export async function GET(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
 
     const categorySlug = searchParams.get("category");
+    const subcategorySlug = searchParams.get("subcategory");
+
     if (!categorySlug) {
+      return NextResponse.json({ error: "Missing category" }, { status: 400 });
+    }
+
+    // deterministycznie: subcategory > category
+    const targetSlug = subcategorySlug || categorySlug;
+
+    // slug -> kolekcja
+    let collection =
+      (await resolveCategoryToCollection(targetSlug).catch(() => targetSlug)) || targetSlug;
+
+    // fallback po lokalnej mapie
+    if (collection === targetSlug && (categoriesMap as any)?.[targetSlug]) {
+      collection = (categoriesMap as any)[targetSlug];
+    }
+
+    if (!isAllowedCollection(collection)) {
       return NextResponse.json(
-        { error: "Missing category parameter" },
+        { error: "Invalid collection resolved", collection, slug: targetSlug },
         { status: 400 }
       );
     }
 
-    // slug -> kolekcja (np. rozwiazania-dla-biura -> office_solutions)
-    const collection = await mapSlugToCollection(categorySlug);
-    if (!collection) {
-      return NextResponse.json(
-        { error: `Unknown category slug: ${categorySlug}` },
-        { status: 404 }
-      );
-    }
+    const fields = await fetchFieldsForCollection(collection);
 
-    // ✅ meta pól z Directusa: labelki + choices (tłumaczenia)
-    const uiMeta = await getCollectionFieldUiMeta(collection);
-
-    // produkty z tej kategorii
-    const products = (await directus.request(
-      readItems("products", {
-        fields: ["id", "status", "primarycategory", "type.collection", "type.item.*"],
-        filter: {
-          status: { _eq: "published" },
-          _and: [{ type: { collection: { _in: [collection] } } }],
-        },
-        limit: 300,
-      })
-    )) as Product[];
-
-    // agregacja wartości
-    const valuesByField = new Map<string, Set<string>>();
-
-    // ✅ 1) ROOT: primarycategory
-    for (const p of products) {
-      const v =
-        typeof p.primarycategory === "string" ? p.primarycategory.trim() : "";
-      if (!v) continue;
-
-      if (!valuesByField.has("primarycategory"))
-        valuesByField.set("primarycategory", new Set());
-      valuesByField.get("primarycategory")!.add(v);
-    }
-
-    // ✅ 2) M2A: type.item.*
-    for (const p of products) {
-      const typeArray = asArray(p.type);
-      for (const t of typeArray) {
-        const item = (t?.item ?? {}) as Record<string, unknown>;
-        for (const [k, raw] of Object.entries(item)) {
-          if (isSkippableField(k)) continue;
-          if (raw === null || raw === undefined) continue;
-
-          const v = String(raw).trim();
-          if (!v) continue;
-
-          if (!valuesByField.has(k)) valuesByField.set(k, new Set());
-          valuesByField.get(k)!.add(v);
-        }
-      }
-    }
-
-    // budujemy wynik
-    const filters = await Promise.all(
-      Array.from(valuesByField.entries())
-        .filter(([, set]) => set.size > 0)
-        .map(async ([field, set]) => {
-          const sorted = Array.from(set).sort((a, b) => a.localeCompare(b, "pl"));
-
-          // label: z Directus translations (fallback humanize)
-          const metaForField = uiMeta.get(field);
-          const label = metaForField?.label ?? humanizeField(field);
-
-          // primarycategory -> text = slug display_template (przyjazny URL)
-          if (field === "primarycategory") {
-            const options = await Promise.all(
-              sorted.map(async (value) => {
-                const slug = await getDisplayTemplateForCollection(value).catch(
-                  () => value
-                );
-                return { value, text: slug || value };
-              })
-            );
-            return { field, label, options };
-          }
-
-          // pozostałe pola -> options.text z choices (Directus) jeśli istnieje
-          const options = sorted.map((value) => {
-            const text = metaForField?.choiceTextByValue.get(String(value)) ?? value;
-            return { value, text };
-          });
-
-          return { field, label, options };
-        })
-    );
-
-    // stabilna kolejność: primarycategory na początku, reszta alfabetycznie po labelu
-    filters.sort((a, b) => {
-      if (a.field === "primarycategory") return -1;
-      if (b.field === "primarycategory") return 1;
-      return a.label.localeCompare(b.label, "pl");
+    // twardy filtr: jeśli w polach jest collection, to MA być tylko ta kolekcja
+    const onlyThisCollection = fields.filter((f: any) => {
+      const c = String(f?.collection ?? "").trim();
+      return !c || c === collection;
     });
 
-    return NextResponse.json({ filters });
-  } catch (error) {
-    console.error("❌ Błąd w /api/products/filters:", error);
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const rawFilters = onlyThisCollection
+      .filter(isUsefulField)
+      .map((f: any) => {
+        const choices = (f.meta?.options?.choices || []) as Choice[];
+
+        const options = choices
+          .map((c) => ({
+            text: normalizeText(c?.text),
+            value: normalizeText(c?.value),
+          }))
+          .filter((o) => o.text && o.value);
+
+        // label: preferuj display -> translation -> field
+        const label =
+          normalizeText(f.meta?.display) ||
+          normalizeText(f.meta?.translations?.[0]?.translation) ||
+          String(f.field);
+
+        return { field: String(f.field), label, options };
+      })
+      .filter((x) => x.options.length > 0);
+
+    // deduplikacja po field
+    const deduped = Array.from(new Map(rawFilters.map((x) => [x.field, x] as const)).values());
+
+    return NextResponse.json({
+      filters: deduped,
+      collection,
+      slug: targetSlug,
+    });
+  } catch (err: any) {
+    console.error("[/api/products/filters] ERROR:", err?.message || err, err?.errors || "");
     return NextResponse.json(
-      { error: "Internal Server Error", details: message },
-      { status: 500 }
+      {
+        error: "Filters endpoint failed",
+        message: err?.message || String(err),
+        directusErrors: err?.errors || undefined,
+      },
+      { status: 502 }
     );
   }
 }
