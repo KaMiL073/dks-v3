@@ -47,7 +47,8 @@ export default function CertyfikatyPage() {
         imageFit="contain"
         variant="full-height"
       />
-<CustomerZoneFormsAccordion />
+      
+       {/* <CustomerZoneFormsAccordion /> */}
 
       <main className="w-full bg-white flex flex-col gap-12">
         

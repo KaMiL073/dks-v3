@@ -68,7 +68,7 @@ export default function FiltersMenu({
   return (
     <div className="w-full self-stretch bg-surface-primary border-b-2 border-border-primary inline-flex flex-col justify-start items-end gap-2.5 p-4">
       {/* 🔹 Sekcja filtrów */}
-      <div className="self-stretch inline-flex justify-between items-start flex-wrap content-start gap-4">
+      <div className="self-stretch inline-flex items-start flex-wrap content-start gap-8">
         {dedupedFilters.map((filter) => (
           <div
             key={filter.field}
@@ -88,7 +88,8 @@ export default function FiltersMenu({
                 <label
                   key={`${filter.field}:${opt.value}:${opt.text}`}
                   htmlFor={inputId}
-                  className="cursor-pointer py-1 bg-surface-primary flex flex-row justify-start items-center gap-3 select-none"
+                  // ✅ było: items-center -> teraz: items-start
+                  className="cursor-pointer py-1 bg-surface-primary flex flex-row justify-start items-start gap-3 select-none"
                 >
                   {/* ✅ prawdziwy checkbox (ukryty), dla dostępności */}
                   <input
@@ -101,7 +102,8 @@ export default function FiltersMenu({
 
                   {/* ✅ własny checkbox UI */}
                   <div
-                    className={`w-5 h-5 flex items-center justify-center rounded border-2 transition-all ${
+                    // ✅ dodany mt-1 + shrink-0 żeby nie pływał i się nie ściskał
+                    className={`mt-1 w-5 h-5 shrink-0 flex items-center justify-center rounded border-2 transition-all ${
                       checked
                         ? "border-surface-action bg-surface-action"
                         : "border-border-primary bg-surface-primary"
@@ -115,7 +117,8 @@ export default function FiltersMenu({
                     )}
                   </div>
 
-                  <span className="text-Text-body text-base font-normal font-['Montserrat'] leading-tight">
+                  {/* ✅ tekst: poprawione łamanie i line-height */}
+                  <span className="min-w-0 break-words text-Text-body text-base font-normal font-['Montserrat'] leading-5">
                     {opt.text}
                   </span>
                 </label>

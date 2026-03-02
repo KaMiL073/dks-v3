@@ -59,7 +59,7 @@ export default function HeroSection({
       "relative w-full " +
       "h-[240px] sm:h-[320px] md:h-[360px] " + // mobile/tablet
       "lg:h-full " + // desktop: wypełnia hero
-      "sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-3xl";
+      "sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-5xl";
 
     const imageClass = imageFit === "cover" ? "object-cover" : "object-contain";
 
@@ -98,6 +98,9 @@ export default function HeroSection({
                   src={heroImage}
                   alt={title || "Hero image"}
                   fill
+  		  sizes="(max-width: 768px) 100vw,
+                        (max-width: 1200px) 50vw,
+                         33vw"
                   priority
                   className={imageClass}
                   style={{ objectPosition }}

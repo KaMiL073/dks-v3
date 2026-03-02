@@ -47,7 +47,7 @@ export default function HomePage() {
           subtitle="Sprawdzone technologie. Profesjonalne <br /> wsparcie. Atrakcyjne ceny."
           buttonLabel="Zamów bezpłatny audyt"
           backgroundImage="/static/homepage/Header.webp"
-          heroImage="/static/homepage/Obraz.webp"
+          heroImage="/static/homepage/079A2955-mini.webp"
           contentPosition="left"
           imageVerticalAlign="bottom"
           imageFit="contain"
@@ -60,7 +60,7 @@ export default function HomePage() {
         <PartnersSection />
         <CaseStudy />
         <NewsSection />
-        <ContactSection />
+        {/*  <ContactSection /> */}
         <AboutSection />
     </main>
   );

@@ -9,6 +9,7 @@ interface DirectusRelation {
   collection: string;
   item: Record<string, unknown>;
 }
+
 interface Product {
   id: number | string;
   model?: string;
@@ -17,13 +18,9 @@ interface Product {
   brand?: { name?: string };
   type?: DirectusRelation[] | DirectusRelation;
 
-  // było:
-  // primarycategoryzip?: string | null;
-
-  // ma być:
+  // ✅ ma być:
   primarycategory?: string | null;
 }
-
 
 interface FilterField {
   field: string;
@@ -39,7 +36,7 @@ interface FilterField {
  * - nie generuje /_next/image?url=...
  * - unoptimized=true dla directusa
  *
- * Jeśli brak obrazka -> lokalny placeholder z /public
+ * Jeżeli brak obrazka -> lokalny placeholder z /public
  */
 function productImageSrc(main_image: Product["main_image"], imwidth = 900) {
   const id =
@@ -52,6 +49,33 @@ function productImageSrc(main_image: Product["main_image"], imwidth = 900) {
   if (!id) return "/static/placeholder-product.svg";
 
   return `/backend/assets/${id}?imwidth=${imwidth}`;
+}
+
+/**
+ * ✅ Pobiera wartość filtra dla produktu:
+ * 1) najpierw z root produktu (np. primarycategory)
+ * 2) potem z M2A type.item.*
+ */
+function getFilterValue(product: Product, filterField: string): string | undefined {
+  const rootVal = (product as any)?.[filterField];
+  if (rootVal !== undefined && rootVal !== null && String(rootVal).trim() !== "") {
+    return String(rootVal);
+  }
+
+  const typeArray = Array.isArray(product.type)
+    ? product.type
+    : product.type
+    ? [product.type]
+    : [];
+
+  for (const t of typeArray) {
+    const item = t?.item as Record<string, unknown> | undefined;
+    if (item && filterField in item && item[filterField]) {
+      return String(item[filterField]);
+    }
+  }
+
+  return undefined;
 }
 
 export default function ProductsList({
@@ -69,40 +93,20 @@ export default function ProductsList({
     );
   }
 
-const getFilterValue = (product: Product, filterField: string): string | undefined => {
-  // ✅ 1) Najpierw pola root (np. primarycategoryzip)
-  const rootVal = (product as any)?.[filterField];
-  if (rootVal !== undefined && rootVal !== null && String(rootVal).trim() !== "") {
-    return String(rootVal);
-  }
-
-  // ✅ 2) Potem szukamy w M2A type.item.*
-  const typeArray = Array.isArray(product.type) ? product.type : product.type ? [product.type] : [];
-
-  for (const t of typeArray) {
-    const item = t?.item as Record<string, unknown> | undefined;
-    if (item && filterField in item && item[filterField]) {
-      return String(item[filterField]);
-    }
-  }
-  return undefined;
-};
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(304px,1fr))] mt-[48px] gap-12">
       {products.map((product) => {
         const imageUrl = productImageSrc(product.main_image, 900);
         const isDirectus = imageUrl.startsWith("/backend/assets/");
         const visibleFilters = filtersMeta.slice(0, 4);
 
-        // ✅ JEDYNY poprawny adres produktu:
-        const productHref = product.slug
-          ? `/oferta/produkty/${product.slug}`
-          : null;
+        // ✅ Jedyny poprawny adres produktu
+        const productHref = product.slug ? `/oferta/produkty/${product.slug}` : null;
 
         return (
           <div
             key={product.id}
-            className="bg-surface-page border-b border-border-primary pb-4"
+            className="bg-surface-page border-b border-border-primary pb-4 mb-[48px] min-w-[304px] max-w-[400px]"
           >
             {/* Zdjęcie */}
             <div className="relative w-full h-64">
@@ -122,15 +126,14 @@ const getFilterValue = (product: Product, filterField: string): string | undefin
                 <h3 className="text-2xl font-semibold mb-1">
                   <Link href={productHref}>
                     {product.model || "Produkt"}
-
-                    <br />
                     {product.brand?.name ? (
-                     <span className="text-lg font-semibold mb-2">
-                        {product.brand.name}
-                      </span>
+                      <>
+                        <br />
+                        <span className="text-lg font-semibold">
+                          {product.brand.name}
+                        </span>
+                      </>
                     ) : null}
-
-                    {/* {product.brand?.name ? ` ${product.brand.name}` : ""} */}
                   </Link>
                 </h3>
               ) : (
@@ -147,8 +150,7 @@ const getFilterValue = (product: Product, filterField: string): string | undefin
                   if (!value) return null;
 
                   const label =
-                    filter.options?.find((o) => o.value === value)?.text ??
-                    value;
+                    filter.options?.find((o) => o.value === value)?.text ?? value;
 
                   return (
                     <div key={filter.field}>
