@@ -71,7 +71,7 @@ export default function OfferPage() {
       <main>
         
         <div className="w-full px-4 lg:px-6 2xl:px-20 py-20 bg-white inline-flex flex-col justify-start items-start gap-12 overflow-hidden">
-            <ContactSection />
+           {/* <ContactSection /> */}
             
             <div className="self-stretch px-28 py-20 bg-gray-300  inline-flex justify-between items-center">
                 <div className="flex-1 flex justify-center items-center gap-16">

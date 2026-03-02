@@ -68,7 +68,7 @@ export default function FiltersMenu({
   return (
     <div className="w-full self-stretch bg-surface-primary border-b-2 border-border-primary inline-flex flex-col justify-start items-end gap-2.5 p-4">
       {/* 🔹 Sekcja filtrów */}
-      <div className="self-stretch inline-flex justify-between items-start flex-wrap content-start gap-4">
+      <div className="self-stretch inline-flex items-start flex-wrap content-start gap-8">
         {dedupedFilters.map((filter) => (
           <div
             key={filter.field}
