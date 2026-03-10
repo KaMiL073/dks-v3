@@ -48,7 +48,7 @@ export default function CertyfikatyPage() {
         variant="full-height"
       />
       
-       {/* <CustomerZoneFormsAccordion /> */}
+       <CustomerZoneFormsAccordion />
 
       <main className="w-full bg-white flex flex-col gap-12">
         

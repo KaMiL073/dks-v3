@@ -2,7 +2,7 @@ import SectionHeader from "@/components/SectionHeader";
 import TopSectionHeader from "@/components/TopSectionHeader";
 import HeroSection from "@/app/(marketing)/HeroSection";
 import ServiceContactSection from "@/app/_components/ServiceContactSection";
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import { Heading } from "@/components/ui/Typography/Heading";
 import IconsSection from "../_components/IconsSection";
@@ -11,6 +11,7 @@ import OfferSection from "../(marketing)/OfferSection";
 import PartnersSection from "../(marketing)/PartnersSection";
 import CaseStudy from "../(marketing)/CaseStudy";
 import ContactSection from "../(marketing)/ContactSection";
+import type { Metadata } from "next";
 
 function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl").replace(/\/$/, "");

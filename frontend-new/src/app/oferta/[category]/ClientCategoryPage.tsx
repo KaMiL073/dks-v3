@@ -9,6 +9,12 @@ import getDescription from "@/content/oferta";
 import JsonLd from "@/components/seo/JsonLd";
 import Pagination from "@/components/Pagination";
 
+interface FilterField {
+  field: string;
+  label: string;
+  options?: { text: string; value: string }[];
+}
+
 interface Product {
   id: number;
   model?: string;
@@ -18,6 +24,7 @@ interface Product {
   short_description?: string;
   main_image?: { id?: string };
   brand?: { id?: string | number; name?: string };
+  filtersMeta?: FilterField[];
   [key: string]: unknown;
 }
 
@@ -65,20 +72,19 @@ export default function ClientCategoryPage({
   const [loading, setLoading] = useState(false);
 
   const PER_PAGE = 12;
-  const [page, setPage] = useState<number>(Number.isFinite(initialPage) ? initialPage : 1);
+  const safeInitialPage = Number.isFinite(initialPage) && initialPage > 0 ? initialPage : 1;
+
+  const [page, setPage] = useState<number>(safeInitialPage);
   const [totalPages, setTotalPages] = useState<number>(1);
 
-  // produkty: subcategory jeśli jest, inaczej category
   const activeCategory = subcategory || category;
 
-  // filtry deterministyczne: category + opcjonalnie subcategory (dla endpointu filtrów)
   const filtersQuery = useMemo(() => {
     const p = new URLSearchParams({ category });
     if (subcategory) p.set("subcategory", subcategory);
     return p.toString();
   }, [category, subcategory]);
 
-  // opis dla aktywnej kategorii/subkategorii
   const description = useMemo(() => getDescription(activeCategory), [activeCategory]);
   const hasDescription = Boolean(description?.leftColumn || description?.rightColumn);
 
@@ -112,6 +118,7 @@ export default function ClientCategoryPage({
   const fetchProducts = useCallback(
     async (nextPage: number, nextFilters: Record<string, string[]>) => {
       setLoading(true);
+
       try {
         const params = new URLSearchParams({
           category: activeCategory,
@@ -119,7 +126,6 @@ export default function ClientCategoryPage({
           perPage: String(PER_PAGE),
         });
 
-        // filtry idą jako f__<field>, żeby nie kolidować z "category"
         Object.entries(nextFilters).forEach(([key, values]) => {
           if (!values?.length) return;
           params.append(`${FILTER_PREFIX}${key}`, values.join(","));
@@ -142,48 +148,62 @@ export default function ClientCategoryPage({
     [activeCategory]
   );
 
-  // reset przy zmianie kategorii/subkategorii
   useEffect(() => {
     setSelectedFilters({});
-    setPage(1);
-  }, [activeCategory]);
+    setPage(safeInitialPage);
+  }, [activeCategory, safeInitialPage]);
 
-  // load filtrów + pierwszy fetch produktów
+  useEffect(() => {
+    setPage(safeInitialPage);
+  }, [safeInitialPage]);
+
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
       setLoading(true);
+
       try {
         const filtersRes = await fetch(`/api/products/filters?${filtersQuery}`, {
           cache: "no-store",
         });
-        const filtersJson = await filtersRes.json().catch(() => ({}));
-        if (!cancelled) setFilters(filtersJson.filters ?? []);
 
-        if (!cancelled) await fetchProducts(1, {});
+        const filtersJson = await filtersRes.json().catch(() => ({}));
+
+        if (!cancelled) {
+          setFilters(filtersJson.filters ?? []);
+        }
+
+        if (!cancelled) {
+          await fetchProducts(safeInitialPage, {});
+        }
       } catch (err) {
         console.error("⨯ Błąd ładowania danych kategorii:", err);
+
         if (!cancelled) {
           setFilters([]);
           setProducts([]);
           setTotalPages(1);
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [filtersQuery, fetchProducts]);
+  }, [filtersQuery, fetchProducts, safeInitialPage]);
 
   const handleApplyFilters = async (filtersToApply: Record<string, string[]>) => {
     setSelectedFilters(filtersToApply);
     setPage(1);
 
-    if (!subcategory) router.push(`/oferta/${category}`);
+    if (!subcategory) {
+      router.push(`/oferta/${category}`);
+    }
 
     await fetchProducts(1, filtersToApply);
   };
@@ -192,7 +212,9 @@ export default function ClientCategoryPage({
     setSelectedFilters({});
     setPage(1);
 
-    if (!subcategory) router.push(`/oferta/${category}`);
+    if (!subcategory) {
+      router.push(`/oferta/${category}`);
+    }
 
     await fetchProducts(1, {});
   };
@@ -200,13 +222,11 @@ export default function ClientCategoryPage({
   const goToPage = async (nextPage: number) => {
     const safe = Math.min(Math.max(nextPage, 1), totalPages);
 
-    // zostawiamy Twoje SEO URL dla paginacji kategorii (jak było)
     if (!subcategory) {
       if (safe === 1) router.push(`/oferta/${category}`);
       else router.push(`/oferta/${category}/page/${safe}`);
     }
 
-    setPage(safe);
     await fetchProducts(safe, selectedFilters);
   };
 
@@ -230,12 +250,7 @@ export default function ClientCategoryPage({
         <>
           {itemListSchema ? <JsonLd data={itemListSchema} /> : null}
 
-          <ProductsList
-            products={products}
-            filtersMeta={filters}
-            categorySlug={category}
-            subcategory={subcategory}
-          />
+          <ProductsList products={products} />
 
           <div className="mt-10">
             <Pagination page={page} totalPages={totalPages} onPageChange={goToPage} />

@@ -2,6 +2,7 @@ import HeroSection from "@/app/(marketing)/HeroSection";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import { getCertifications } from "@/lib/certifications";
 import CertificationsGrid from "@/components/CertificationsGrid";
+import type { Metadata } from "next";
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl");
 
@@ -75,7 +76,6 @@ export default async function CertyfikatyPage() {
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"
-        imageObjectOffsetY={80}
         variant="full-height"
       />
 

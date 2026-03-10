@@ -1,4 +1,4 @@
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import TopSectionHeader from "@/components/TopSectionHeader";
 import { Heading } from "@/components/ui/Typography/Heading";
 import IndustryApplications from "../components/IndustryApplications";
