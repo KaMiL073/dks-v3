@@ -40,11 +40,12 @@ export default function IconsSection({ title, items }: IconsSectionProps) {
               {item.label}
             </div>
 
-            {item.description ? (
-              <div className="self-stretch text-center justify-start text-Text-body text-xl font-normal font-['Montserrat'] leading-6">
-                {item.description}
-              </div>
-            ) : null}
+	    {item.description ? (
+  		<div
+    		   className="self-stretch text-center justify-start text-Text-body text-xl font-normal font-['Montserrat'] leading-6"
+    		   dangerouslySetInnerHTML={{ __html: item.description }}
+  		/>
+	    ) : null}
           </div>
         ))}
       </div>

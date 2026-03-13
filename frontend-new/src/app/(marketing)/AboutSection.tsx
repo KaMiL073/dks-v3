@@ -36,7 +36,7 @@ export default function AboutSection() {
   return (
     <section className="px-6 xl:px-28 py-20 bg-surface-page flex flex-col gap-8">
       <RichContentStatic
-        image="/static/homepage/Obraz-a.webp"
+        image="/static/homepage/obraz-a.webp"
         layout="text_left"
         content={`
           <div class="flex-1 text-Text-body text-base font-normal leading-tight">

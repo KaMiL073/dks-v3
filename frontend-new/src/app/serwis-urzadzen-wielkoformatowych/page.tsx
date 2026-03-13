@@ -121,7 +121,7 @@ export default function SerwisUrzadzenWielkoformatowychPage() {
       <HeroSection
         title="Serwis urządzeń wielkoformatowych"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"

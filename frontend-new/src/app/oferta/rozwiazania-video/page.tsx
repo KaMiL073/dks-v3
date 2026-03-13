@@ -126,7 +126,7 @@ export default function OfferPage() {
             </ul>
             <p>Od audytu i testów POC, przez wdrożenie i szkolenia, po utrzymanie i SLA.</p>
           `}
-          image="/static/oferta/Obraz.webp"
+          image="/static/oferta/obraz.webp"
           layout="text_right"
           text_button="Skontaktuj się z nami"
           url_button="/oferta/rozwiazania-video"
@@ -141,7 +141,7 @@ export default function OfferPage() {
           title="Elastyczne zarządzanie obrazem. W jednym miejscu"
           header_type="h3"
           heading_styles="h5_semibold"
-          image="/static/oferta/Obraz-1.webp"
+          image="/static/oferta/obraz-1.webp"
           layout="text_left"
           content={`
             <p>
@@ -185,7 +185,7 @@ export default function OfferPage() {
           `}
         />
 
-
+{/*
         <Heading as="h2" headingValue="h2_semibold">
           Kamery i-PRO z Analityką AI
         </Heading>
@@ -193,7 +193,7 @@ export default function OfferPage() {
           title="Precyzyjna detekcja i inteligentne decyzje"
           header_type="h3"
           heading_styles="h5_semibold"
-          image="/static/oferta/Obraz-4.webp"
+          image="/static/oferta/obraz-4.webp"
           layout="text_left"
           content={`
             <p>
@@ -210,7 +210,7 @@ export default function OfferPage() {
             <p>System i-PRO to bezpieczne, ekonomiczne i skalowalne rozwiązanie wizyjne, które wspiera ochronę i decyzje operacyjne.</p>
           `}
         />
-
+	*/}
         {/* 🔸 Sekcja 5 - Analityka */}
         <Heading as="h2" headingValue="h2_semibold">
           Analityka wizyjna
@@ -219,7 +219,7 @@ export default function OfferPage() {
           title="Zobacz więcej. Zrozum więcej."
           header_type="h3"
           heading_styles="h5_semibold"
-          image="/static/oferta/Obraz-5.webp"
+          image="/static/oferta/obraz-4.webp"
           layout="text_right"
           content={`
             <p>

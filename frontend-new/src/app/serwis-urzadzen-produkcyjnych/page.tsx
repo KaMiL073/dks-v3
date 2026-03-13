@@ -156,7 +156,7 @@ export default function SerwisUrzadzenProdukcyjnychPage() {
       <HeroSection
         title="Serwis produkcyjnych urządzeń drukujących"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"

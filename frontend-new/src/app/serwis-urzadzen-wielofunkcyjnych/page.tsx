@@ -173,7 +173,7 @@ export default function SerwisUrzadzenWielofunkcyjnychPage() {
       <HeroSection
         title="Autoryzowany serwis urządzeń wielofunkcyjnych"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"

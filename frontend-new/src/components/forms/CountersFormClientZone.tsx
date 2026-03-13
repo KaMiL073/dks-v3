@@ -359,7 +359,7 @@ export default function CountersFormClientZone() {
                 </span>
               </label>
 
-              <div className="text-tiny leading-3 mb-6">
+              <div className="text-xs leading-snug text-gray-800">
                 <p>
                   Informujemy, że: Administratorem Pani/Pana danych osobowych jest DKS Sp. z o.o., z siedzibą przy ul. 
                   Energetycznej 15, 80-180 Kowale, e-mail: rodo@dks.pl.</p>
