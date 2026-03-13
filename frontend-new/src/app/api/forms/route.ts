@@ -21,52 +21,73 @@ function pickString(v: unknown): string | null {
 }
 
 function pickBoolString(v: unknown): string | null {
-  // na starej stronie w DB często były "false"/"true" jako stringi
   if (typeof v === "boolean") return v ? "true" : "false";
   if (typeof v === "string") return v;
   return null;
 }
 
+function getField(obj: Record<string, unknown>, key: string): unknown {
+  return obj[key];
+}
+
+type DirectusRequestClient = {
+  request: (operation: unknown) => Promise<unknown>;
+};
+
+function hasRequestClient(v: unknown): v is DirectusRequestClient {
+  return isRecord(v) && typeof (v as Record<string, unknown>).request === "function";
+}
+
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as Record<string, unknown>;
+    const raw: unknown = await request.json();
+
+    if (!isRecord(raw)) {
+      return NextResponse.json({ ok: false, error: "Niepoprawne body (JSON)." }, { status: 400 });
+    }
+
+    const body = raw;
 
     const isNewFormat =
-      typeof body?.form_name === "string" &&
-      typeof body?.email === "string" &&
-      isRecord(body?.form_data);
+      typeof body.form_name === "string" &&
+      typeof body.email === "string" &&
+      isRecord(body.form_data);
 
     // 1) Normalizujemy dane formularza do jednego obiektu
-    const form_name = isNewFormat ? (body.form_name as string) : "ContactForm";
-    const email = isNewFormat
-      ? (body.email as string)
-      : String((body as any)?.email ?? "");
+    const form_name: string = isNewFormat ? (body.form_name as string) : "ContactForm";
+
+    const legacyEmail = pickString(getField(body, "email")) ?? "";
+    const email: string = isNewFormat ? (body.email as string) : legacyEmail;
 
     const form_data: Record<string, unknown> = isNewFormat
       ? (body.form_data as Record<string, unknown>)
-      : body; // stary format: płasko
+      : body;
 
-    // 2) Wypychanie najważniejszych pól na top-level (żeby lista w Directus nie była pusta)
-    //    (dopasowane do pól które widać w Twoim API response: name/email/phone/message/province/nip/clause/clause_for_answers)
+    // 2) Najważniejsze pola na top-level (ale BEZ email, żeby nie duplikować)
+    const clause = pickBoolString(getField(form_data, "clause") ?? getField(form_data, "consentMarketing"));
+    const clause_for_answers = pickBoolString(
+      getField(form_data, "clause_for_answers") ?? getField(form_data, "consentData")
+    );
+
     const topLevel = {
-      name: pickString(form_data.name),
-      email: pickString(form_data.email) ?? email,
-      phone: pickString(form_data.phone),
-      message: pickString(form_data.message),
-      province: pickString(form_data.province),
-
-      nip: pickString(form_data.nip),
-
-      // stare nazwy z Directusa:
-      clause: pickBoolString((form_data as any).clause ?? (form_data as any).consentMarketing),
-      clause_for_answers: pickBoolString(
-        (form_data as any).clause_for_answers ?? (form_data as any).consentData
-      ),
+      name: pickString(getField(form_data, "name")),
+      phone: pickString(getField(form_data, "phone")),
+      message: pickString(getField(form_data, "message")),
+      province: pickString(getField(form_data, "province")),
+      nip: pickString(getField(form_data, "nip")),
+      clause,
+      clause_for_answers,
     };
+
+    // email bierzemy z:
+    // - form_data.email jeśli jest
+    // - w innym wypadku z wyliczonego "email"
+    const emailFromFormData = pickString(getField(form_data, "email"));
+    const finalEmail = emailFromFormData ?? email;
 
     const payload: NewPayload & Record<string, unknown> = {
       form_name,
-      email,
+      email: finalEmail,
       form_data,
       ...topLevel,
     };
@@ -78,14 +99,116 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: false, error: "Brak pola form_name." }, { status: 400 });
     }
 
-    const created = await directus.request(createItem(COLLECTION, payload as any));
+    if (!hasRequestClient(directus)) {
+      return NextResponse.json({ ok: false, error: "Directus client has no request()" }, { status: 500 });
+    }
+
+    // operation jako unknown -> bez any, bez no-explicit-any
+    const operation: unknown = createItem(COLLECTION as never, payload as never);
+    const created = await directus.request(operation);
+
     return NextResponse.json({ ok: true, created }, { status: 200 });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("❌ /api/forms POST error:", error);
-    return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, error: "Server error", message: error instanceof Error ? error.message : String(error) },
+      { status: 500 }
+    );
   }
 }
 
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 });
 }
+
+// import { NextResponse } from "next/server";
+// import { directus } from "@/lib/directus";
+// import { createItem } from "@directus/sdk";
+
+// type NewPayload = {
+//   form_name: string;
+//   email: string;
+//   form_data: Record<string, unknown>;
+// };
+
+// const COLLECTION = "contact_forms";
+
+// function isRecord(v: unknown): v is Record<string, unknown> {
+//   return !!v && typeof v === "object" && !Array.isArray(v);
+// }
+
+// function pickString(v: unknown): string | null {
+//   if (typeof v === "string") return v;
+//   if (typeof v === "number") return String(v);
+//   return null;
+// }
+
+// function pickBoolString(v: unknown): string | null {
+//   // na starej stronie w DB często były "false"/"true" jako stringi
+//   if (typeof v === "boolean") return v ? "true" : "false";
+//   if (typeof v === "string") return v;
+//   return null;
+// }
+
+// export async function POST(request: Request) {
+//   try {
+//     const body = (await request.json()) as Record<string, unknown>;
+
+//     const isNewFormat =
+//       typeof body?.form_name === "string" &&
+//       typeof body?.email === "string" &&
+//       isRecord(body?.form_data);
+
+//     // 1) Normalizujemy dane formularza do jednego obiektu
+//     const form_name = isNewFormat ? (body.form_name as string) : "ContactForm";
+//     const email = isNewFormat
+//       ? (body.email as string)
+//       : String((body as any)?.email ?? "");
+
+//     const form_data: Record<string, unknown> = isNewFormat
+//       ? (body.form_data as Record<string, unknown>)
+//       : body; // stary format: płasko
+
+//     // 2) Wypychanie najważniejszych pól na top-level (żeby lista w Directus nie była pusta)
+//     //    (dopasowane do pól które widać w Twoim API response: name/email/phone/message/province/nip/clause/clause_for_answers)
+//     const topLevel = {
+//       name: pickString(form_data.name),
+//       email: pickString(form_data.email) ?? email,
+//       phone: pickString(form_data.phone),
+//       message: pickString(form_data.message),
+//       province: pickString(form_data.province),
+
+//       nip: pickString(form_data.nip),
+
+//       // stare nazwy z Directusa:
+//       clause: pickBoolString((form_data as any).clause ?? (form_data as any).consentMarketing),
+//       clause_for_answers: pickBoolString(
+//         (form_data as any).clause_for_answers ?? (form_data as any).consentData
+//       ),
+//     };
+
+//     const payload: NewPayload & Record<string, unknown> = {
+//       form_name,
+//       email,
+//       form_data,
+//       ...topLevel,
+//     };
+
+//     if (!payload.email) {
+//       return NextResponse.json({ ok: false, error: "Brak pola email." }, { status: 400 });
+//     }
+//     if (!payload.form_name) {
+//       return NextResponse.json({ ok: false, error: "Brak pola form_name." }, { status: 400 });
+//     }
+
+//     const created = await directus.request(createItem(COLLECTION, payload as any));
+//     return NextResponse.json({ ok: true, created }, { status: 200 });
+//   } catch (error) {
+//     console.error("❌ /api/forms POST error:", error);
+//     return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 });
+//   }
+// }
+
+// export async function OPTIONS() {
+//   return NextResponse.json({}, { status: 200 });
+// }

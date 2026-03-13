@@ -2,6 +2,7 @@ import HeroSection from "@/app/(marketing)/HeroSection";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import BranchCard from "@/components/BranchCard";
 import { branches } from "@/content/Branch";
+import type { Metadata } from "next";
 
 function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl").replace(/\/$/, "");

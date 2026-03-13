@@ -2,7 +2,7 @@ import SectionHeader from "@/components/SectionHeader";
 import TopSectionHeader from "@/components/TopSectionHeader";
 import HeroSection from "@/app/(marketing)/HeroSection";
 import ServiceContactSection from "@/app/_components/ServiceContactSection";
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import { Heading } from "@/components/ui/Typography/Heading";
 import IconsSection from "../_components/IconsSection";

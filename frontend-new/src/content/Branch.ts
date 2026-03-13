@@ -456,6 +456,7 @@ export const branches: Branch[] = [
   {
     name: 'bydgoszcz',
     fullName: 'DKS Sp. z o.o. Oddział Bydgoszcz',
+    address: 'ul. Jagiellońska 94c, 85-097 Bydgoszcz',
     img: '/static/oddzialy/bydgoszcz.webp',
     image: "/static/oddzialy/bydgoszcz.webp",
     href: '/oddzialy/bydgoszcz',

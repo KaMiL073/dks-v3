@@ -60,7 +60,7 @@ export default function HomePage() {
         <PartnersSection />
         <CaseStudy />
         <NewsSection />
-        {/*  <ContactSection /> */}
+         <ContactSection />
         <AboutSection />
     </main>
   );

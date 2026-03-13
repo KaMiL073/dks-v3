@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 import HeroSection from "@/app/(marketing)/HeroSection";
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import IconsSection from "../_components/IconsSection";
 
@@ -117,7 +117,7 @@ export default function KontraktObslugiSerwisowejPage() {
       <HeroSection
         title="Kontrakt Obsługi Serwisowej"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"
@@ -156,41 +156,40 @@ export default function KontraktObslugiSerwisowejPage() {
           expand_left={leftHtml}
           expand_right={rightHtml}
         />
-
-        <IconsSection
-          title="Korzyści z umowy KOS"
-          items={[
-            {
-              icon: "/static/icons/Balance.svg",
-              label: "RÓWNOMIERNE ROZŁOŻENIE<br/>KOSZTÓW EKSPLOATACJI",
-            },
-            {
-              icon: "/static/icons/calculate.svg",
-              label: "ŁATWA KALKULACJA<br/>MIESIĘCZNYCH<br/>KOSZTÓW DRUKU",
-            },
-            {
-              icon: "/static/icons/handshake.svg",
-              label: "STAŁA OPIEKA I SKRÓCONY CZAS<br/>REAKCJI SERWISOWEJ",
-            },
-            {
-              icon: "/static/icons/equalizer.svg",
-              label: "UZUPEŁNIANIE MATERIAŁÓW<br/>EKSPLOATACYJNYCH NA CZAS",
-            },
-            {
-              icon: "/static/icons/Hourglass.svg",
-              label: "WYDŁUŻONY OKRES EKSPLOATACJI MASZYN",
-            },
-            {
-              icon: "/static/icons/Diamond.svg",
-              label: "GWARANCJA JAKOŚCI WYDRUKÓW I SPRZĘTU",
-            },
-            {
-              icon: "/static/icons/Clock.svg",
-              label: "WYGODA I OSZCZĘDNOŚĆ CZASU",
-            },
-          ]}
-        />
-      </main>
+	<IconsSection
+ 	   title="Korzyści z umowy KOS"
+  	   items={[
+    	      {
+      		icon: "/static/icons/Balance.svg",
+      		label: "RÓWNOMIERNE ROZŁOŻENIE<br/>KOSZTÓW EKSPLOATACJI",
+              },
+    	      {
+      		icon: "/static/icons/Calculate.svg",
+      		label: "ŁATWA KALKULACJA <br/> MIESIĘCZNYCH <br/> KOSZTÓW DRUKU",
+    	      },
+    	      {
+      		icon: "/static/icons/Handshake.svg",
+      		label: "STAŁA OPIEKA I SKRÓCONY CZAS<br/>REAKCJI SERWISOWEJ",
+    	      },
+    	      {
+      		icon: "/static/icons/Equalizer.svg",
+      		label: "UZUPEŁNIANIE MATERIAŁÓW<br/>EKSPLOATACYJNYCH NA CZAS",
+    	      },
+    	      {
+      		icon: "/static/icons/Hourglass.svg",
+      		label: "WYDŁUŻONY OKRES EKSPLOATACJI MASZYN",
+    	      },
+    	      {
+      		icon: "/static/icons/Diamond.svg",
+      		label: "GWARANCJA JAKOŚCI WYDRUKÓW I SPRZĘTU",
+    	      },
+    	      {
+      		icon: "/static/icons/Clock.svg",
+      		label: "WYGODA I OSZCZĘDNOŚĆ CZASU",
+    	      },
+  	   ]}
+	/>
+        </main>
     </>
   );
 }

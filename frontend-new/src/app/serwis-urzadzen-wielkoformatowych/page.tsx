@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 
 import HeroSection from "@/app/(marketing)/HeroSection";
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import IconsSection from "../_components/IconsSection";
 
@@ -121,7 +121,7 @@ export default function SerwisUrzadzenWielkoformatowychPage() {
       <HeroSection
         title="Serwis urządzeń wielkoformatowych"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"

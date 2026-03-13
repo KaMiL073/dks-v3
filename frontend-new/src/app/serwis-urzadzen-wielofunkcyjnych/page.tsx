@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 
 import HeroSection from "@/app/(marketing)/HeroSection";
 import ServiceContactSection from "@/app/_components/ServiceContactSection";
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import IconsSection from "../_components/IconsSection";
 
@@ -173,7 +173,7 @@ export default function SerwisUrzadzenWielofunkcyjnychPage() {
       <HeroSection
         title="Autoryzowany serwis urządzeń wielofunkcyjnych"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"

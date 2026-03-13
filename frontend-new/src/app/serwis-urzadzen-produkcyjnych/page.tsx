@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import HeroSection from "@/app/(marketing)/HeroSection";
 import ServiceContactSection from "@/app/_components/ServiceContactSection";
-import RichContentStatic from "@/components/RichContent";
+import RichContentStatic from "@/components/RichContentStatic";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import IconsSection from "../_components/IconsSection";
 
@@ -156,7 +156,7 @@ export default function SerwisUrzadzenProdukcyjnychPage() {
       <HeroSection
         title="Serwis produkcyjnych urządzeń drukujących"
         backgroundImage="/static/homepage/Header.webp"
-        heroImage="/static/serwis/Obraz.webp"
+        heroImage="/static/serwis/obraz.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"
