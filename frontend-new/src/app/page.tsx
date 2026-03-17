@@ -1,14 +1,17 @@
 import React from "react";
 
-import HeroSection from "./(marketing)/HeroSection"; 
+import HeroSection from "./(marketing)/HeroSection";
 import OfferSection from "./(marketing)/OfferSection";
 import PromoSection from "./(marketing)/PromoSection";
 import PartnersSection from "./(marketing)/PartnersSection";
-import CaseStudy from "./(marketing)/CaseStudy";
+import CaseStudy, { type Slide } from "./(marketing)/CaseStudy";
 import NewsSection from "./(marketing)/NewsSection";
 import ContactSection from "./(marketing)/ContactSection";
 import AboutSection from "./(marketing)/AboutSection";
+import { getLatestCaseStudies } from "@/lib/getNews";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata = {
   title: "Dostawca sprzętu drukującego dla biur, reklamy i poligrafii – DKS",
@@ -39,29 +42,39 @@ export const metadata = {
   },
 };
 
-export default function HomePage() {
-  return (
-      <main className="">
-        <HeroSection  
-          title="Twój partner w biznesie" 
-          subtitle="Sprawdzone technologie. Profesjonalne <br /> wsparcie. Atrakcyjne ceny."
-          buttonLabel="Zamów bezpłatny audyt"
-          backgroundImage="/static/homepage/Header.webp"
-          heroImage="/static/homepage/079A2955-mini.webp"
-          contentPosition="left"
-          imageVerticalAlign="bottom"
-          imageFit="contain"
-          // imageObjectOffsetY={80} 
-          variant="full-height"
+export default async function HomePage() {
+  const posts = await getLatestCaseStudies(3);
+  
+  console.log("CASE STUDY POSTS:", posts);
+  
+  const slides: Slide[] = posts.map((post) => ({
+    title: post.title,
+    desc: post.lead,
+    image: post.image ?? "/static/homepage/Obraz-a.webp",
+    slug: post.slug,
+    categorySlug: post.categorySlug ?? "case-study",
+  }));
 
-        />
-        <OfferSection/>
-        <PromoSection />
-        <PartnersSection />
-        <CaseStudy />
-        <NewsSection />
-         <ContactSection />
-        <AboutSection />
+  return (
+    <main className="">
+      <HeroSection
+        title="Twój partner w biznesie"
+        subtitle="Sprawdzone technologie. Profesjonalne <br /> wsparcie. Atrakcyjne ceny."
+        buttonLabel="Zamów bezpłatny audyt"
+        backgroundImage="/static/homepage/Header.webp"
+        heroImage="/static/homepage/079A2955-mini.webp"
+        contentPosition="left"
+        imageVerticalAlign="bottom"
+        imageFit="contain"
+        variant="full-height"
+      />
+      <OfferSection />
+      <PromoSection />
+      <PartnersSection />
+      <CaseStudy slides={slides} />
+      <NewsSection />
+      <ContactSection />
+      <AboutSection />
     </main>
   );
 }

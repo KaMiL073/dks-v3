@@ -9,8 +9,9 @@ import IconsSection from "../_components/IconsSection";
 import StatsSection from "@/components/StatsSection";
 import OfferSection from "../(marketing)/OfferSection";
 import PartnersSection from "../(marketing)/PartnersSection";
-import CaseStudy from "../(marketing)/CaseStudy";
+import CaseStudy, { type Slide } from "../(marketing)/CaseStudy";
 import ContactSection from "../(marketing)/ContactSection";
+import { getLatestCaseStudies } from "@/lib/getNews";
 import type { Metadata } from "next";
 
 function getBaseUrl() {
@@ -30,20 +31,18 @@ const description =
   "Nowoczesne urządzenia drukujące i materiały eksploatacyjne, a także oprogramowanie dla biur i firm poligraficznych są specjalnością naszej firmy.";
 
 const url = absUrl(canonicalPath);
-
-// wrzuć plik do: /public/og/o-firmie.jpg
 const ogImage = absUrl("/og/o-firmie.jpg");
 
 const leftHtml = `<div>
-  <strong >Jesteśmy blisko naszych Klientów</strong>
+  <strong>Jesteśmy blisko naszych Klientów</strong>
   <br/>
   <p>
-    Prowadzimy 12 oddziałów w największych miastach wojewódzkich w Polsce. Jesteśmy blisko
-    naszych Klientów. Dzięki temu możemy skrócić znacznie czas realizacji zamówień 
-    i zagwarantować błyskawiczną reakcję serwisową. Prowadzimy serwis urządzeń 
-    wielofunkcyjnych, maszyn produkcyjnych i drukarek wielkoformatowych.
-    <br/> <br />
-    Zapraszamy do kontaktu telefonicznego, mailowego i wizyt w oddziałach 
+    Prowadzimy 12 oddziałów w największych miastach wojewódzkich w Polsce. Jesteśmy blisko
+    naszych Klientów. Dzięki temu możemy skrócić znacznie czas realizacji zamówień
+    i zagwarantować błyskawiczną reakcję serwisową. Prowadzimy serwis urządzeń
+    wielofunkcyjnych, maszyn produkcyjnych i drukarek wielkoformatowych.
+    <br /><br />
+    Zapraszamy do kontaktu telefonicznego, mailowego i wizyt w oddziałach
     DKS!ądzeń drukujących, ale nie chcą ponosić kosztów ich zakupu.
   </p>
 </div>`;
@@ -51,17 +50,17 @@ const leftHtml = `<div>
 const rightHtml = `<div>
   <strong>Sprzedaż i dzierżawa nowych i używanych maszyn drukujących</strong>
   <p>
-    Sprzedajemy nowy i używany (poleasingowy) sprzęt drukujący. Alternatywą 
-    dla zakupu jest wynajem urządzeń wielofunkcyjnych: zamieniasz kosztowną 
+    Sprzedajemy nowy i używany (poleasingowy) sprzęt drukujący. Alternatywą
+    dla zakupu jest wynajem urządzeń wielofunkcyjnych: zamieniasz kosztowną
     inwestycję na miesięczną opłatę czynszową.
   </p>
   <br />
   <p>
-    Wszystkie używane maszyny drukujące są drobiazgowo sprawdzane, naprawiane 
-    i testowane. Oszczędzasz pieniądze i masz pewność długiej, niezawodnej 
-    pracy. W przypadku nowych maszyn zabezpieczeniem przed kosztami awarii 
-    jest gwarancja. Z myślą o użytkownikach sprzętu w okresie pogwarancyjnym 
-    stworzyliśmy Kontrakt Obsługi Serwisowej. Naszym celem jest zabezpieczenie 
+    Wszystkie używane maszyny drukujące są drobiazgowo sprawdzane, naprawiane
+    i testowane. Oszczędzasz pieniądze i masz pewność długiej, niezawodnej
+    pracy. W przypadku nowych maszyn zabezpieczeniem przed kosztami awarii
+    jest gwarancja. Z myślą o użytkownikach sprzętu w okresie pogwarancyjnym
+    stworzyliśmy Kontrakt Obsługi Serwisowej. Naszym celem jest zabezpieczenie
     komfortu i poczucia bezpieczeństwa ekonomicznego wszystkich użytkowników.
   </p>
 </div>`;
@@ -115,8 +114,17 @@ export const metadata: Metadata = {
   },
 };
 
+export default async function OfferPage() {
+  const posts = await getLatestCaseStudies(3);
 
-export default function OfferPage() {
+  const slides: Slide[] = posts.map((post) => ({
+    title: post.title,
+    desc: post.lead,
+    image: post.image ?? "/static/homepage/Obraz-a.webp",
+    slug: post.slug,
+    categorySlug: post.categorySlug ?? "case-study",
+  }));
+
   return (
     <>
       <Breadcrumb />
@@ -124,66 +132,62 @@ export default function OfferPage() {
         title="DKS – dostawca sprzętu do druku biurowego, poligraficznego i wielkoformatowego"
         subtitle="Explore our diverse range of solutions tailored to meet your needs. Whether you're looking for cutting-edge technology or reliable support."
         backgroundImage="/static/homepage/Header.webp"
-        // heroImage="/static/serwis/Obraz.webp"
         buttonLabel="Skontaktuj się z nami"
       />
 
       <main>
-
         <StatsSection />
         <OfferSection />
         <PartnersSection />
-        <CaseStudy />
-        
+        <CaseStudy slides={slides} />
+
         <div className="w-full px-4 lg:px-6 2xl:px-20 py-20 bg-white inline-flex flex-col justify-start items-start gap-12 overflow-hidden">
           <RichContentStatic
             image="/static/o-firmie/o-firmie.webp"
             layout="text_left"
             content={`
               <p>
-                Jesteśmy czołowym polskim dostawcą sprzętu drukującego czterech renomowanych marek: 
-                Canon, Lexmark, HP i Konica Minolta. Oferujemy nowe i używane urządzenia do użytku 
-                biurowego, do zastosowań poligraficznych i druku wielkoformatowego. 
-                Dostarczamy drukarki 
-                <a 
-                  title="urządzenia wielofunkcyjne do biura" 
+                Jesteśmy czołowym polskim dostawcą sprzętu drukującego czterech renomowanych marek:
+                Canon, Lexmark, HP i Konica Minolta. Oferujemy nowe i używane urządzenia do użytku
+                biurowego, do zastosowań poligraficznych i druku wielkoformatowego.
+                Dostarczamy drukarki
+                <a
+                  title="urządzenia wielofunkcyjne do biura"
                   href="https://www.dks.pl/oferta/rozwiazania-dla-biura"
                   target="_self">
                     urządzenia wielofunkcyjne do biura
                 </a>,
-                kserokopiarki, skanery i niszczarki. W naszej ofercie znajdziesz też oprogramowanie 
-                do zarządzania drukiem, skanowaniem i obiegiem dokumentów..
+                kserokopiarki, skanery i niszczarki. W naszej ofercie znajdziesz też oprogramowanie
+                do zarządzania drukiem, skanowaniem i obiegiem dokumentów.
               </p>
               <p>
-                Niezwykle ważną i różnorodną częścią naszej oferty są maszyny do wysokonakładowego 
-                druku produkcyjnego. Dostarczamy drukarki i 
-                <a 
-                  title="sprzęt poligraficzny " 
+                Niezwykle ważną i różnorodną częścią naszej oferty są maszyny do wysokonakładowego
+                druku produkcyjnego. Dostarczamy drukarki i
+                <a
+                  title="sprzęt poligraficzny"
                   href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii"
                   target="_self">
-                    sprzęt poligraficzny 
-                </a>, 
-                dla drukarń cyfrowych. Instalujemy maszyny i przeprowadzamy rozruch systemów druku 
-                u naszych Klientów. Obok urządzeń drukujących wprowadziliśmy 
+                    sprzęt poligraficzny
+                </a>,
+                dla drukarń cyfrowych. Instalujemy maszyny i przeprowadzamy rozruch systemów druku
+                u naszych Klientów. Obok urządzeń drukujących wprowadziliśmy
                 do oferty maszyny introligatorskie cenionej na całym świecie marki Duplo.
               </p>
               <p>
-                Ostatni z trzech głównych działów naszej oferty wypełniają wielkoformatowe 
-                urządzenia drukujące, szeroko wykorzystywane w usługach i branży reklamowej. 
-                Sprzedajemy m.in. skanery Contex, plotery tonerowe KIP, 
-                <span class="underline decoration-1">składarki offline</span> 
-                es-te, 
-                plotery atramentowe Océ, OKI, Canon, Konica Minolta.
+                Ostatni z trzech głównych działów naszej oferty wypełniają wielkoformatowe
+                urządzenia drukujące, szeroko wykorzystywane w usługach i branży reklamowej.
+                Sprzedajemy m.in. skanery Contex, plotery tonerowe KIP,
+                <span class="underline decoration-1">składarki offline</span>
+                es-te, plotery atramentowe Océ, OKI, Canon, Konica Minolta.
               </p>
             `}
-          expanded_columns={2}
-          expand_left={leftHtml}
-          expand_right={rightHtml}
-        />
+            expanded_columns={2}
+            expand_left={leftHtml}
+            expand_right={rightHtml}
+          />
         </div>
 
         <ContactSection />
-        
 
         {/* <ServiceContactSection
           title="Kontakt z serwisem"
@@ -194,6 +198,3 @@ export default function OfferPage() {
     </>
   );
 }
-
-
-
