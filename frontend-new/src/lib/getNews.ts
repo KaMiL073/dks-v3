@@ -307,6 +307,46 @@ export async function getRecommended(
   }
 }
 
+/* ============================================================
+   🔥 Case study 
+   ============================================================ */
+
+export async function getLatestCaseStudies(limit = 3): Promise<News[]> {
+  try {
+    const dataRaw = await directus.request(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (readItems as any)("news", {
+        fields: [
+          "id",
+          "title",
+          "lead",
+          "slug",
+          "image",
+          "date_created",
+          "tags",
+          "category.id",
+          "category.slug",
+          "category.name",
+        ],
+        filter: {
+          status: { _eq: "published" },
+          category: {
+            slug: { _eq: "case-study" },
+          },
+        },
+        sort: ["-date_created"],
+        limit,
+      })
+    );
+
+    const rows: NewsRow[] = Array.isArray(dataRaw) ? (dataRaw as NewsRow[]) : [];
+    return rows.map(mapNewsItem);
+  } catch (err: unknown) {
+    console.error("❌ Błąd pobierania case studies:", err);
+    return [];
+  }
+}
+
 // import { directus } from "./directus";
 // import { readItems } from "@directus/sdk";
 
