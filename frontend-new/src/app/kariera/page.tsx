@@ -12,6 +12,8 @@ import { getLatestCaseStudies } from "@/lib/getNews";
 
 import type { Metadata } from "next";
 
+export const dynamic = "force-dynamic";
+
 const baseUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl");
 
 export const metadata: Metadata = {
@@ -68,7 +70,7 @@ export const metadata: Metadata = {
 
 export default async function OfferPage() {
   const posts = await getLatestCaseStudies(3);
-
+    
   const slides: Slide[] = posts.map((post) => ({
     title: post.title,
     desc: post.lead,

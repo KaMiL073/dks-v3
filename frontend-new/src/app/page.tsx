@@ -44,9 +44,7 @@ export const metadata = {
 
 export default async function HomePage() {
   const posts = await getLatestCaseStudies(3);
-  
-  console.log("CASE STUDY POSTS:", posts);
-  
+    
   const slides: Slide[] = posts.map((post) => ({
     title: post.title,
     desc: post.lead,
