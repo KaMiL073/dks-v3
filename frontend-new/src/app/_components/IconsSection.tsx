@@ -21,7 +21,7 @@ export default function IconsSection({ title, items }: IconsSectionProps) {
         </h2>
       ) : null}
 
-      <div className="self-stretch inline-flex justify-center items-start gap-6 flex-wrap content-start">
+      <div className="self-stretch inline-flex justify-center items-start gap-12 flex-wrap content-start">
         {items.map((item, idx) => (
           <div
             key={`${item.label}-${idx}`}
@@ -35,17 +35,20 @@ export default function IconsSection({ title, items }: IconsSectionProps) {
                 className="object-contain"
               />
             </div>
+	          
+            {item.label ? (
+              <div className="self-stretch text-center justify-start text-xl font-semibold font-['Montserrat'] leading-6"
+                dangerouslySetInnerHTML={{ __html: item.label }}
+              >
+              </div>
+            ) : null}
 
-            <div className="self-stretch text-center justify-start text-Text-body text-xl font-semibold font-['Montserrat'] leading-6">
-              {item.label}
-            </div>
-
-	    {item.description ? (
-  		<div
-    		   className="self-stretch text-center justify-start text-Text-body text-xl font-normal font-['Montserrat'] leading-6"
-    		   dangerouslySetInnerHTML={{ __html: item.description }}
-  		/>
-	    ) : null}
+	          {item.description ? (
+  		        <div
+    		        className="self-stretch text-center justify-start text-[16px] font-normal font-['Montserrat'] leading-6"
+    		        dangerouslySetInnerHTML={{ __html: item.description }}
+  		        />
+	          ) : null}
           </div>
         ))}
       </div>
