@@ -38,7 +38,7 @@ export default function RecruitmentSteps({
   return (
     <section
       className={[
-        "self-stretch px-6 sm:px-10 inline-flex flex-col justify-start items-start gap-10 lg:gap-16",
+        "self-stretch inline-flex flex-col justify-start items-start px-8 gap-10 lg:gap-16",
         className,
       ].join(" ")}
     >
