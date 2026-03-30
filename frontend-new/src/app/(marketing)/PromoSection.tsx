@@ -187,8 +187,8 @@ export default function PromoSection() {
       </div>
 
       {/* Grid: tylko 2xl */}
-      <div className="hidden 2xl:grid grid-cols-3 gap-10 items-stretch">
-        {offers.map((offer, idx) => (
+      <div className="hidden 2xl:grid grid-cols-3 gap-10 items-stretch justify-items-center">
+        {offers.map((offer, idx) => ( 
           <OfferCard key={idx} offer={offer} />
         ))}
       </div>

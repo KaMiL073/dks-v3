@@ -84,7 +84,7 @@ export default async function BlogPagePaged({ params }: PageProps) {
             <a
               href={`/blog/${c.slug}`}
               key={c.id}
-              className="w-full px-6 py-4 border-b-2 border-border-primary flex justify-between items-center bg-surface-secondary hover:bg-surface-page transition"
+              className="w-full px-6 py-4 border-b-2 border-[#99A1AF] flex justify-between items-center bg-[#D1D5DC] hover:bg-surface-page transition"
             >
               <div className="text-Text-headings text-2xl font-semibold">{c.name}</div>
               <div className="py-0.5">
