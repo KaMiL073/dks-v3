@@ -156,40 +156,40 @@ export default function KontraktObslugiSerwisowejPage() {
           expand_left={leftHtml}
           expand_right={rightHtml}
         />
-	<IconsSection
- 	   title="Korzyści z umowy KOS"
-  	   items={[
-    	      {
-      		icon: "/static/icons/Balance.svg",
-      		label: "RÓWNOMIERNE ROZŁOŻENIE<br/>KOSZTÓW EKSPLOATACJI",
+        <IconsSection
+          title="Korzyści z umowy KOS"
+            items={[
+              {
+                icon: "/static/icons/Balance.svg",
+                label: "RÓWNOMIERNE ROZŁOŻENIE <br/> KOSZTÓW EKSPLOATACJI",
               },
-    	      {
-      		icon: "/static/icons/Calculate.svg",
-      		label: "ŁATWA KALKULACJA <br/> MIESIĘCZNYCH <br/> KOSZTÓW DRUKU",
-    	      },
-    	      {
-      		icon: "/static/icons/Handshake.svg",
-      		label: "STAŁA OPIEKA I SKRÓCONY CZAS<br/>REAKCJI SERWISOWEJ",
-    	      },
-    	      {
-      		icon: "/static/icons/Equalizer.svg",
-      		label: "UZUPEŁNIANIE MATERIAŁÓW<br/>EKSPLOATACYJNYCH NA CZAS",
-    	      },
-    	      {
-      		icon: "/static/icons/Hourglass.svg",
-      		label: "WYDŁUŻONY OKRES EKSPLOATACJI MASZYN",
-    	      },
-    	      {
-      		icon: "/static/icons/Diamond.svg",
-      		label: "GWARANCJA JAKOŚCI WYDRUKÓW I SPRZĘTU",
-    	      },
-    	      {
-      		icon: "/static/icons/Clock.svg",
-      		label: "WYGODA I OSZCZĘDNOŚĆ CZASU",
-    	      },
-  	   ]}
-	/>
-        </main>
+              {
+                icon: "/static/icons/Calculate.svg",
+                label: "ŁATWA KALKULACJA MIESIĘCZNYCH <br/> KOSZTÓW DRUKU",
+              },
+              {
+                icon: "/static/icons/Handshake.svg",
+                label: "STAŁA OPIEKA I SKRÓCONY CZAS REAKCJI SERWISOWEJ",
+              },
+              {
+                icon: "/static/icons/Equalizer.svg",
+                label: "UZUPEŁNIANIE MATERIAŁÓW<br/>EKSPLOATACYJNYCH NA CZAS",
+              },
+              {
+                icon: "/static/icons/Hourglass.svg",
+                label: "WYDŁUŻONY OKRES EKSPLOATACJI MASZYN",
+              },
+              {
+                icon: "/static/icons/Diamond.svg",
+                label: "GWARANCJA JAKOŚCI WYDRUKÓW I SPRZĘTU",
+              },
+              {
+                icon: "/static/icons/Clock.svg",
+                label: "WYGODA I OSZCZĘDNOŚĆ CZASU",
+              },
+            ]}
+        />
+      </main>
     </>
   );
 }
