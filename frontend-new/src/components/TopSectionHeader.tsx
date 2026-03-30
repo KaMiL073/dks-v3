@@ -4,11 +4,17 @@ import React from "react";
 
 interface TopSectionHeaderProps {
   title: string;
+  subtitle?: string;
   description?: string;
   img?: string;
 }
 
-export default function TopSectionHeader({ title, description, img }: TopSectionHeaderProps) {
+export default function TopSectionHeader({
+  title,
+  subtitle,
+  description,
+  img,
+}: TopSectionHeaderProps) {
   return (
     <div
       className="
@@ -25,7 +31,6 @@ export default function TopSectionHeader({ title, description, img }: TopSection
       }}
     >
       <div className="flex-1 flex flex-col justify-center items-start gap-8 md:gap-12 max-w-[710px]">
-        {/* 🔹 Tytuł */}
         <div
           className="
             text-Text-headings
@@ -37,7 +42,17 @@ export default function TopSectionHeader({ title, description, img }: TopSection
           {title}
         </div>
 
-        {/* 🔹 Opis (tylko jeśli istnieje) */}
+        {subtitle && (
+          <div
+            className="
+              self-stretch justify-end text-Text-headings
+              text-2xl font-semibold font-['Montserrat'] leading-7
+            "
+          >
+            {subtitle}
+          </div>
+        )}
+
         {description && (
           <div
             className="
