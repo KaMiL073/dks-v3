@@ -295,6 +295,39 @@ export async function getProductsByBrandId(brandId: string): Promise<Product[]> 
     })
     .filter((p) => p.id && p.model && p.slug);
 }
+
+export type SitemapProductItem = {
+  slug: string;
+  updatedAt: string | null;
+};
+
+export async function getAllOfferPages(): Promise<SitemapProductItem[]> {
+  try {
+    const res = await directus.request(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (readItems as any)("products", {
+        fields: ["slug", "date_updated", "date_created"],
+        limit: -1,
+      })
+    );
+
+    const rows: ProductRow[] = Array.isArray(res) ? (res as ProductRow[]) : [];
+
+    return rows
+      .filter(isRecord)
+      .map((row) => ({
+        slug: pickString(row.slug) ?? "",
+        updatedAt:
+          pickString(row.date_updated) ??
+          pickString(row.date_created) ??
+          null,
+      }))
+      .filter((item) => item.slug.length > 0);
+  } catch (err: unknown) {
+    console.error("❌ getAllOfferPages error:", err);
+    return [];
+  }
+}
 // import { directus } from "@/lib/directus";
 // import { readItems } from "@directus/sdk";
 // import { mapCollectionToSlug } from "@/lib/directusCategoryMapper";
