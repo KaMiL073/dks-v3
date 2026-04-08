@@ -2,7 +2,7 @@ import { directus } from "./directus";
 import { readItems } from "@directus/sdk";
 
 /* ============================================================
-   🔥 Typy
+   Typy
    ============================================================ */
 export interface News {
   id: string;
@@ -22,10 +22,22 @@ export interface SinglePost extends News {
 
 export type PagedNews = {
   items: News[];
-  total: number; // ile wszystkich pasujących
-  page: number; // 1-based
+  total: number;
+  page: number;
   perPage: number;
   totalPages: number;
+};
+
+export type SitemapNewsItem = {
+  slug: string;
+  date_created: string | null;
+  categorySlug: string | null;
+};
+
+type NewsCategoryRow = {
+  id?: unknown;
+  slug?: unknown;
+  name?: unknown;
 };
 
 type NewsRow = {
@@ -39,13 +51,14 @@ type NewsRow = {
   tags?: unknown;
   category?: unknown;
   category_name?: unknown;
+  status?: unknown;
   [key: string]: unknown;
 };
 
 type CountRow = { count?: unknown };
 
 /* ============================================================
-   🔥 Helpery
+   Helpery
    ============================================================ */
 function isRecord(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === "object" && !Array.isArray(v);
@@ -65,17 +78,19 @@ function pickStringArray(v: unknown): string[] {
 }
 
 /* ============================================================
-   🔥 Helper: URL do obrazu
+   URL do obrazu
    ============================================================ */
 function imageUrl(id: string | null) {
   return id ? `https://dks.pl/backend/assets/${id}?imwidth=1920` : null;
 }
 
 /* ============================================================
-   🔥 Mapowanie item -> News
+   Mapowanie item -> News
    ============================================================ */
 function mapNewsItem(row: NewsRow): News {
-  const category = isRecord(row.category) ? row.category : undefined;
+  const category = isRecord(row.category)
+    ? (row.category as NewsCategoryRow)
+    : undefined;
 
   return {
     id: pickString(row.id) ?? "",
@@ -91,13 +106,51 @@ function mapNewsItem(row: NewsRow): News {
 }
 
 /* ============================================================
-   ✅ Paginacja (offset-based)
+   Sitemap: wszystkie opublikowane wpisy
+   ============================================================ */
+export async function getAllNewsSlugs(): Promise<SitemapNewsItem[]> {
+  try {
+    const dataRaw = await directus.request(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (readItems as any)("news", {
+        fields: ["slug", "date_created", "category.slug"],
+        filter: {
+          status: { _eq: "published" },
+        },
+        sort: ["-date_created"],
+        limit: -1,
+      })
+    );
+
+    const rows: NewsRow[] = Array.isArray(dataRaw) ? (dataRaw as NewsRow[]) : [];
+
+    return rows
+      .map((row) => {
+        const category = isRecord(row.category)
+          ? (row.category as NewsCategoryRow)
+          : undefined;
+
+        return {
+          slug: pickString(row.slug) ?? "",
+          date_created: pickString(row.date_created) ?? null,
+          categorySlug: category ? pickString(category.slug) ?? null : null,
+        };
+      })
+      .filter((item) => item.slug.length > 0 && item.categorySlug);
+  } catch (err: unknown) {
+    console.error("❌ Błąd pobierania slugów newsów do sitemap:", err);
+    return [];
+  }
+}
+
+/* ============================================================
+   Paginacja (offset-based)
    ============================================================ */
 export async function getNewsPaged(
   args: {
     page?: number;
     perPage?: number;
-    category?: string; // slug kategorii (categories.slug)
+    category?: string;
   } = {}
 ): Promise<PagedNews> {
   const page =
@@ -110,18 +163,20 @@ export async function getNewsPaged(
       ? (args.perPage as number)
       : 12;
 
-  const filter: Record<string, unknown> = {};
+  const filter: Record<string, unknown> = {
+    status: { _eq: "published" },
+  };
+
   if (args.category) {
     filter.category = { slug: { _eq: args.category } };
   }
 
   try {
-    // Total count (aggregate)
     const totalRaw = await directus.request(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (readItems as any)("news", {
         aggregate: { count: "*" },
-        ...(Object.keys(filter).length ? { filter } : {}),
+        filter,
       } as Record<string, unknown>)
     );
 
@@ -131,7 +186,6 @@ export async function getNewsPaged(
     );
 
     const totalPages = Math.max(1, Math.ceil(totalCount / perPage));
-
     const safePage = Math.min(page, totalPages);
     const safeOffset = (safePage - 1) * perPage;
 
@@ -150,10 +204,10 @@ export async function getNewsPaged(
           "category.slug",
           "category.name",
         ],
+        filter,
         sort: ["-date_created"],
         limit: perPage,
         offset: safeOffset,
-        ...(Object.keys(filter).length ? { filter } : {}),
       })
     );
 
@@ -180,7 +234,7 @@ export async function getNewsPaged(
 }
 
 /* ============================================================
-   🔥 1. Stara funkcja (kompatybilna)
+   Stara funkcja (kompatybilna)
    ============================================================ */
 export default async function getNews(
   attributes: Record<string, unknown> = {}
@@ -189,9 +243,12 @@ export default async function getNews(
 
   const categoryId = pickString(attrs.categoryId) ?? pickString(attrs.category);
 
-  const filters: Record<string, unknown> = {};
+  const filters: Record<string, unknown> = {
+    status: { _eq: "published" },
+  };
+
   if (categoryId) {
-    filters.filter = { category: { _eq: categoryId } };
+    filters.category = { _eq: categoryId };
     delete attrs.categoryId;
     delete attrs.category;
   }
@@ -213,7 +270,7 @@ export default async function getNews(
           "category.name",
         ],
         sort: ["-date_created"],
-        ...filters,
+        filter: filters,
         ...attrs,
       })
     );
@@ -227,14 +284,17 @@ export default async function getNews(
 }
 
 /* ============================================================
-   🔥 2. Pobieranie pojedynczego artykułu
+   Pobieranie pojedynczego artykułu
    ============================================================ */
 export async function getSinglePost(slug: string): Promise<SinglePost | null> {
   try {
     const dataRaw = await directus.request(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (readItems as any)("news", {
-        filter: { slug: { _eq: slug } },
+        filter: {
+          slug: { _eq: slug },
+          status: { _eq: "published" },
+        },
         limit: 1,
         fields: [
           "id",
@@ -269,7 +329,7 @@ export async function getSinglePost(slug: string): Promise<SinglePost | null> {
 }
 
 /* ============================================================
-   🔥 3. Pobieranie polecanych artykułów
+   Pobieranie polecanych artykułów
    ============================================================ */
 export async function getRecommended(
   categoryId: string,
@@ -282,6 +342,7 @@ export async function getRecommended(
         filter: {
           category: { _eq: categoryId },
           slug: { _neq: excludeSlug },
+          status: { _eq: "published" },
         },
         sort: ["-date_created"],
         limit: 2,
@@ -308,9 +369,8 @@ export async function getRecommended(
 }
 
 /* ============================================================
-   🔥 Case study 
+   Case study
    ============================================================ */
-
 export async function getLatestCaseStudies(limit = 3): Promise<News[]> {
   try {
     const dataRaw = await directus.request(
