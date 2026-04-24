@@ -1,7 +1,28 @@
 @import "tailwindcss";
 
+.material-symbols-outlined {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
 
+  /* możesz zostawić albo kontrolować z Tailwinda */
+  font-size: 40px;
 
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+
+  /* ważne dla ligatur (czyli nazw ikon jak "co_present") */
+  letter-spacing: normal;
+  text-transform: none;
+
+  /* KLUCZOWE */
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
 /* :root {
   --background: #ffffff;
   --foreground: #171717;

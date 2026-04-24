@@ -6,8 +6,8 @@ import {
   getEventsCreateSlugs,
 } from "@/lib/eventsCreate";
 import Breadcrumb from "@/app/oferta/components/Breadcrumb";
-import HeroSection from "@/app/(marketing)/HeroSection";
 import DirectusRenderer from "@/components/bloxs/DirectusRenderer";
+import EventHero from "@/components/bloxs/EventHero";
 
 type PageProps = {
   params: Promise<{
@@ -60,16 +60,6 @@ export async function generateMetadata({
   }
 }
 
-function getHeroImage(image?: string | null) {
-  if (!image) return "/static/homepage/Header.webp";
-
-  const publicBaseUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "";
-
-  if (!publicBaseUrl) return "/static/homepage/Header.webp";
-
-  return `${publicBaseUrl.replace(/\/$/, "")}/assets/${image}`;
-}
-
 export default async function EventSinglePage({ params }: PageProps) {
   const { slug } = await params;
 
@@ -94,15 +84,13 @@ export default async function EventSinglePage({ params }: PageProps) {
     <main>
       <Breadcrumb />
 
-      <HeroSection
+      <EventHero
         title={event.name}
-        subtitle={event.lead ?? ""}
-        backgroundImage="/static/homepage/Header.webp"
-        heroImage={getHeroImage(event.image)}
+        subtitle={event.lead}
+        image={event.image}
         contentPosition="left"
         imageVerticalAlign="bottom"
         imageFit="contain"
-        variant="full-height"
       />
 
       <section className="bg-white px-4 py-8 md:px-6">
