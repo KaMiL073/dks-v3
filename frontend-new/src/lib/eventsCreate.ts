@@ -39,6 +39,12 @@ export type ConsultantRelation = {
   consultants_id: ConsultantPerson | number;
 };
 
+export type KeyInfoRepeaterItem = {
+  id?: number | string | null;
+  key?: string | null;
+  value?: string | null;
+};
+
 export type AgendaSpeaker = SpeakerPerson;
 
 export type AgendaItem = {
@@ -49,6 +55,7 @@ export type AgendaItem = {
   end_date?: string | null;
   events_create_id?: number | null;
   icon?: string | null;
+  ikona?: string | null;
   speakers?: AgendaSpeaker[];
 };
 
@@ -86,8 +93,12 @@ export type ComponentEventItem = {
   agenda?: AgendaEntry[];
   speakers?: SpeakerRelation[];
 
-  // consultants_event aktualnie zwraca pole "collection"
-  collection?: ConsultantRelation[];
+  item?: KeyInfoRepeaterItem[];
+  items?: KeyInfoRepeaterItem[];
+  key_value?: KeyInfoRepeaterItem[];
+  info?: KeyInfoRepeaterItem[];
+
+  collection?: ConsultantRelation[] | KeyInfoRepeaterItem[];
 
   [key: string]: unknown;
 };
@@ -142,24 +153,27 @@ const eventFields = [
   "location",
   "lead",
   "speakers",
+
   "components_event.*",
   "components_event.item.*",
+
+  "components_event.item.item.*",
+  "components_event.item.items.*",
+  "components_event.item.key_value.*",
+  "components_event.item.info.*",
+
   "components_event.item.logo.*",
   "components_event.item.agenda.*",
   "components_event.item.agenda.agenda_id.*",
   "components_event.item.agenda.agenda_id.speakers.*",
   "components_event.item.speakers.*",
   "components_event.item.speakers.speakers_id.*",
-
-  // consultants_event ma teraz pole "collection"
   "components_event.item.collection.*",
   "components_event.item.collection.consultants_id.*",
 ] as const;
 
 function normalizeItems<T>(response: unknown): T[] {
-  if (Array.isArray(response)) {
-    return response as T[];
-  }
+  if (Array.isArray(response)) return response as T[];
 
   if (
     response &&
