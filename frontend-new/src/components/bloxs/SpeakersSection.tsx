@@ -51,7 +51,18 @@ function getSpeakerSubtitle(speaker: Speaker) {
 function getSpeakerImage(image?: string | null) {
   if (!image) return null;
 
-  return `http://localhost/backend/assets/${image}`;
+  // jeśli już jest pełny URL → napraw localhost
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image.replace("http://localhost/backend", "https://dks.pl/backend");
+  }
+
+  // pobierz backend URL z env
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "https://dks.pl/backend";
+
+  return `${backendUrl.replace(/\/$/, "")}/assets/${image}`;
 }
 
 export default function SpeakersSection({ item }: SpeakersSectionProps) {

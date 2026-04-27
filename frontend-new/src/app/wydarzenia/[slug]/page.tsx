@@ -89,7 +89,7 @@ export default async function EventSinglePage({ params }: PageProps) {
         subtitle={event.lead}
         image={event.image}
         contentPosition="left"
-        imageVerticalAlign="bottom"
+        imageVerticalAlign="center"
         imageFit="contain"
       />
 

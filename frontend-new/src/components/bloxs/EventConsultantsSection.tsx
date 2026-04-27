@@ -59,14 +59,14 @@ export default function EventConsultantsSection({
 
   return (
     <section className="self-stretch py-12 lg:py-20">
-      <div className="flex max-w-7xl flex-col items-start gap-16">
+      <div className="flex flex-col items-start gap-16">
         <div className="inline-flex w-full items-center justify-between">
           <h2 className="flex-1 text-3xl font-semibold leading-tight text-black md:text-4xl md:leading-[56px]">
             {item.title?.trim() || "Konsultanci wydarzenia"}
           </h2>
         </div>
 
-        <div className="flex w-full flex-wrap items-start justify-start gap-8">
+        <div className="flex w-full flex-wrap items-start justify-between gap-8">
           {consultants.map((consultant) => {
             const name = getConsultantName(consultant);
             const imageSrc = getConsultantImage(consultant.image);
