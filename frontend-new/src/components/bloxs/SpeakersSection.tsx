@@ -30,9 +30,7 @@ interface SpeakersSectionProps {
 }
 
 function getSpeakerName(speaker: Speaker) {
-  if (speaker.fullname && speaker.fullname.trim()) {
-    return speaker.fullname.trim();
-  }
+  if (speaker.fullname?.trim()) return speaker.fullname.trim();
 
   return `${speaker.name ?? ""} ${speaker.lastname ?? ""}`.trim() || "Prelegent";
 }
@@ -51,12 +49,10 @@ function getSpeakerSubtitle(speaker: Speaker) {
 function getSpeakerImage(image?: string | null) {
   if (!image) return null;
 
-  // jeśli już jest pełny URL → napraw localhost
   if (image.startsWith("http://") || image.startsWith("https://")) {
     return image.replace("http://localhost/backend", "https://dks.pl/backend");
   }
 
-  // pobierz backend URL z env
   const backendUrl =
     process.env.NEXT_PUBLIC_BACKEND_URL ||
     process.env.NEXT_PUBLIC_API_URL ||
@@ -79,26 +75,24 @@ export default function SpeakersSection({ item }: SpeakersSectionProps) {
   if (speakers.length === 0) return null;
 
   return (
-    <section className="self-stretch py-12 lg:py-20">
-      <div className="flex max-w-7xl flex-col items-start gap-16">
-        <div className="inline-flex w-full items-center justify-between">
-          <h2 className="flex-1 text-3xl font-semibold leading-tight text-black md:text-4xl md:leading-[56px]">
-            {item.title?.trim() || "Prelegenci"}
-          </h2>
-        </div>
+    <section className="w-full py-12 lg:py-20">
+      <div className="flex w-full flex-col items-start gap-12 px-4 lg:gap-16">
+        <h2 className="w-full text-3xl font-semibold leading-tight text-black md:text-4xl md:leading-[56px]">
+          {item.title?.trim() || "Prelegenci"}
+        </h2>
 
-        <div className="flex w-full flex-col items-start gap-12">
+        <div className="flex w-full flex-col gap-12">
           {speakers.map((speaker) => {
             const name = getSpeakerName(speaker);
             const subtitle = getSpeakerSubtitle(speaker);
             const imageSrc = getSpeakerImage(speaker.image);
 
             return (
-              <div
+              <article
                 key={speaker.id}
-                className="flex w-full flex-col items-start gap-6 md:flex-row md:gap-12"
+                className="flex w-full flex-col gap-6 md:flex-row md:gap-12"
               >
-                <div className="relative h-64 w-full max-w-64 shrink-0 overflow-hidden bg-gray-100">
+                <div className="relative h-64 w-full max-w-64 shrink-0 overflow-hidden bg-gray-100 max-sm:max-w-full">
                   {imageSrc ? (
                     <Image
                       src={imageSrc}
@@ -115,28 +109,26 @@ export default function SpeakersSection({ item }: SpeakersSectionProps) {
                   )}
                 </div>
 
-                <div className="flex flex-1 flex-col items-start gap-8">
-                  <div className="flex w-full flex-col items-start gap-4">
-                    <h3 className="w-full text-2xl font-semibold leading-10 text-black md:text-3xl">
+                <div className="flex min-w-0 flex-1 flex-col gap-5 md:gap-8">
+                  <div className="flex flex-col gap-3 md:gap-4">
+                    <h3 className="text-2xl font-semibold leading-tight text-black md:text-3xl md:leading-10">
                       {name}
                     </h3>
 
                     {subtitle ? (
-                      <p className="w-full text-lg font-semibold leading-6 text-black md:text-xl">
+                      <p className="text-base font-semibold leading-6 text-black md:text-xl">
                         {subtitle}
                       </p>
                     ) : null}
                   </div>
 
                   {speaker.bio ? (
-                    <div className="inline-flex max-h-40 w-full items-center justify-center gap-2.5">
-                      <p className="flex-1 overflow-hidden text-base font-normal leading-6 text-black md:h-40 md:text-xl">
-                        {speaker.bio.replace(/\s+/g, " ").trim()}
-                      </p>
-                    </div>
+                    <p className="text-base font-normal leading-7 text-black md:text-xl md:leading-8">
+                      {speaker.bio.replace(/\s+/g, " ").trim()}
+                    </p>
                   ) : null}
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>

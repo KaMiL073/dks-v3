@@ -66,7 +66,7 @@ export default function EventConsultantsSection({
           </h2>
         </div>
 
-        <div className="flex w-full flex-wrap items-start justify-between gap-8">
+        <div className="flex w-full flex-wrap items-start justify-center gap-8">
           {consultants.map((consultant) => {
             const name = getConsultantName(consultant);
             const imageSrc = getConsultantImage(consultant.image);
