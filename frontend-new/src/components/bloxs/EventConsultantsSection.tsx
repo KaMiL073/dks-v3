@@ -58,8 +58,8 @@ export default function EventConsultantsSection({
   if (consultants.length === 0) return null;
 
   return (
-    <section className="self-stretch py-12 lg:py-20">
-      <div className="flex flex-col items-start gap-16">
+    <section className="self-stretch py-12 lg:py-20 py-18 px-4 sm:px-6 lg:px-8 xl:px-28">
+      <div className="flex flex-col items-start gap-16 ">
         <div className="inline-flex w-full items-center justify-between">
           <h2 className="flex-1 text-3xl font-semibold leading-tight text-black md:text-4xl md:leading-[56px]">
             {item.title?.trim() || "Konsultanci wydarzenia"}

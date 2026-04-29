@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+
 import Button from "@/components/ui/Button";
 import { Heading } from "@/components/ui/Typography/Heading";
 
@@ -11,83 +13,81 @@ type EventHeroProps = {
 
   title?: string | null;
   subtitle?: string | null;
-  buttonLabel?: string;
+  buttonLabel?: string | null;
+  buttonUrl?: string | null;
+
   image?: string | null;
+  backgroundImage?: string | null;
 
   contentPosition?: "left" | "right";
   imageVerticalAlign?: "bottom" | "center";
   imageFit?: "contain" | "cover";
 };
 
-/* =========================
-   🔥 DIRECTUS IMAGE
-========================= */
-
 function getDirectusImage(image?: string | null) {
   if (!image) return null;
+
+  if (image.startsWith("http://") || image.startsWith("https://")) {
+    return image.replace("http://localhost/backend", "https://dks.pl/backend");
+  }
+
   return `/backend/assets/${image}`;
 }
 
-// 👇 KLUCZOWE: omijamy next/image optimizer
 const directusLoader = ({ src }: { src: string }) => src;
-
-/* =========================
-   COMPONENT
-========================= */
 
 export default function EventHero({
   variant = "full-height",
   title,
   subtitle,
   buttonLabel,
+  buttonUrl,
   image,
+  backgroundImage,
   contentPosition = "left",
   imageVerticalAlign = "center",
   imageFit = "contain",
 }: EventHeroProps) {
   const heroImage = getDirectusImage(image);
+  const bgImage = getDirectusImage(backgroundImage);
 
   const isRight = contentPosition === "right";
   const isCenter = imageVerticalAlign === "center";
-  const directionClass = isRight ? "lg:flex-row-reverse" : "";
 
   const imageClass = imageFit === "cover" ? "object-cover" : "object-contain";
   const objectPosition = isCenter ? "50% 50%" : "50% 100%";
 
   const containerClasses =
-    "flex flex-col lg:flex-row gap-6 lg:gap-12 " +
-    "px-4 sm:px-6 lg:px-8 xl:px-28 mx-auto " +
-    "pt-8 lg:pt-20 " +
-    "min-h-[500px] lg:h-[680px] " +
-    "items-start lg:items-stretch " +
-    directionClass;
+    variant === "boxed-image"
+      ? [
+          "mx-auto flex min-h-[500px] flex-col gap-6 px-4 pt-8 sm:px-6 lg:h-[680px] lg:flex-row lg:items-stretch lg:gap-12 lg:px-8 lg:pt-20 xl:px-28",
+          isRight ? "lg:flex-row-reverse" : "",
+        ].join(" ")
+      : [
+          "mx-auto flex min-h-[500px] flex-col gap-6 px-4 pt-8 sm:px-6 lg:h-[680px] lg:flex-row lg:items-stretch lg:gap-12 lg:px-8 lg:pt-20 xl:px-28",
+          isRight ? "lg:flex-row-reverse" : "",
+        ].join(" ");
 
-  const textColClasses =
-    "w-full lg:flex-1 flex flex-col gap-4 lg:gap-8 lg:justify-center";
-
-  const imageOuterClasses =
-    "w-full lg:flex-1 flex justify-center lg:h-full " +
-    (isRight ? "lg:justify-end " : "lg:justify-start ") +
-    (isCenter ? "lg:items-center" : "lg:items-end");
-
-  const imageInnerClasses =
-    "relative w-full " +
-    "h-[240px] sm:h-[320px] md:h-[360px] " +
-    "lg:h-full " +
-    "sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-5xl";
+  const imageOuterClasses = [
+    "flex w-full justify-center lg:h-full lg:flex-1",
+    isRight ? "lg:justify-end" : "lg:justify-start",
+    isCenter ? "lg:items-center" : "lg:items-end",
+  ].join(" ");
 
   return (
     <section
       className="w-full bg-cover bg-center"
-      style={{ backgroundImage: 'url("/static/homepage/Header.webp")' }}
+      style={{
+        backgroundImage: `url("${bgImage || "/static/homepage/Header.webp"}")`,
+      }}
     >
       <div className={containerClasses}>
-        <div className={textColClasses}>
+        <div className="flex w-full flex-col gap-4 lg:flex-1 lg:justify-center lg:gap-8">
           {title && (
             <Heading headingValue="h1_semibold" as="h1">
               {title}
             </Heading>
-          )}
+          )}-
 
           {subtitle && (
             <Heading headingValue="h5_normal" as="h5">
@@ -97,24 +97,28 @@ export default function EventHero({
 
           {buttonLabel && (
             <div className="mt-2">
-              <Button>{buttonLabel}</Button>
+              {buttonUrl ? (
+                <Link href={buttonUrl}>
+                  <Button>{buttonLabel}</Button>
+                </Link>
+              ) : (
+                <Button>{buttonLabel}</Button>
+              )}
             </div>
           )}
         </div>
 
         {heroImage && (
           <div className={imageOuterClasses}>
-            <div className={imageInnerClasses}>
+            <div className="relative h-[240px] w-full sm:h-[320px] sm:max-w-sm md:h-[360px] md:max-w-md lg:h-full lg:max-w-2xl xl:max-w-5xl">
               <Image
-                loader={directusLoader}   // 🔥 omija next/image proxy
+                loader={directusLoader}
                 src={heroImage}
                 alt={title || "Hero image"}
                 fill
-                unoptimized               // 🔥 KLUCZOWE
+                unoptimized
                 priority
-                sizes="(max-width: 768px) 100vw,
-                       (max-width: 1200px) 50vw,
-                       33vw"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 className={imageClass}
                 style={{ objectPosition }}
               />

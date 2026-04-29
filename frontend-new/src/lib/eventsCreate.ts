@@ -73,6 +73,7 @@ export type LogoItem = {
 
 export type ComponentEventItem = {
   id: number;
+  sort?: number | null;
   title?: string | null;
   subtitle?: string | null;
   content?: string | null;
@@ -105,6 +106,7 @@ export type ComponentEventItem = {
 
 export type ComponentEvent = {
   id: number;
+  sort?: number | null;
   events_create_id: number;
   collection: string;
   item: ComponentEventItem | null;

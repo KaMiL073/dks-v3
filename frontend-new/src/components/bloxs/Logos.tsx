@@ -126,7 +126,7 @@ export default function LogosSection({
   if (logos.length === 0) return null;
 
   return (
-    <section className="flex flex-col gap-12 bg-surface-page py-12 md:py-20">
+    <section className="flex flex-col gap-12 bg-surface-page py-12 md:py-20 py-18 px-4 sm:px-6 lg:px-8 xl:px-28">
       <Heading2 variant="semibold">
         {item.name?.trim() || "Nasi Partnerzy"}
       </Heading2>

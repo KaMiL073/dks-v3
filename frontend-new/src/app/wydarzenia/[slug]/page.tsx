@@ -7,7 +7,6 @@ import {
 } from "@/lib/eventsCreate";
 import Breadcrumb from "@/app/oferta/components/Breadcrumb";
 import DirectusRenderer from "@/components/bloxs/DirectusRenderer";
-import EventHero from "@/components/bloxs/EventHero";
 
 type PageProps = {
   params: Promise<{
@@ -16,6 +15,7 @@ type PageProps = {
 };
 
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function generateStaticParams() {
   try {
@@ -84,32 +84,21 @@ export default async function EventSinglePage({ params }: PageProps) {
     <main>
       <Breadcrumb />
 
-      <EventHero
-        title={event.name}
-        subtitle={event.lead}
-        image={event.image}
-        contentPosition="left"
-        imageVerticalAlign="center"
-        imageFit="contain"
-      />
-
-      <section className="bg-white px-4 py-8 md:px-6">
-        <div className="inline-flex w-full flex-col items-start justify-start gap-12 overflow-hidden bg-white px-4 py-20 lg:px-6 2xl:px-20">
-          <div className="prose max-w-none leading-relaxed text-gray-700">
-            {components.length > 0 ? (
-              <DirectusRenderer components={components} />
-            ) : event.lead ? (
-              <div className="rich-content">
-                <p>{event.lead}</p>
-              </div>
-            ) : (
-              <p className="text-lg text-gray-500">
-                Brak opisu dla tego wydarzenia.
-              </p>
-            )}
+      {components.length > 0 ? (
+        <DirectusRenderer components={components} />
+      ) : event.lead ? (
+        <section className="bg-white px-4 py-20 md:px-6 lg:px-28">
+          <div className="rich-content mx-auto max-w-7xl">
+            <p>{event.lead}</p>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : (
+        <section className="bg-white px-4 py-20 md:px-6 lg:px-28">
+          <p className="mx-auto max-w-7xl text-lg text-gray-500">
+            Brak opisu dla tego wydarzenia.
+          </p>
+        </section>
+      )}
     </main>
   );
 }

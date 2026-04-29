@@ -18,7 +18,7 @@ export default function KeyInfo({ item }: { item: KeyInfoItem }) {
   if (items.length === 0) return null;
 
   return (
-    <section className="bg-[#D1D5DC] px-6 py-12 xl:py-20">
+    <section className="bg-[#D1D5DC] px-6 py-12 xl:py-20 py-18 px-4 sm:px-6 lg:px-8 xl:px-28">
       <div className="flex flex-col gap-12">
         {item.title ? (
           <h2 className="text-3xl font-semibold leading-tight text-Text-body md:text-4xl md:leading-[48px]">

@@ -75,7 +75,7 @@ export default function SpeakersSection({ item }: SpeakersSectionProps) {
   if (speakers.length === 0) return null;
 
   return (
-    <section className="w-full py-12 lg:py-20">
+    <section className="w-full py-12 lg:py-20 py-18 px-4 sm:px-6 lg:px-8 xl:px-28">
       <div className="flex w-full flex-col items-start gap-12 px-4 lg:gap-16">
         <h2 className="w-full text-3xl font-semibold leading-tight text-black md:text-4xl md:leading-[56px]">
           {item.title?.trim() || "Prelegenci"}

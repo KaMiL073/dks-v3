@@ -97,7 +97,7 @@ export default function AgendaSection({ item }: { item: AgendaSectionItem }) {
   if (agenda.length === 0) return null;
 
   return (
-    <section className="py-12 md:py-20">
+    <section className="py-12 md:py-20 py-18 px-4 sm:px-6 lg:px-8 xl:px-28">
       <div className="flex flex-col gap-12">
         <h2 className="text-3xl font-semibold text-Text-headings md:text-4xl">
           {item.name?.trim() || "Agenda"}
