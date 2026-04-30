@@ -27,22 +27,30 @@ type EventsCreateItem = {
   [key: string]: unknown;
 };
 
+type PromotionItem = {
+  id: string | number;
+  name?: string | null;
+  slug?: string | null;
+  status?: string | null;
+  date_created?: string | null;
+  [key: string]: unknown;
+};
+
 type DirectusSchema = {
   brands: BrandItem[];
   events_create: EventsCreateItem[];
+  promotions: PromotionItem[];
 };
 
 function cleanEnv(v: string | undefined): string {
   const s = (v ?? "").trim();
+
   if (!s) return "";
   if (s === "undefined" || s === "null") return "";
+
   return s;
 }
 
-/**
- * Server-side Directus SDK wymaga ABSOLUTNEGO URL.
- * Jeśli ktoś poda "/backend", to na serwerze to jest niepoprawne.
- */
 function resolveBackendUrl(): string {
   const internal =
     cleanEnv(process.env.DIRECTUS_INTERNAL_URL) ||
@@ -51,6 +59,7 @@ function resolveBackendUrl(): string {
   if (internal) return internal.replace(/\/$/, "");
 
   const raw = cleanEnv(process.env.NEXT_PUBLIC_BACKEND_URL);
+
   if (!raw) return "http://directus:8055";
 
   try {
