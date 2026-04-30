@@ -16,15 +16,12 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl";
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
-
   title: {
     default: "DKS",
     template: "%s | DKS",
   },
-
   description:
     "DKS – dostawca sprzętu drukującego dla biur, reklamy i poligrafii.",
-
   robots: {
     index: true,
     follow: true,
@@ -39,6 +36,11 @@ export default function RootLayout({
   return (
     <html lang="pl-PL">
       <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+
         <JsonLd
           data={{
             "@context": "https://schema.org",

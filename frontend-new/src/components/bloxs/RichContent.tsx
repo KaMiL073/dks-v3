@@ -50,7 +50,7 @@ export default function RichContentBlock({ item }: { item: RichContentItem }) {
 
   return (
     <section
-      className="bg-surface-page flex flex-col justify-center items-start gap-6 py-18"
+      className="bg-surface-page flex flex-col justify-center items-start gap-6 py-18 px-4 sm:px-6 lg:px-8 xl:px-28"
       data-directus={setAttr({
         collection: "rich_content",
         item: String(item.id),
