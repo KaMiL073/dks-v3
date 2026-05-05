@@ -347,7 +347,6 @@ export default function CountersFormClientZone() {
               name="consentData"
               checked={form.consentData}
               onChange={handleChange}
-              required
               className={checkboxClass}
             />
             <span className="flex-1 justify-start text-Text-body text-xs font-normal font-['Montserrat'] leading-4">
