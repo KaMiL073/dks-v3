@@ -1,268 +1,252 @@
 "use client";
 
 import React, { useState } from "react";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
 
-export type ContactFormState = {
+type OrderType = "" | "W ramach umowy" | "Bez umowy";
+
+type FormState = {
   name: string;
   nip: string;
   email: string;
   phone: string;
-  message: string;
   province: string;
+  model: string;
+  serialNumber: string;
+  type: OrderType;
+  cyjan: string;
+  cyjanQty: string;
+  magenta: string;
+  magentaQty: string;
+  yellow: string;
+  yellowQty: string;
+  black: string;
+  blackQty: string;
+  message: string;
   consentData: boolean;
   consentMarketing: boolean;
 };
 
-type ContactFormProps = {
-  /**
-   * Jeśli wrapper (np. accordion) daje już padding, ustaw compact=true
-   * żeby nie robić dodatkowych odstępów w samym formularzu.
-   */
-  compact?: boolean;
-  className?: string;
+const FORM_NAME = "ConsumablesOrderForm";
+
+const PROVINCES = [
+  { value: "pomorskie", label: "Pomorskie" },
+  { value: "mazowieckie", label: "Mazowieckie" },
+  { value: "slaskie", label: "Śląskie" },
+  { value: "wielkopolskie", label: "Wielkopolskie" },
+  { value: "lodzkie", label: "Łódzkie" },
+  { value: "malopolskie", label: "Małopolskie" },
+  { value: "zachodniopomorskie", label: "Zachodniopomorskie" },
+  { value: "kujawsko-pomorskie", label: "Kujawsko-pomorskie" },
+  { value: "warminsko-mazurskie", label: "Warmińsko-mazurskie" },
+  { value: "podkarpackie", label: "Podkarpackie" },
+  { value: "podlaskie", label: "Podlaskie" },
+  { value: "dolnoslaskie", label: "Dolnośląskie" },
+] as const;
+
+const initialForm: FormState = {
+  name: "",
+  nip: "",
+  email: "",
+  phone: "",
+  province: "pomorskie",
+  model: "",
+  serialNumber: "",
+  type: "",
+  cyjan: "",
+  cyjanQty: "",
+  magenta: "",
+  magentaQty: "",
+  yellow: "",
+  yellowQty: "",
+  black: "",
+  blackQty: "",
+  message: "",
+  consentData: false,
+  consentMarketing: false,
 };
 
-export default function ContactForm({
-  compact = false,
-  className = "",
-}: ContactFormProps) {
-  const [form, setForm] = useState<ContactFormState>({
-    name: "",
-    nip: "",
-    email: "",
-    phone: "",
-    message: "",
-    province: "pomorskie",
-    consentData: false,
-    consentMarketing: false,
-  });
+export default function ConsumablesOrderFormClientZone() {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [isSending, setIsSending] = useState(false);
+
+  const isContract = form.type === "W ramach umowy";
+  const isNoContract = form.type === "Bez umowy";
+
+  const inputClass =
+    "w-full h-10 bg-surface-page rounded-lg border border-border-primary px-3 text-base outline-none focus:border-Text-headings";
+
+  const textareaClass =
+    "w-full h-44 bg-surface-page rounded-lg border border-border-primary px-3 py-2 text-base outline-none resize-none";
+
+  const checkboxClass =
+    "mt-0.5 w-6 h-6 shrink-0 appearance-none bg-surface-page border border-border-primary rounded-[3px] cursor-pointer checked:bg-surface-action checked:border-surface-action checked:after:content-['✓'] checked:after:block checked:after:text-white checked:after:text-center checked:after:leading-6 checked:after:text-sm";
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement;
-    const { name, type, value, checked } = target;
+    const target = e.target;
+    const { name, value } = target;
 
     if (name === "nip") {
       if (!/^\d*$/.test(value)) return;
       if (value.length > 10) return;
     }
 
+    if (target instanceof HTMLInputElement && target.type === "checkbox") {
+      setForm((prev) => ({
+        ...prev,
+        [name]: target.checked,
+      }));
+      return;
+    }
+
     setForm((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
+  };
+
+  const validateBeforeSubmit = (): string | null => {
+    if (!form.type) return "Wybierz rodzaj zamówienia.";
+
+    if (isContract) {
+      const requiredFields: Array<keyof FormState> = [
+        "cyjan",
+        "cyjanQty",
+        "magenta",
+        "magentaQty",
+        "yellow",
+        "yellowQty",
+        "black",
+        "blackQty",
+      ];
+
+      for (const key of requiredFields) {
+        if (!String(form[key]).trim()) {
+          return "Uzupełnij wszystkie pola tonerów dla umowy.";
+        }
+      }
+    }
+
+    if (isNoContract) {
+      const requiredFields: Array<keyof FormState> = [
+        "cyjanQty",
+        "magentaQty",
+        "yellowQty",
+        "blackQty",
+      ];
+
+      for (const key of requiredFields) {
+        if (!String(form[key]).trim()) {
+          return "Uzupełnij ilości tonerów.";
+        }
+      }
+    }
+
+    if (!form.consentData) {
+      return "Zgoda na przetwarzanie danych jest wymagana.";
+    }
+
+    return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const validationError = validateBeforeSubmit();
+    if (validationError) {
+      alert(`❌ ${validationError}`);
+      return;
+    }
+
     try {
+      setIsSending(true);
+
+      if (!executeRecaptcha) {
+        throw new Error("reCAPTCHA nie jest gotowa.");
+      }
+
+      const recaptchaToken = await executeRecaptcha("consumables_form");
+
+      const payload = {
+        form_name: FORM_NAME,
+        email: form.email,
+        form_data: form,
+        recaptchaToken,
+      };
+
       const resp = await fetch("/api/forms", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          form_name: "ContactForm",
-          email: form.email,
-          form_data: form,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await resp.json();
       if (!resp.ok) throw data;
 
-      alert("✅ Dziękujemy! Formularz został wysłany.");
-      setForm({
-        name: "",
-        nip: "",
-        email: "",
-        phone: "",
-        message: "",
-        province: "pomorskie",
-        consentData: false,
-        consentMarketing: false,
-      });
+      alert("✅ Wysłano!");
+      setForm(initialForm);
     } catch (err) {
-      console.error("Błąd wysyłania formularza:", err);
-      alert("❌ Ups! Coś poszło nie tak. Spróbuj ponownie.");
+      console.error(err);
+      alert("❌ Błąd wysyłania.");
+    } finally {
+      setIsSending(false);
     }
   };
 
-  const inputClass =
-    "w-full h-11 rounded-lg border border-gray-500 px-3 bg-white outline-none focus:border-gray-700";
-  const textareaClass =
-    "w-full min-h-[180px] rounded-lg border border-gray-500 px-3 py-2 bg-white outline-none focus:border-gray-700";
-  const labelClass = "flex flex-col gap-1 text-base text-Text-headings";
-
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={[
-        "w-full",
-        compact ? "" : "py-2",
-        className,
-      ].join(" ")}
-    >
-      {/* WSZYSTKIE POLA JEDNO POD DRUGIM */}
-      <div className="flex flex-col gap-4">
-        <label className={labelClass}>
-          Imię i Nazwisko / Nazwa firmy:
-          <input
-            type="text"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            required
-            autoComplete="name"
-            className={inputClass}
-          />
-        </label>
-
-        <label className={labelClass}>
-          NIP:
-          <input
-            type="text"
-            name="nip"
-            value={form.nip}
-            onChange={handleChange}
-            required
-            inputMode="numeric"
-            pattern="[0-9]*"
-            className={inputClass}
-          />
-        </label>
-
-        <label className={labelClass}>
-          Telefon:
-          <input
-            type="tel"
-            name="phone"
-            value={form.phone}
-            onChange={handleChange}
-            required
-            pattern="[0-9+]{8,13}"
-            autoComplete="tel"
-            className={inputClass}
-          />
-        </label>
-
-        <label className={labelClass}>
-          Email:
-          <input
-            type="email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            required
-            autoComplete="email"
-            className={inputClass}
-          />
-        </label>
-
-        <label className={labelClass}>
-          Województwo:
-          <select
-            name="province"
-            value={form.province}
-            onChange={handleChange}
-            required
-            className={inputClass}
-          >
-            <option value="pomorskie">Pomorskie</option>
-            <option value="mazowieckie">Mazowieckie</option>
-            <option value="slaskie">Śląskie</option>
-            <option value="wielkopolskie">Wielkopolskie</option>
-            <option value="lodzkie">Łódzkie</option>
-            <option value="malopolskie">Małopolskie</option>
-            <option value="zachodniopomorskie">Zachodniopomorskie</option>
-            <option value="kujawsko-pomorskie">Kujawsko-pomorskie</option>
-            <option value="warminsko-mazurskie">Warmińsko-mazurskie</option>
-            <option value="podkarpackie">Podkarpackie</option>
-            <option value="podlaskie">Podlaskie</option>
-            <option value="dolnoslaskie">Dolnośląskie</option>
-          </select>
-        </label>
-
-        <label className={labelClass}>
-          Treść wiadomości:
-          <textarea
-            name="message"
-            value={form.message}
-            onChange={handleChange}
-            required
-            className={textareaClass}
-          />
-        </label>
+    <section className="px-6 md:px-12 xl:px-28 py-20 flex flex-col lg:flex-row gap-20">
+      {/* tekst */}
+      <div className="max-w-md">
+        <h2 className="text-4xl font-semibold mb-4">Skontaktuj się z nami</h2>
+        <p className="text-lg">
+          Wypełnij formularz, by zamówić materiały eksploatacyjne.
+        </p>
       </div>
 
-      {/* RODO */}
-      <div className="mt-6 space-y-4">
-        <label className="flex items-start gap-3 text-xs leading-snug text-gray-800">
+      {/* formularz */}
+      <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
+        <input name="name" value={form.name} onChange={handleChange} placeholder="Imię / firma" className={inputClass} required />
+        <input name="nip" value={form.nip} onChange={handleChange} placeholder="NIP" className={inputClass} required />
+        <input name="phone" value={form.phone} onChange={handleChange} placeholder="Telefon" className={inputClass} required />
+        <input name="email" value={form.email} onChange={handleChange} placeholder="Email" className={inputClass} required />
+
+        <textarea name="message" value={form.message} onChange={handleChange} placeholder="Wiadomość" className={textareaClass} />
+
+        {/* CHECKBOXY */}
+        <label className="flex items-start gap-3 text-sm">
           <input
             type="checkbox"
             name="consentData"
             checked={form.consentData}
             onChange={handleChange}
-            className="mt-1"
-            required
+            className={checkboxClass}
           />
           <span>
-            Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w powyższym formularzu przez DKS Sp. z o.o., 
-            zgodnie z przepisami rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. 
-            w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu 
-            takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych), 
-            Dz. Urz. UE z 4.5.2016 r. L 119, str. 1, w celu udzielenia odpowiedzi na złożone zapytanie. 
-            Zgoda jest dobrowolna i w każdym dowolnym momencie można z niej zrezygnować. 
-            Żądanie usunięcia danych proszę kierować na adres rodo@dks.pl. 
-            Cofnięcie zgody na przetwarzanie danych nie ma wpływu na przetwarzanie danych dokonane przed jego zgłoszeniem.
-
+            Wyrażam zgodę na przetwarzanie danych osobowych...
           </span>
         </label>
 
-        <label className="flex items-start gap-3 text-xs leading-snug text-gray-800">
+        <label className="flex items-start gap-3 text-sm">
           <input
             type="checkbox"
             name="consentMarketing"
             checked={form.consentMarketing}
             onChange={handleChange}
-            className="mt-1"
+            className={checkboxClass}
           />
           <span>
-            Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w powyższym formularzu przez DKS Sp. z o.o., 
-            zgodnie z przepisami rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia 27 kwietnia 2016 r. 
-            w sprawie ochrony osób fizycznych w związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu 
-            takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych), 
-            Dz. Urz. UE z 4.5.2016 r. L 119, str. 1, w celu otrzymywania od DKS Sp. z o.o. 
-            treści marketingowych oraz informacji handlowych, w tym informacji o promocjach i ofertach, 
-            za pośrednictwem podanego adresu e-mail oraz numeru telefonu. Zgoda jest dobrowolna 
-            i w każdym dowolnym momencie można z niej zrezygnować. Żądanie usunięcia danych proszę kierować na adres 
-            rodo@dks.pl. Cofnięcie zgody na przetwarzanie danych nie ma wpływu na przetwarzanie danych dokonane 
-            przed jego zgłoszeniem.
+            Wyrażam zgodę marketingową...
           </span>
         </label>
 
-        <div className="text-xs leading-snug text-gray-800">
-          <p>
-            Informujemy, że: Administratorem Pani/Pana danych osobowych jest DKS Sp. z o.o., z siedzibą przy ul. 
-            Energetycznej 15, 80-180 Kowale, e-mail: rodo@dks.pl.</p>
-          <p>
-            Więcej informacji o tym, jak przetwarzamy Twoje dane znajdziesz w 
-            <a className="text-red" href="klauzula-ochrony-danych-data-protection">Klauzuli Ochrony Danych.</a>
-          </p>
-        </div>
-      </div>
-
-      <div className="flex justify-end mt-6">
-        <Button
-          type="submit"
-          className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition"
-        >
-          Wyślij
+        <Button type="submit" disabled={isSending}>
+          {isSending ? "Wysyłanie..." : "Wyślij"}
         </Button>
-      </div>
-    </form>
+      </form>
+    </section>
   );
 }

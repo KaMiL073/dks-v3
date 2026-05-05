@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { directus } from "@/lib/directus";
-import { createItem } from "@directus/sdk";
+import { createDirectus, createItem, rest, staticToken } from "@directus/sdk";
+import crypto from "crypto";
 
 type NewPayload = {
   form_name: string;
@@ -9,6 +9,11 @@ type NewPayload = {
 };
 
 const COLLECTION = "contact_forms";
+const directusUrl = process.env.DIRECTUS_URL || "http://directus:8055";
+
+const formsDirectus = createDirectus(directusUrl)
+  .with(staticToken(process.env.SERVICE_USER_TOKEN || ""))
+  .with(rest());
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return !!v && typeof v === "object" && !Array.isArray(v);
@@ -30,12 +35,58 @@ function getField(obj: Record<string, unknown>, key: string): unknown {
   return obj[key];
 }
 
-type DirectusRequestClient = {
-  request: (operation: unknown) => Promise<unknown>;
-};
+function stableStringify(obj: unknown): string | undefined {
+  if (obj === null) return "null";
 
-function hasRequestClient(v: unknown): v is DirectusRequestClient {
-  return isRecord(v) && typeof (v as Record<string, unknown>).request === "function";
+  const t = typeof obj;
+
+  if (t === "string") return JSON.stringify(obj);
+  if (t === "number") return Number.isFinite(obj) ? String(obj) : "null";
+  if (t === "boolean") return obj ? "true" : "false";
+
+  if (t === "undefined" || t === "function" || t === "symbol") return undefined;
+
+  if (Array.isArray(obj)) {
+    const items = obj
+      .map((v) => {
+        const s = stableStringify(v);
+        return s === undefined ? "null" : s;
+      })
+      .join(",");
+
+    return `[${items}]`;
+  }
+
+  if (isRecord(obj)) {
+    const keys = Object.keys(obj).sort();
+    const props: string[] = [];
+
+    for (const k of keys) {
+      const v = stableStringify(obj[k]);
+      if (v === undefined) continue;
+      props.push(`${JSON.stringify(k)}:${v}`);
+    }
+
+    return `{${props.join(",")}}`;
+  }
+
+  return undefined;
+}
+
+function signPayload(payload: Record<string, unknown>): string {
+  const secret = process.env.FORMS_HMAC_SECRET;
+
+  if (!secret) {
+    throw new Error("Missing FORMS_HMAC_SECRET");
+  }
+
+  const body = stableStringify(payload);
+
+  if (!body) {
+    throw new Error("Cannot stringify payload");
+  }
+
+  return crypto.createHmac("sha256", secret).update(body).digest("hex");
 }
 
 export async function POST(request: Request) {
@@ -43,30 +94,90 @@ export async function POST(request: Request) {
     const raw: unknown = await request.json();
 
     if (!isRecord(raw)) {
-      return NextResponse.json({ ok: false, error: "Niepoprawne body (JSON)." }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Niepoprawne body (JSON)." },
+        { status: 400 }
+      );
+    }
+
+    if (!process.env.SERVICE_USER_TOKEN) {
+      throw new Error("Missing SERVICE_USER_TOKEN");
     }
 
     const body = raw;
 
+    /**
+     * ✅ RECAPTCHA VALIDATION
+     */
+    const recaptchaToken = pickString(getField(body, "recaptchaToken"));
+
+    if (!recaptchaToken) {
+      return NextResponse.json(
+        { ok: false, error: "Brak tokena reCAPTCHA." },
+        { status: 400 }
+      );
+    }
+
+    if (!process.env.RECAPTCHA_SECRET_KEY) {
+      throw new Error("Missing RECAPTCHA_SECRET_KEY");
+    }
+
+    const verifyResp = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: recaptchaToken,
+        }),
+      }
+    );
+
+    const verify = await verifyResp.json();
+
+    if (!verify.success) {
+      return NextResponse.json(
+        { ok: false, error: "Niepoprawna reCAPTCHA.", verify },
+        { status: 400 }
+      );
+    }
+
+    /**
+     * FORMAT
+     */
     const isNewFormat =
       typeof body.form_name === "string" &&
       typeof body.email === "string" &&
       isRecord(body.form_data);
 
-    // 1) Normalizujemy dane formularza do jednego obiektu
-    const form_name: string = isNewFormat ? (body.form_name as string) : "ContactForm";
+    const form_name: string =
+      isNewFormat && typeof body.form_name === "string"
+        ? body.form_name
+        : "ContactForm";
 
     const legacyEmail = pickString(getField(body, "email")) ?? "";
-    const email: string = isNewFormat ? (body.email as string) : legacyEmail;
 
-    const form_data: Record<string, unknown> = isNewFormat
-      ? (body.form_data as Record<string, unknown>)
-      : body;
+    const email: string =
+      isNewFormat && typeof body.email === "string"
+        ? body.email
+        : legacyEmail;
 
-    // 2) Najważniejsze pola na top-level (ale BEZ email, żeby nie duplikować)
-    const clause = pickBoolString(getField(form_data, "clause") ?? getField(form_data, "consentMarketing"));
+    const rawFormData: Record<string, unknown> =
+      isNewFormat && isRecord(body.form_data) ? body.form_data : body;
+
+    /**
+     * ❗ USUWAMY recaptchaToken z danych
+     */
+    const { recaptchaToken: _recaptchaToken, ...form_data } = rawFormData;
+
+    const clause = pickBoolString(
+      getField(form_data, "clause") ?? getField(form_data, "consentMarketing")
+    );
+
     const clause_for_answers = pickBoolString(
-      getField(form_data, "clause_for_answers") ?? getField(form_data, "consentData")
+      getField(form_data, "clause_for_answers") ??
+        getField(form_data, "consentData")
     );
 
     const topLevel = {
@@ -79,9 +190,6 @@ export async function POST(request: Request) {
       clause_for_answers,
     };
 
-    // email bierzemy z:
-    // - form_data.email jeśli jest
-    // - w innym wypadku z wyliczonego "email"
     const emailFromFormData = pickString(getField(form_data, "email"));
     const finalEmail = emailFromFormData ?? email;
 
@@ -93,25 +201,37 @@ export async function POST(request: Request) {
     };
 
     if (!payload.email) {
-      return NextResponse.json({ ok: false, error: "Brak pola email." }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Brak pola email." },
+        { status: 400 }
+      );
     }
+
     if (!payload.form_name) {
-      return NextResponse.json({ ok: false, error: "Brak pola form_name." }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, error: "Brak pola form_name." },
+        { status: 400 }
+      );
     }
 
-    if (!hasRequestClient(directus)) {
-      return NextResponse.json({ ok: false, error: "Directus client has no request()" }, { status: 500 });
-    }
+    payload.__sig = signPayload(payload);
 
-    // operation jako unknown -> bez any, bez no-explicit-any
-    const operation: unknown = createItem(COLLECTION as never, payload as never);
-    const created = await directus.request(operation);
+    /**
+     * DIRECTUS
+     */
+    const operation = createItem(COLLECTION as never, payload as never);
+    const created = await formsDirectus.request(operation);
 
     return NextResponse.json({ ok: true, created }, { status: 200 });
   } catch (error: unknown) {
     console.error("❌ /api/forms POST error:", error);
+
     return NextResponse.json(
-      { ok: false, error: "Server error", message: error instanceof Error ? error.message : String(error) },
+      {
+        ok: false,
+        error: "Server error",
+        message: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
@@ -120,95 +240,3 @@ export async function POST(request: Request) {
 export async function OPTIONS() {
   return NextResponse.json({}, { status: 200 });
 }
-
-// import { NextResponse } from "next/server";
-// import { directus } from "@/lib/directus";
-// import { createItem } from "@directus/sdk";
-
-// type NewPayload = {
-//   form_name: string;
-//   email: string;
-//   form_data: Record<string, unknown>;
-// };
-
-// const COLLECTION = "contact_forms";
-
-// function isRecord(v: unknown): v is Record<string, unknown> {
-//   return !!v && typeof v === "object" && !Array.isArray(v);
-// }
-
-// function pickString(v: unknown): string | null {
-//   if (typeof v === "string") return v;
-//   if (typeof v === "number") return String(v);
-//   return null;
-// }
-
-// function pickBoolString(v: unknown): string | null {
-//   // na starej stronie w DB często były "false"/"true" jako stringi
-//   if (typeof v === "boolean") return v ? "true" : "false";
-//   if (typeof v === "string") return v;
-//   return null;
-// }
-
-// export async function POST(request: Request) {
-//   try {
-//     const body = (await request.json()) as Record<string, unknown>;
-
-//     const isNewFormat =
-//       typeof body?.form_name === "string" &&
-//       typeof body?.email === "string" &&
-//       isRecord(body?.form_data);
-
-//     // 1) Normalizujemy dane formularza do jednego obiektu
-//     const form_name = isNewFormat ? (body.form_name as string) : "ContactForm";
-//     const email = isNewFormat
-//       ? (body.email as string)
-//       : String((body as any)?.email ?? "");
-
-//     const form_data: Record<string, unknown> = isNewFormat
-//       ? (body.form_data as Record<string, unknown>)
-//       : body; // stary format: płasko
-
-//     // 2) Wypychanie najważniejszych pól na top-level (żeby lista w Directus nie była pusta)
-//     //    (dopasowane do pól które widać w Twoim API response: name/email/phone/message/province/nip/clause/clause_for_answers)
-//     const topLevel = {
-//       name: pickString(form_data.name),
-//       email: pickString(form_data.email) ?? email,
-//       phone: pickString(form_data.phone),
-//       message: pickString(form_data.message),
-//       province: pickString(form_data.province),
-
-//       nip: pickString(form_data.nip),
-
-//       // stare nazwy z Directusa:
-//       clause: pickBoolString((form_data as any).clause ?? (form_data as any).consentMarketing),
-//       clause_for_answers: pickBoolString(
-//         (form_data as any).clause_for_answers ?? (form_data as any).consentData
-//       ),
-//     };
-
-//     const payload: NewPayload & Record<string, unknown> = {
-//       form_name,
-//       email,
-//       form_data,
-//       ...topLevel,
-//     };
-
-//     if (!payload.email) {
-//       return NextResponse.json({ ok: false, error: "Brak pola email." }, { status: 400 });
-//     }
-//     if (!payload.form_name) {
-//       return NextResponse.json({ ok: false, error: "Brak pola form_name." }, { status: 400 });
-//     }
-
-//     const created = await directus.request(createItem(COLLECTION, payload as any));
-//     return NextResponse.json({ ok: true, created }, { status: 200 });
-//   } catch (error) {
-//     console.error("❌ /api/forms POST error:", error);
-//     return NextResponse.json({ ok: false, error: "Server error" }, { status: 500 });
-//   }
-// }
-
-// export async function OPTIONS() {
-//   return NextResponse.json({}, { status: 200 });
-// }
