@@ -4,31 +4,25 @@ import React, { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
 
-type OrderType = "" | "W ramach umowy" | "Bez umowy";
-
-type FormState = {
+export type ContactFormState = {
   name: string;
   nip: string;
-  email: string;
   phone: string;
+  email: string;
   province: string;
   model: string;
   serialNumber: string;
-  type: OrderType;
-  cyjan: string;
-  cyjanQty: string;
-  magenta: string;
-  magentaQty: string;
-  yellow: string;
-  yellowQty: string;
-  black: string;
-  blackQty: string;
   message: string;
   consentData: boolean;
   consentMarketing: boolean;
 };
 
-const FORM_NAME = "ConsumablesOrderForm";
+type ContactFormProps = {
+  compact?: boolean;
+  className?: string;
+};
+
+const FORM_NAME = "ContactForm";
 
 const PROVINCES = [
   { value: "pomorskie", label: "Pomorskie" },
@@ -45,44 +39,42 @@ const PROVINCES = [
   { value: "dolnoslaskie", label: "Dolnośląskie" },
 ] as const;
 
-const initialForm: FormState = {
+const initialForm: ContactFormState = {
   name: "",
   nip: "",
-  email: "",
   phone: "",
+  email: "",
   province: "pomorskie",
   model: "",
   serialNumber: "",
-  type: "",
-  cyjan: "",
-  cyjanQty: "",
-  magenta: "",
-  magentaQty: "",
-  yellow: "",
-  yellowQty: "",
-  black: "",
-  blackQty: "",
   message: "",
   consentData: false,
   consentMarketing: false,
 };
 
-export default function ConsumablesOrderFormClientZone() {
+export default function ContactForm({
+  compact = false,
+  className = "",
+}: ContactFormProps) {
   const { executeRecaptcha } = useGoogleReCaptcha();
-  const [form, setForm] = useState<FormState>(initialForm);
+
+  const [form, setForm] = useState<ContactFormState>(initialForm);
   const [isSending, setIsSending] = useState(false);
 
-  const isContract = form.type === "W ramach umowy";
-  const isNoContract = form.type === "Bez umowy";
+  const fieldWrapClass =
+    "self-stretch flex flex-col justify-start items-start gap-2";
+
+  const labelClass =
+    "self-stretch min-h-5 justify-center text-Text-body text-xl font-normal font-['Montserrat'] leading-6";
 
   const inputClass =
-    "w-full h-10 bg-surface-page rounded-lg border border-border-primary px-3 text-base outline-none focus:border-Text-headings";
+    "self-stretch h-10 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 text-base font-normal font-['Montserrat'] text-Text-body outline-none focus:border-Text-headings";
 
   const textareaClass =
-    "w-full h-44 bg-surface-page rounded-lg border border-border-primary px-3 py-2 text-base outline-none resize-none";
+    "self-stretch h-44 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 py-2 text-base font-normal font-['Montserrat'] text-Text-body outline-none resize-none focus:border-Text-headings";
 
   const checkboxClass =
-    "mt-0.5 w-6 h-6 shrink-0 appearance-none bg-surface-page border border-border-primary rounded-[3px] cursor-pointer checked:bg-surface-action checked:border-surface-action checked:after:content-['✓'] checked:after:block checked:after:text-white checked:after:text-center checked:after:leading-6 checked:after:text-sm";
+    "w-6 h-6 shrink-0 appearance-none bg-[#F9FAFB] rounded border-2 border-border-primary cursor-pointer checked:bg-surface-action checked:border-surface-action checked:after:content-['✓'] checked:after:block checked:after:text-Text-on-action checked:after:text-center checked:after:leading-[22px] checked:after:text-sm";
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -109,56 +101,11 @@ export default function ConsumablesOrderFormClientZone() {
     }));
   };
 
-  const validateBeforeSubmit = (): string | null => {
-    if (!form.type) return "Wybierz rodzaj zamówienia.";
-
-    if (isContract) {
-      const requiredFields: Array<keyof FormState> = [
-        "cyjan",
-        "cyjanQty",
-        "magenta",
-        "magentaQty",
-        "yellow",
-        "yellowQty",
-        "black",
-        "blackQty",
-      ];
-
-      for (const key of requiredFields) {
-        if (!String(form[key]).trim()) {
-          return "Uzupełnij wszystkie pola tonerów dla umowy.";
-        }
-      }
-    }
-
-    if (isNoContract) {
-      const requiredFields: Array<keyof FormState> = [
-        "cyjanQty",
-        "magentaQty",
-        "yellowQty",
-        "blackQty",
-      ];
-
-      for (const key of requiredFields) {
-        if (!String(form[key]).trim()) {
-          return "Uzupełnij ilości tonerów.";
-        }
-      }
-    }
-
-    if (!form.consentData) {
-      return "Zgoda na przetwarzanie danych jest wymagana.";
-    }
-
-    return null;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const validationError = validateBeforeSubmit();
-    if (validationError) {
-      alert(`❌ ${validationError}`);
+    if (!form.consentData) {
+      alert("❌ Zgoda na przetwarzanie danych jest wymagana.");
       return;
     }
 
@@ -169,7 +116,7 @@ export default function ConsumablesOrderFormClientZone() {
         throw new Error("reCAPTCHA nie jest gotowa.");
       }
 
-      const recaptchaToken = await executeRecaptcha("consumables_form");
+      const recaptchaToken = await executeRecaptcha("contact_form");
 
       const payload = {
         form_name: FORM_NAME,
@@ -185,68 +132,223 @@ export default function ConsumablesOrderFormClientZone() {
       });
 
       const data = await resp.json();
-      if (!resp.ok) throw data;
 
-      alert("✅ Wysłano!");
+      if (!resp.ok) {
+        throw data;
+      }
+
+      alert("✅ Dziękujemy! Formularz został wysłany.");
       setForm(initialForm);
     } catch (err) {
-      console.error(err);
-      alert("❌ Błąd wysyłania.");
+      console.error("Błąd wysyłania formularza:", err);
+      alert("❌ Ups! Coś poszło nie tak. Spróbuj ponownie.");
     } finally {
       setIsSending(false);
     }
   };
 
   return (
-    <section className="px-6 md:px-12 xl:px-28 py-20 flex flex-col lg:flex-row gap-20">
-      {/* tekst */}
-      <div className="max-w-md">
-        <h2 className="text-4xl font-semibold mb-4">Skontaktuj się z nami</h2>
-        <p className="text-lg">
-          Wypełnij formularz, by zamówić materiały eksploatacyjne.
-        </p>
+    <div
+      className={[
+        "self-stretch min-h-[1200px] inline-flex justify-start items-start gap-16",
+        compact ? "" : "px-6 md:px-12 xl:px-28 py-20",
+        className,
+      ].join(" ")}
+    >
+      <div className="w-96 self-stretch inline-flex flex-col justify-start items-start gap-2.5 overflow-hidden">
+        <div className="self-stretch flex flex-col justify-center items-center gap-2.5">
+          <div className="self-stretch justify-end">
+            <span className="text-Text-headings text-4xl font-semibold font-['Montserrat'] leading-[56px]">
+              Skontaktuj się z nami
+              <br />
+              <br />
+            </span>
+            <span className="text-Text-headings text-xl font-normal font-['Montserrat'] leading-6">
+              Wypełnij formularz, a nasi specjaliści skontaktują się z Tobą najszybciej jak to możliwe. 
+              <br />
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* formularz */}
-      <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-6">
-        <input name="name" value={form.name} onChange={handleChange} placeholder="Imię / firma" className={inputClass} required />
-        <input name="nip" value={form.nip} onChange={handleChange} placeholder="NIP" className={inputClass} required />
-        <input name="phone" value={form.phone} onChange={handleChange} placeholder="Telefon" className={inputClass} required />
-        <input name="email" value={form.email} onChange={handleChange} placeholder="Email" className={inputClass} required />
+      <form
+        onSubmit={handleSubmit}
+        className="flex-1 min-w-[520px] inline-flex flex-col justify-end items-end gap-9"
+      >
+        <div className="self-stretch flex flex-col justify-start items-center gap-12">
+          <div className="self-stretch flex flex-col justify-start items-start gap-3">
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>Imię i Nazwisko / Nazwa firmy:</span>
+              <input
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                required
+                autoComplete="name"
+                className={inputClass}
+              />
+            </label>
 
-        <textarea name="message" value={form.message} onChange={handleChange} placeholder="Wiadomość" className={textareaClass} />
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>NIP:</span>
+              <input
+                type="text"
+                name="nip"
+                value={form.nip}
+                onChange={handleChange}
+                required
+                inputMode="numeric"
+                pattern="[0-9]{10}"
+                className={inputClass}
+              />
+            </label>
 
-        {/* CHECKBOXY */}
-        <label className="flex items-start gap-3 text-sm">
-          <input
-            type="checkbox"
-            name="consentData"
-            checked={form.consentData}
-            onChange={handleChange}
-            className={checkboxClass}
-          />
-          <span>
-            Wyrażam zgodę na przetwarzanie danych osobowych...
-          </span>
-        </label>
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>Telefon:</span>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                required
+                pattern="[0-9+]{8,13}"
+                autoComplete="tel"
+                className={inputClass}
+              />
+            </label>
 
-        <label className="flex items-start gap-3 text-sm">
-          <input
-            type="checkbox"
-            name="consentMarketing"
-            checked={form.consentMarketing}
-            onChange={handleChange}
-            className={checkboxClass}
-          />
-          <span>
-            Wyrażam zgodę marketingową...
-          </span>
-        </label>
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>Email:</span>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+                className={inputClass}
+              />
+            </label>
 
-        <Button type="submit" disabled={isSending}>
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>Województwo:</span>
+              <select
+                name="province"
+                value={form.province}
+                onChange={handleChange}
+                required
+                className={inputClass}
+              >
+                {PROVINCES.map((province) => (
+                  <option key={province.value} value={province.value}>
+                    {province.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+
+          <div className="self-stretch flex flex-col justify-start items-start gap-3">
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>Model:</span>
+              <input
+                type="text"
+                name="model"
+                value={form.model}
+                onChange={handleChange}
+                autoComplete="off"
+                className={inputClass}
+              />
+            </label>
+
+            <label className={fieldWrapClass}>
+              <span className={labelClass}>Numer seryjny:</span>
+              <input
+                type="text"
+                name="serialNumber"
+                value={form.serialNumber}
+                onChange={handleChange}
+                autoComplete="off"
+                className={inputClass}
+              />
+            </label>
+          </div>
+
+          <label className="self-stretch flex flex-col justify-start items-start gap-2">
+            <span className={labelClass}>Treść wiadomości:</span>
+            <textarea
+              name="message"
+              value={form.message}
+              onChange={handleChange}
+              required
+              className={textareaClass}
+            />
+          </label>
+        </div>
+
+        <div className="self-stretch flex flex-col justify-start items-start gap-6">
+          <label className="self-stretch inline-flex justify-start items-start gap-4">
+            <input
+              type="checkbox"
+              name="consentData"
+              checked={form.consentData}
+              onChange={handleChange}
+              required
+              className={checkboxClass}
+            />
+            <span className="flex-1 justify-start text-Text-body text-xs font-normal font-['Montserrat'] leading-4">
+              Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w
+              powyższym formularzu przez DKS Sp. z o.o., zgodnie z przepisami
+              rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z
+              dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w
+              związku z przetwarzaniem danych osobowych i w sprawie swobodnego
+              przepływu takich danych oraz uchylenia dyrektywy 95/46/WE ogólne
+              rozporządzenie o ochronie danych, Dz. Urz. UE z 4.5.2016 r. L
+              119, str. 1, w celu udzielenia odpowiedzi na złożone zapytanie.
+              Zgoda jest dobrowolna i w każdym dowolnym momencie można z niej
+              zrezygnować. Żądanie usunięcia danych proszę kierować na adres
+              rodo@dks.pl. Cofnięcie zgody na przetwarzanie danych nie ma wpływu
+              na przetwarzanie danych dokonane przed jego zgłoszeniem.
+            </span>
+          </label>
+
+          <label className="self-stretch inline-flex justify-start items-start gap-4">
+            <input
+              type="checkbox"
+              name="consentMarketing"
+              checked={form.consentMarketing}
+              onChange={handleChange}
+              className={checkboxClass}
+            />
+            <span className="flex-1 justify-start text-Text-body text-xs font-normal font-['Montserrat'] leading-4">
+              Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w
+              powyższym formularzu przez DKS Sp. z o.o., zgodnie z przepisami
+              rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z
+              dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w
+              związku z przetwarzaniem danych osobowych i w sprawie swobodnego
+              przepływu takich danych oraz uchylenia dyrektywy 95/46/WE ogólne
+              rozporządzenie o ochronie danych, Dz. Urz. UE z 4.5.2016 r. L
+              119, str. 1, w celu otrzymywania od DKS Sp. z o.o. treści
+              marketingowych oraz informacji handlowych, w tym informacji o
+              promocjach i ofertach, za pośrednictwem podanego adresu e-mail
+              oraz numeru telefonu. Zgoda jest dobrowolna i w każdym dowolnym
+              momencie można z niej zrezygnować. Żądanie usunięcia danych proszę
+              kierować na adres rodo@dks.pl. Cofnięcie zgody na przetwarzanie
+              danych nie ma wpływu na przetwarzanie danych dokonane przed jego
+              zgłoszeniem.
+            </span>
+          </label>
+        </div>
+
+        <Button
+          type="submit"
+          disabled={isSending}
+          className="p-4 bg-surface-action rounded-lg inline-flex justify-end items-end gap-2.5 text-Text-on-action text-2xl font-semibold font-['Montserrat'] leading-7 disabled:opacity-60"
+        >
           {isSending ? "Wysyłanie..." : "Wyślij"}
         </Button>
       </form>
-    </section>
+    </div>
   );
 }
