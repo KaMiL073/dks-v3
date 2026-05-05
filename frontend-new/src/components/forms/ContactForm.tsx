@@ -7,11 +7,9 @@ import Button from "@/components/ui/Button";
 export type ContactFormState = {
   name: string;
   nip: string;
-  phone: string;
   email: string;
+  phone: string;
   province: string;
-  model: string;
-  serialNumber: string;
   message: string;
   consentData: boolean;
   consentMarketing: boolean;
@@ -42,11 +40,9 @@ const PROVINCES = [
 const initialForm: ContactFormState = {
   name: "",
   nip: "",
-  phone: "",
   email: "",
+  phone: "",
   province: "pomorskie",
-  model: "",
-  serialNumber: "",
   message: "",
   consentData: false,
   consentMarketing: false,
@@ -77,7 +73,9 @@ export default function ContactForm({
     "w-6 h-6 shrink-0 appearance-none bg-[#F9FAFB] rounded border-2 border-border-primary cursor-pointer checked:bg-surface-action checked:border-surface-action checked:after:content-['✓'] checked:after:block checked:after:text-Text-on-action checked:after:text-center checked:after:leading-[22px] checked:after:text-sm";
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const target = e.target;
     const { name, value } = target;
@@ -121,7 +119,18 @@ export default function ContactForm({
       const payload = {
         form_name: FORM_NAME,
         email: form.email,
-        form_data: form,
+        form_data: {
+          name: form.name,
+          nip: form.nip,
+          email: form.email,
+          phone: form.phone,
+          province: form.province,
+          message: form.message,
+          clause_for_answers: form.consentData,
+          clause: form.consentMarketing,
+          consentData: form.consentData,
+          consentMarketing: form.consentMarketing,
+        },
         recaptchaToken,
       };
 
@@ -164,7 +173,8 @@ export default function ContactForm({
               <br />
             </span>
             <span className="text-Text-headings text-xl font-normal font-['Montserrat'] leading-6">
-              Wypełnij formularz, a nasi specjaliści skontaktują się z Tobą najszybciej jak to możliwe. 
+              Wypełnij formularz, a nasi specjaliści skontaktują się z Tobą
+              najszybciej jak to możliwe.
               <br />
             </span>
           </div>
@@ -205,6 +215,19 @@ export default function ContactForm({
             </label>
 
             <label className={fieldWrapClass}>
+              <span className={labelClass}>Email:</span>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+                autoComplete="email"
+                className={inputClass}
+              />
+            </label>
+
+            <label className={fieldWrapClass}>
               <span className={labelClass}>Telefon:</span>
               <input
                 type="tel"
@@ -214,19 +237,6 @@ export default function ContactForm({
                 required
                 pattern="[0-9+]{8,13}"
                 autoComplete="tel"
-                className={inputClass}
-              />
-            </label>
-
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>Email:</span>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                autoComplete="email"
                 className={inputClass}
               />
             </label>
@@ -246,32 +256,6 @@ export default function ContactForm({
                   </option>
                 ))}
               </select>
-            </label>
-          </div>
-
-          <div className="self-stretch flex flex-col justify-start items-start gap-3">
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>Model:</span>
-              <input
-                type="text"
-                name="model"
-                value={form.model}
-                onChange={handleChange}
-                autoComplete="off"
-                className={inputClass}
-              />
-            </label>
-
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>Numer seryjny:</span>
-              <input
-                type="text"
-                name="serialNumber"
-                value={form.serialNumber}
-                onChange={handleChange}
-                autoComplete="off"
-                className={inputClass}
-              />
             </label>
           </div>
 
