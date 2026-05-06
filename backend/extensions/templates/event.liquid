@@ -1,16 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>{{ data.name }}</title>
+    <title>{{ data.eventData.name }}</title>
 
     <style type="text/css">
         #outlook a {
             padding: 0;
         }
+
         .ExternalClass {
             width: 100%;
         }
+
         .ExternalClass,
         .ExternalClass p,
         .ExternalClass span,
@@ -19,64 +21,228 @@
         .ExternalClass div {
             line-height: 100%;
         }
-        body, table, td, a, li {
+
+        body,
+        table,
+        td,
+        a,
+        li {
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
         }
+
         body {
             margin: 0;
             padding: 0;
+            background: #f1f1f1;
         }
     </style>
 </head>
+
 <body>
+
 <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f1f1f1">
     <tbody>
         <tr>
-            <td>
-                <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff">
+            <td align="center">
+
+                <!-- HEADER -->
+                <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff">
                     <tbody>
+
                         <tr>
-                            <td height="100" valign="middle" align="center" style="padding-top: 30px;">
-                                <img src="https://dks.pl/storage/newsletter/dks-newslleter.png" width="86" height="49" border="0" alt="DKS" style="display: block;" />
+                            <td align="center" style="padding-top:30px;">
+                                <img
+                                    src="https://dks.pl/storage/newsletter/dks-newslleter.png"
+                                    width="86"
+                                    height="49"
+                                    border="0"
+                                    alt="DKS"
+                                    style="display:block;"
+                                />
                             </td>
                         </tr>
+
                         <tr>
-                            <td valign="top" align="center" style="padding-right: 30px; padding-left: 30px;">
-                                <h2><strong>Dziękujemy za zapisanie się na wydarzenie </strong></h2>
+                            <td
+                                align="center"
+                                style="
+                                    padding:30px;
+                                    font-family:Tahoma, Helvetica, Arial, sans-serif;
+                                "
+                            >
+                                <h2 style="margin:0;">
+                                    Dziękujemy za zapisanie się na wydarzenie
+                                </h2>
+
+                                <p
+                                    style="
+                                        margin-top:15px;
+                                        font-size:20px;
+                                        font-weight:bold;
+                                        color:#000000;
+                                    "
+                                >
+                                    {{ data.eventData.name }}
+                                </p>
                             </td>
                         </tr>
+
                     </tbody>
                 </table>
-                <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff">
+
+                <!-- EVENT IMAGE -->
+                {% if data.eventData.image_email %}
+
+                {% assign imageId = data.eventData.image_email.id | default: data.eventData.image_email %}
+
+                {% capture emailImg %}
+https://www.dks.pl/backend/assets/{{ imageId }}
+                {% endcapture %}
+
+                <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff">
                     <tbody>
                         <tr>
-                            <td height="100" valign="middle" align="center" style="padding-left: 30px;">
-                                {% capture eamilImg %}
-                                    https://www.dks.pl/backend/assets/{{ data.image_email }}
-                                {% endcapture %}    
-                                <img src={{ eamilImg }} width="321" height="295" border="0" alt="DKS" style="display: block;" />
+                            <td align="center" style="padding:40px 30px;">
+
+                                <img
+                                    src="{{ emailImg | strip }}"
+                                    width="321"
+                                    border="0"
+                                    alt="DKS"
+                                    style="
+                                        display:block;
+                                        max-width:100%;
+                                        height:auto;
+                                    "
+                                />
+
                             </td>
                         </tr>
                     </tbody>
                 </table>
 
-                <table width="600" cellpadding="0" cellspacing="0" border="0" align="center" bgcolor="#ffffff">
+                {% endif %}
+
+                <!-- USER DATA -->
+                <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff">
                     <tbody>
+
                         <tr>
-                            <td valign="top" style="padding-right: 30px; padding-left: 30px; font-size: 10px">
-                                <p style="font-size: 8px;"><b>UWAGA: Ta wiadomość została wygenerowana automatycznie, prosimy na nią nie odpowiadać</b>
-                                </p>
-                                <p class="s4"><a style="color: black; font-size: 8;" href="http://www.dks.pl/dks/privacy-policy.html">Polityka prywatności DKS Sp. z o.o.</a></p>
-                                <p><span class="s1" style="font-size: 6px;">Niniejsza wiadomość elektroniczna lub jej załączniki mogą zawierać poufne lub chronione prawem informacje, które są przeznaczone wyłącznie dla wskazanego w nich adresata. Jeżeli nie jesteś adresatem wiadomości, prosimy o jej nieujawnianie, zawiadomienie nadawcy o jej otrzymaniu oraz usunięcie wraz ze wszystkimi załącznikami. Dziękujemy.<br />
-                                DKS Spółka z ograniczoną odpowiedzialnoącią z siedzibą w Kowalach (80-180) przy ulicy Energetyczna 15, wpisana do Rejestru Przedsiębiorców prowadzonego przez Sąd Rejonowy Gdańsk-Północ w Gdańsku VII Wydział Gospodarczy pod numerem KRS 0000099557, REGON 190917946. NIP 583-27-90-417. Wysokość kapitału zakładowego 1 025 000 zł.</span></p>
+                            <td
+                                style="
+                                    padding:0 30px 30px 30px;
+                                    font-family:Tahoma, Helvetica, Arial, sans-serif;
+                                "
+                            >
+
+                                <h3
+                                    style="
+                                        margin-top:0;
+                                        margin-bottom:25px;
+                                        color:#20292f;
+                                    "
+                                >
+                                    Dane uczestnika
+                                </h3>
+
+                                <strong>Imię i nazwisko:</strong><br />
+                                <span>{{ data.name }}</span>
+                                <br /><br />
+
+                                <strong>Adres e-mail:</strong><br />
+                                <span>{{ data.email }}</span>
+                                <br /><br />
+
+                                {% if data.phone %}
+                                <strong>Telefon:</strong><br />
+                                <span>{{ data.phone }}</span>
+                                <br /><br />
+                                {% endif %}
+
+                                {% if data.company %}
+                                <strong>Firma:</strong><br />
+                                <span>{{ data.company }}</span>
+                                <br /><br />
+                                {% endif %}
+
+                                {% if data.position %}
+                                <strong>Stanowisko:</strong><br />
+                                <span>{{ data.position }}</span>
+                                <br /><br />
+                                {% endif %}
+
+                                {% if data.message %}
+                                <strong>Wiadomość:</strong><br />
+                                <span>{{ data.message }}</span>
+                                <br /><br />
+                                {% endif %}
+
                             </td>
                         </tr>
+
                     </tbody>
                 </table>
+
+                <!-- FOOTER -->
+                <table width="600" cellpadding="0" cellspacing="0" border="0" bgcolor="#ffffff">
+                    <tbody>
+
+                        <tr>
+                            <td
+                                style="
+                                    padding:0 30px 30px 30px;
+                                    font-size:10px;
+                                    font-family:Tahoma, Helvetica, Arial, sans-serif;
+                                "
+                            >
+
+                                <p style="font-size:8px;">
+                                    <b>
+                                        UWAGA: Ta wiadomość została wygenerowana automatycznie,
+                                        prosimy na nią nie odpowiadać
+                                    </b>
+                                </p>
+
+                                <p>
+                                    <a
+                                        style="color:black; font-size:8px;"
+                                        href="http://www.dks.pl/dks/privacy-policy.html"
+                                    >
+                                        Polityka prywatności DKS Sp. z o.o.
+                                    </a>
+                                </p>
+
+                                <p style="font-size:6px; line-height:1.5;">
+                                    Niniejsza wiadomość elektroniczna lub jej załączniki mogą
+                                    zawierać poufne lub chronione prawem informacje, które są
+                                    przeznaczone wyłącznie dla wskazanego w nich adresata.
+
+                                    Jeżeli nie jesteś adresatem wiadomości, prosimy o jej
+                                    nieujawnianie, zawiadomienie nadawcy o jej otrzymaniu oraz
+                                    usunięcie wraz ze wszystkimi załącznikami.
+
+                                    Dziękujemy.
+                                    <br /><br />
+
+                                    DKS Spółka z ograniczoną odpowiedzialnością z siedzibą
+                                    w Kowalach (80-180) przy ulicy Energetyczna 15,
+                                    wpisana do Rejestru Przedsiębiorców prowadzonego przez
+                                    Sąd Rejonowy Gdańsk-Północ w Gdańsku VII Wydział Gospodarczy
+                                    pod numerem KRS 0000099557, REGON 190917946,
+                                    NIP 583-27-90-417.
+                                </p>
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
             </td>
         </tr>
     </tbody>
 </table>
+
 </body>
 </html>

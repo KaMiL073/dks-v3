@@ -5,8 +5,11 @@ import {
   getEventCreateBySlug,
   getEventsCreateSlugs,
 } from "@/lib/eventsCreate";
+import { getFields } from "@/lib/fields";
+
 import Breadcrumb from "@/app/oferta/components/Breadcrumb";
 import DirectusRenderer from "@/components/bloxs/DirectusRenderer";
+import EventRegistrationForm from "./EventRegistrationForm";
 
 type PageProps = {
   params: Promise<{
@@ -55,7 +58,6 @@ export async function generateMetadata({
   } catch {
     return {
       title: "Wydarzenie | DKS",
-      description: "Wydarzenie DKS",
     };
   }
 }
@@ -80,6 +82,14 @@ export default async function EventSinglePage({ params }: PageProps) {
     ? event.components_event
     : [];
 
+  let fields: Awaited<ReturnType<typeof getFields>> = [];
+
+  try {
+    fields = await getFields("events");
+  } catch (error) {
+    console.error("getFields events error:", error);
+  }
+
   return (
     <main>
       <Breadcrumb />
@@ -88,17 +98,19 @@ export default async function EventSinglePage({ params }: PageProps) {
         <DirectusRenderer components={components} />
       ) : event.lead ? (
         <section className="bg-white px-4 py-20 md:px-6 lg:px-28">
-          <div className="rich-content mx-auto max-w-7xl">
+          <div className="mx-auto max-w-7xl">
             <p>{event.lead}</p>
           </div>
         </section>
       ) : (
         <section className="bg-white px-4 py-20 md:px-6 lg:px-28">
-          <p className="mx-auto max-w-7xl text-lg text-gray-500">
-            Brak opisu dla tego wydarzenia.
+          <p className="mx-auto max-w-7xl text-gray-500">
+            Brak opisu wydarzenia.
           </p>
         </section>
       )}
+
+      <EventRegistrationForm fields={fields} eventSlug={slug} />
     </main>
   );
 }
