@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 
 import ServiceCallForm from "@/components/forms/ServiceCallForm";
 import ConsumablesOrderFormClientZone from "@/components/forms/ConsumablesOrderFormClientZone";
@@ -14,29 +13,48 @@ type SectionKey = "contact" | "service" | "consumables" | "counters" | "debt";
 type Item = {
   key: SectionKey;
   title: string;
-  hasBorder?: boolean;
 };
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <span
+      className={[
+        "w-12 h-12 flex items-center justify-center shrink-0 text-Text-headings",
+        "transition-transform duration-200",
+        open ? "-rotate-90" : "rotate-90", // ✅ FIX
+      ].join(" ")}
+      aria-hidden="true"
+    >
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M9 18l6-6-6-6"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
 
 export default function CustomerZoneFormsAccordion() {
   const items: Item[] = useMemo(
     () => [
-      { key: "contact", title: "Kontakt", hasBorder: true },
-      { key: "service", title: "Zgłoszenie serwisowe", hasBorder: true },
+      { key: "contact", title: "Kontakt" },
+      { key: "service", title: "Zgłoszenie serwisowe" },
       {
         key: "consumables",
         title: "Zamawianie materiałów eksploatacyjnych",
-        hasBorder: true,
       },
-      { key: "counters", title: "Liczniki", hasBorder: true },
-      { key: "debt", title: "Dział windykacji", hasBorder: false },
+      { key: "counters", title: "Liczniki" },
+      { key: "debt", title: "Dział windykacji" },
     ],
     []
   );
 
-  // ✅ pozwalamy na zamknięcie (null)
   const [open, setOpen] = useState<SectionKey | null>("contact");
 
-  // refs do scrollowania
   const headerRefs = useRef<Record<SectionKey, HTMLButtonElement | null>>({
     contact: null,
     service: null,
@@ -53,17 +71,12 @@ export default function CustomerZoneFormsAccordion() {
     debt: null,
   });
 
-  // ✅ po otwarciu: przewiń do początku formularza (z offsetem na sticky nav)
   useEffect(() => {
     if (!open) return;
 
-    // czekamy aż DOM się wyrenderuje (animacja + layout)
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const el = contentRefs.current[open];
-        if (!el) return;
-
-        el.scrollIntoView({
+        contentRefs.current[open]?.scrollIntoView({
           behavior: "smooth",
           block: "start",
         });
@@ -75,11 +88,12 @@ export default function CustomerZoneFormsAccordion() {
     setOpen((prev) => {
       const next = prev === key ? null : key;
 
-      // ✅ jeśli zamykamy sekcję, przewijamy do jej nagłówka
       if (prev === key) {
         requestAnimationFrame(() => {
-          const header = headerRefs.current[key];
-          header?.scrollIntoView({ behavior: "smooth", block: "start" });
+          headerRefs.current[key]?.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
         });
       }
 
@@ -88,68 +102,44 @@ export default function CustomerZoneFormsAccordion() {
   };
 
   return (
-    <section className="self-stretch px-6 md:px-28 py-20 flex flex-col">
-      {items.map((it) => {
+    <section className="self-stretch px-28 py-20 flex flex-col">
+      {items.map((it, index) => {
         const isOpen = open === it.key;
+        const isLast = index === items.length - 1;
 
         return (
           <div key={it.key} className="self-stretch">
-            {/* ===== HEADER ===== */}
+            {/* HEADER */}
             <button
               ref={(node) => {
                 headerRefs.current[it.key] = node;
               }}
               type="button"
               onClick={() => toggle(it.key)}
-              className={[
-                "w-full p-6 md:p-12 bg-gray-300 inline-flex items-center gap-2.5 text-left",
-                it.hasBorder ? "border-b-4 border-gray-500" : "",
-              ].join(" ")}
               aria-expanded={isOpen}
+              className={[
+                "w-full p-12 bg-[#D1D5DC] flex justify-between items-center text-left",
+                "transition-all duration-200",
+                !isLast ? "border-b-4 border-border-primary" : "",
+              ].join(" ")}
             >
-              <div className="flex-1 flex items-center gap-6 md:gap-16">
-                <div className="flex-1">
-                  <div className="text-Text-headings text-2xl md:text-4xl font-semibold font-['Montserrat'] leading-tight">
-                    {it.title}
-                  </div>
-                </div>
-
-                {/* chevron */}
-                <span className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center shrink-0">
-                  <Image
-                    src="/static/icons/chevron.svg"
-                    alt=""
-                    width={48}
-                    height={48}
-                    className={[
-                      "transition-transform duration-200",
-                      isOpen ? "rotate-180" : "rotate-0",
-                    ].join(" ")}
-                  />
-                </span>
+              <div className="text-Text-headings text-4xl font-semibold font-['Montserrat'] leading-[48px]">
+                {it.title}
               </div>
+
+              <Chevron open={isOpen} />
             </button>
 
-            {/* ===== CONTENT ===== */}
-            <div
-              className={[
-                "bg-gray-300 overflow-hidden",
-                "grid transition-[grid-template-rows] duration-300 ease-in-out",
-                isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-                it.hasBorder ? "border-b-4 border-gray-500" : "",
-              ].join(" ")}
-            >
-              <div className="min-h-0">
-                {/* ✅ TO JEST MIEJSCE, DO KTÓREGO SCROLLUJEMY
-                    + scroll-margin-top: 80px (żeby sticky nav nie przykrywał) */}
+            {/* CONTENT */}
+            {isOpen && (
+              <div className="w-full bg-[#D1D5DC] border-b-4 border-border-primary flex flex-col items-center">
                 <div
                   ref={(node) => {
                     contentRefs.current[it.key] = node;
                   }}
-                  className="scroll-mt-[80px] py-6 md:py-12 px-6 md:px-12"
+                  className="w-full max-w-[1440px] px-28 py-20 scroll-mt-[80px]"
                 >
-                  {it.key === "contact" && <ContactForm compact />
-                  }
+                  {it.key === "contact" && <ContactForm compact />}
                   {it.key === "service" && <ServiceCallForm />}
                   {it.key === "consumables" && (
                     <ConsumablesOrderFormClientZone />
@@ -158,7 +148,7 @@ export default function CustomerZoneFormsAccordion() {
                   {it.key === "debt" && <DebtCollectionFormClientZone />}
                 </div>
               </div>
-            </div>
+            )}
           </div>
         );
       })}

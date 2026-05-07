@@ -6,7 +6,6 @@ import faqSections, { type FaqSection } from "@/content/faq";
 type Props = {
   sections?: FaqSection[];
   className?: string;
-  /** opcjonalnie: czy otwierać pierwszy element w każdej sekcji */
   defaultOpenFirst?: boolean;
 };
 
@@ -16,11 +15,10 @@ function Chevron({ open }: { open: boolean }) {
       className={[
         "w-12 h-16 flex items-center justify-center",
         "transition-transform duration-200",
-        open ? "rotate-90" : "-rotate-90",
+        open ? "-rotate-90" : "rotate-90", // ✅ FIX
       ].join(" ")}
       aria-hidden="true"
     >
-      {/* prosta strzałka jak w Figmie (obrót robi robotę) */}
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
         <path
           d="M9 18l6-6-6-6"
@@ -57,18 +55,17 @@ function AccordionItem({
         className={[
           "w-full pb-8 border-b border-border-primary",
           "inline-flex justify-between items-center gap-6 text-left",
-          "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-Text-action-hover/60",
         ].join(" ")}
       >
         <div className="flex-1 flex justify-between items-center gap-6">
-          <div className="flex-1 justify-start text-Text-headings text-xl font-semibold font-['Montserrat'] leading-6">
+          <div className="flex-1 text-Text-headings text-xl font-semibold font-['Montserrat'] leading-6">
             {question}
           </div>
           <Chevron open={isOpen} />
         </div>
       </button>
 
-      {/* treść odpowiedzi (animacja bez JS do wysokości) */}
+      {/* CONTENT */}
       <div
         id={contentId}
         className={[
@@ -93,7 +90,6 @@ export default function FaqAccordion({
   className = "",
   defaultOpenFirst = false,
 }: Props) {
-  // stan: sekcjaIndex -> itemIndex (albo null gdy nic nieotwarte)
   const [openMap, setOpenMap] = useState<Record<number, number | null>>(() => {
     if (!defaultOpenFirst) return {};
     const init: Record<number, number | null> = {};
@@ -106,9 +102,8 @@ export default function FaqAccordion({
   return (
     <section
       className={[
-        // Figmowe: px-28 py-20, gap-32 — ale responsywnie
         "self-stretch px-6 md:px-28 py-12 md:py-20",
-        "inline-flex flex-col justify-start items-start gap-16 md:gap-32",
+        "flex flex-col gap-16 md:gap-32",
         className,
       ].join(" ")}
     >
@@ -116,23 +111,20 @@ export default function FaqAccordion({
         const openIndex = openMap[si] ?? null;
 
         return (
-          <div
-            key={`${section.title}-${si}`}
-            className="self-stretch flex flex-col justify-start items-start"
-          >
-            <div className="pb-10 md:pb-16 inline-flex justify-center items-center gap-2.5">
-              <h2 className="w-full max-w-[720px] justify-start text-Text-headings text-3xl md:text-4xl font-semibold font-['Montserrat'] leading-[40px] md:leading-[48px]">
+          <div key={si} className="self-stretch flex flex-col">
+            <div className="pb-10 md:pb-16">
+              <h2 className="text-Text-headings text-3xl md:text-4xl font-semibold font-['Montserrat'] leading-[48px]">
                 {section.title}
               </h2>
             </div>
 
-            <div className="self-stretch flex flex-col justify-start items-start gap-10">
+            <div className="flex flex-col gap-10">
               {section.items.map((item, ii) => {
                 const isOpen = openIndex === ii;
 
                 return (
                   <AccordionItem
-                    key={`${item.question}-${ii}`}
+                    key={ii}
                     question={item.question}
                     answer={item.answer}
                     isOpen={isOpen}

@@ -81,7 +81,7 @@ function pickStringArray(v: unknown): string[] {
    URL do obrazu
    ============================================================ */
 function imageUrl(id: string | null) {
-  return id ? `https://dks.pl/backend/assets/${id}?imwidth=1920` : null;
+  return id ? `https://www3.dks.pl/backend/assets/${id}?imwidth=1920` : null;
 }
 
 /* ============================================================
