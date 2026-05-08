@@ -59,6 +59,7 @@ export default async function HomePage() {
         title="Twój partner w biznesie"
         subtitle="Sprawdzone technologie. Profesjonalne <br /> wsparcie. Atrakcyjne ceny."
         buttonLabel="Zamów bezpłatny audyt"
+        buttonHref="/kontakt"
         backgroundImage="/static/homepage/Header.webp"
         heroImage="/static/homepage/079A2955-mini.webp"
         contentPosition="left"

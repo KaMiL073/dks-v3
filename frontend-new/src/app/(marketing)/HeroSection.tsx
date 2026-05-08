@@ -12,6 +12,8 @@ type HeroProps = {
   title?: string;
   subtitle?: string;
   buttonLabel?: string;
+  buttonHref?: string;
+
   backgroundImage?: string;
   heroImage?: string;
 
@@ -25,6 +27,7 @@ export default function HeroSection({
   title,
   subtitle,
   buttonLabel,
+  buttonHref,
   backgroundImage,
   heroImage,
   contentPosition = "left",
@@ -36,7 +39,7 @@ export default function HeroSection({
   const directionClass = isRight ? "lg:flex-row-reverse" : "";
 
   // =========================
-  // VARIANT: full-height (bez pb)
+  // VARIANT: full-height
   // =========================
   if (variant === "full-height") {
     const containerClasses =
@@ -57,18 +60,23 @@ export default function HeroSection({
 
     const imageInnerClasses =
       "relative w-full " +
-      "h-[240px] sm:h-[320px] md:h-[360px] " + // mobile/tablet
-      "lg:h-full " + // desktop: wypełnia hero
+      "h-[240px] sm:h-[320px] md:h-[360px] " +
+      "lg:h-full " +
       "sm:max-w-sm md:max-w-md lg:max-w-2xl xl:max-w-5xl";
 
-    const imageClass = imageFit === "cover" ? "object-cover" : "object-contain";
+    const imageClass =
+      imageFit === "cover" ? "object-cover" : "object-contain";
 
     const objectPosition = isCenter ? "50% 50%" : "50% 100%";
 
     return (
       <section
         className="w-full bg-cover bg-center"
-        style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}
+        style={
+          backgroundImage
+            ? { backgroundImage: `url("${backgroundImage}")` }
+            : undefined
+        }
       >
         <div className={containerClasses}>
           <div className={textColClasses}>
@@ -86,7 +94,9 @@ export default function HeroSection({
 
             {buttonLabel && (
               <div className="mt-2">
-                <Button>{buttonLabel}</Button>
+                <Button href={buttonHref}>
+                  {buttonLabel}
+                </Button>
               </div>
             )}
           </div>
@@ -98,8 +108,8 @@ export default function HeroSection({
                   src={heroImage}
                   alt={title || "Hero image"}
                   fill
-  		  sizes="(max-width: 768px) 100vw,
-                        (max-width: 1200px) 50vw,
+                  sizes="(max-width: 768px) 100vw,
+                         (max-width: 1200px) 50vw,
                          33vw"
                   priority
                   className={imageClass}
@@ -114,12 +124,12 @@ export default function HeroSection({
   }
 
   // ======================
-  // VARIANT: boxed-image (z pb)
+  // VARIANT: boxed-image
   // ======================
   const containerClasses =
     "flex flex-col gap-6 " +
     "px-4 sm:px-6 mx-auto " +
-    "pt-8 pb-10 lg:pt-20 lg:pb-12 " + // ✅ TU JEST DOLNY PADDING
+    "pt-8 pb-10 lg:pt-20 lg:pb-12 " +
     "md:min-h-[420px] lg:min-h-[520px] xl:min-h-[564px] " +
     "lg:flex-row lg:gap-12 lg:px-8 xl:px-28 " +
     "items-start md:items-center " +
@@ -136,17 +146,23 @@ export default function HeroSection({
 
   const imageInnerClasses =
     "relative w-full " +
-    "h-[220px] sm:h-[280px] md:h-[320px] " + // ✅ poprawiona progresja
+    "h-[220px] sm:h-[280px] md:h-[320px] " +
     "lg:h-[360px] xl:h-[440px] 2xl:h-[480px] " +
     "lg:max-w-2xl xl:max-w-3xl";
 
-  const imageClass = imageFit === "cover" ? "object-cover" : "object-contain";
+  const imageClass =
+    imageFit === "cover" ? "object-cover" : "object-contain";
+
   const objectPosition = isCenter ? "50% 50%" : "50% 100%";
 
   return (
     <section
       className="w-full bg-cover bg-center"
-      style={backgroundImage ? { backgroundImage: `url("${backgroundImage}")` } : undefined}
+      style={
+        backgroundImage
+          ? { backgroundImage: `url("${backgroundImage}")` }
+          : undefined
+      }
     >
       <div className={containerClasses}>
         <div className={textColClasses}>
@@ -164,7 +180,9 @@ export default function HeroSection({
 
           {buttonLabel && (
             <div className="mt-2">
-              <Button>{buttonLabel}</Button>
+              <Button href={buttonHref}>
+                {buttonLabel}
+              </Button>
             </div>
           )}
         </div>
@@ -187,79 +205,3 @@ export default function HeroSection({
     </section>
   );
 }
-// "use client";
-
-// import Image from "next/image";
-// import Button from "@/components/ui/Button";
-// import { Heading } from "@/components/ui/Typography/Heading";
-
-// type HeroProps = {
-//   title?: string;
-//   subtitle?: string; // ← HTML string
-//   buttonLabel?: string;
-//   backgroundImage?: string;
-//   heroImage?: string;
-// };
-
-// export default function HeroSection({
-//   title,
-//   subtitle,
-//   buttonLabel,
-//   backgroundImage,
-//   heroImage,
-// }: HeroProps) {
-//   return (
-//     <section
-//       className="w-full bg-cover bg-center"
-//       style={
-//         backgroundImage
-//           ? { backgroundImage: `url("${backgroundImage}")` }
-//           : undefined
-//       }
-//     >
-//       <div
-//         className="flex flex-col lg:flex-row items-start 2xl:items-center gap-6 lg:gap-12 
-//         px-4 sm:px-6 md:px-6 lg:px-8 xl:px-28 pt-8 lg:pt-20 mx-auto"
-//       >
-//         {/* LEWA KOLUMNA */}
-//         <div className="flex-1 flex flex-col gap-4 lg:gap-8 pb-28">
-//           {title && (
-//             <Heading headingValue="h1_semibold" as="h1">
-//               {title}
-//             </Heading>
-//           )}
-
-//           {subtitle && (
-//             <Heading headingValue="h5_normal" as="h5">
-//               <span
-//                 dangerouslySetInnerHTML={{ __html: subtitle }}
-//               />
-//             </Heading>
-//           )}
-
-//           {buttonLabel && (
-//             <div className="flex">
-//               <Button>{buttonLabel}</Button>
-//             </div>
-//           )}
-//         </div>
-
-//         {/* PRAWA KOLUMNA */}
-//         {heroImage && (
-//           <div
-//             className="flex-1 relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-2xl 
-//             xl:max-w-3xl aspect-[4/3] lg:aspect-auto lg:h-[400px] xl:h-[550px] 2xl:h-[500px] 
-//             flex items-center lg:items-end"
-//           >
-//             <Image
-//               src={heroImage}
-//               alt={title || "Hero image"}
-//               fill
-//               style={{ objectFit: "contain", objectPosition: "bottom" }}
-//             />
-//           </div>
-//         )}
-//       </div>
-//     </section>
-//   );
-// } 

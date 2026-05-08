@@ -52,7 +52,7 @@ export default function OfferSection() {
               title: "Oprogramowanie dla poligrafii",
               desc: "Oprogramowanie do profesjonalnych wydruków, oprogramowanie do skanowania",
               icon: "/static/icons/oprogramowanie.svg",
-              link: "/oferta//oprogramowanie-dla-poligrafii-i-cad-gis"
+              link: "/oferta/rozwiazania-dla-poligrafii/software-dla-poligrafii"
             },
           ].map((item, i) => (
             <Link href={item.link} key={i}>

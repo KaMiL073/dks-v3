@@ -79,7 +79,7 @@ export default function OfferPage() {
       <Breadcrumb />
       <HeroSection
         title="Oddziały"
-        subtitle="Explore our diverse range of solutions tailored to meet your needs. Whether you're looking for cutting-edge technology or reliable support."
+        // subtitle="Explore our diverse range of solutions tailored to meet your needs. Whether you're looking for cutting-edge technology or reliable support."
         backgroundImage="/static/homepage/Header.webp"
         heroImage="/static/o-firmie/Rectangle-168.webp"
         buttonLabel="Skontaktuj się z nami"

@@ -11,57 +11,7 @@ export type FaqSection = {
 };
 
 export const faqSections: FaqSection[] = [
-  {
-    title: "Windykacja",
-    items: [
-    { 
-      question: 'Minął termin płatności za fakturę', 
-      answer: `Prosimy w takiej sytuacji o kontakt z Działem Windykacji 
-      pod adresem windykacja@dks.pl w celu ustalenia dalszych kroków oraz 
-      zachowania ciągłości świadczenia usług.` },
     {
-      question: 'Dostałem Wezwanie do Zapłaty', 
-      answer: `Oznacza to, że Państwa zobowiązanie przekroczyło 30 dni zwłoki, 
-      co spowodowało wygenerowanie dokumentu informującego o dalszych krokach 
-      windykacyjnych przy utrzymującym się stanie zaległości. 
-      Zachęcamy do skontaktowania się z Działem Windykacji pod adresem windykacja@dks.pl`},
-    { 
-      question: 'Dostałem MONIT', 
-      answer: `Jest to automatyczna wiadomość mailowa wysyłana przez system w sytuacji 
-      zarejestrowania przeterminowanego zobowiązania. Zachęcamy do przesłania w odpowiedzi 
-      potwierdzenia wpłaty lub informacji co jest przyczyną zwłoki w płatności, 
-      co wpłynie na ciągłość świadczenia usług.`
-    },
-    { 
-      question: 'Nie dostałem faktury', 
-      answer: `Jeżeli rozliczenia odbywają się na podstawie podpisanej umowy o świadczenie 
-      usług, bardzo proszę o kontakt z Działem Rozliczeń pod adresem  serwis.rozliczenia@dks.pl, 
-      który wystawia oraz dostarcza faktury. 
-      <br /><br /> W sytuacji rozliczenia bez umowy bardzo proszę 
-      o wiadomość na adres windykacja@dks.pl` 
-    },
-    { 
-      question: 'Limit Kupiecki', 
-      answer: `Jest to ubezpieczenie należności nadawane przez naszego ubezpieczyciela 
-      dla działalności gospodarczych działających na rynku więcej niż 12 miesięcy. 
-      Przyznanie limitu pozwala na prowadzenie transakcji w formie przelewu 
-      z określonym terminem płatności. Każda firma jest indywidualnie weryfikowana.`},
-    { 
-      question: 'Numer NIP uległ zmianie', 
-      answer: `Bardzo proszę o wiadomość na adres: windykacja@dks.pl z aktualnym numerem NIP. 
-      Przekażemy dalsze kroki aktualizacji danych w systemie.`
-    },
-    { 
-      question: 'Aktualizacja danych adresowych', 
-      answer: `Bardzo proszę o nowe dane na 
-      adres: windykacja@dks.pl. Zwrotnie przekażemy informację o zmianie w systemie. 
-      <br /><br /> Bardzo ważne, aby zmiana danych była wprowadzona w dokumentach rejestrowych: KRS lub CEiDG. 
-      Tylko wtedy będziemy mogli wprowadzić aktualizację po naszej stronie.`
-    },
-    ],
-  },
-
-  {
     title: "Biuro Obsługi Klienta",
     items: [
       {
@@ -191,6 +141,55 @@ export const faqSections: FaqSection[] = [
         answer:
           "Możliwość skupu zależy od rodzaju materiału. Wyślij zapytanie na adres: kontakt@dks.pl.",
       },
+    ],
+  },
+  {
+    title: "Windykacja",
+    items: [
+    { 
+      question: 'Minął termin płatności za fakturę', 
+      answer: `Prosimy w takiej sytuacji o kontakt z Działem Windykacji 
+      pod adresem windykacja@dks.pl w celu ustalenia dalszych kroków oraz 
+      zachowania ciągłości świadczenia usług.` },
+    {
+      question: 'Dostałem Wezwanie do Zapłaty', 
+      answer: `Oznacza to, że Państwa zobowiązanie przekroczyło 30 dni zwłoki, 
+      co spowodowało wygenerowanie dokumentu informującego o dalszych krokach 
+      windykacyjnych przy utrzymującym się stanie zaległości. 
+      Zachęcamy do skontaktowania się z Działem Windykacji pod adresem windykacja@dks.pl`},
+    { 
+      question: 'Dostałem MONIT', 
+      answer: `Jest to automatyczna wiadomość mailowa wysyłana przez system w sytuacji 
+      zarejestrowania przeterminowanego zobowiązania. Zachęcamy do przesłania w odpowiedzi 
+      potwierdzenia wpłaty lub informacji co jest przyczyną zwłoki w płatności, 
+      co wpłynie na ciągłość świadczenia usług.`
+    },
+    { 
+      question: 'Nie dostałem faktury', 
+      answer: `Jeżeli rozliczenia odbywają się na podstawie podpisanej umowy o świadczenie 
+      usług, bardzo proszę o kontakt z Działem Rozliczeń pod adresem  serwis.rozliczenia@dks.pl, 
+      który wystawia oraz dostarcza faktury. 
+      <br /><br /> W sytuacji rozliczenia bez umowy bardzo proszę 
+      o wiadomość na adres windykacja@dks.pl` 
+    },
+    { 
+      question: 'Limit Kupiecki', 
+      answer: `Jest to ubezpieczenie należności nadawane przez naszego ubezpieczyciela 
+      dla działalności gospodarczych działających na rynku więcej niż 12 miesięcy. 
+      Przyznanie limitu pozwala na prowadzenie transakcji w formie przelewu 
+      z określonym terminem płatności. Każda firma jest indywidualnie weryfikowana.`},
+    { 
+      question: 'Numer NIP uległ zmianie', 
+      answer: `Bardzo proszę o wiadomość na adres: windykacja@dks.pl z aktualnym numerem NIP. 
+      Przekażemy dalsze kroki aktualizacji danych w systemie.`
+    },
+    { 
+      question: 'Aktualizacja danych adresowych', 
+      answer: `Bardzo proszę o nowe dane na 
+      adres: windykacja@dks.pl. Zwrotnie przekażemy informację o zmianie w systemie. 
+      <br /><br /> Bardzo ważne, aby zmiana danych była wprowadzona w dokumentach rejestrowych: KRS lub CEiDG. 
+      Tylko wtedy będziemy mogli wprowadzić aktualizację po naszej stronie.`
+    },
     ],
   },
 ];
