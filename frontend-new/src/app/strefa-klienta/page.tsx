@@ -43,9 +43,9 @@ export default function CertyfikatyPage() {
         title="Strefa klienta"
         backgroundImage="/static/homepage/Header.webp"
         contentPosition="left"
-        imageVerticalAlign="bottom"
-        imageFit="contain"
-        variant="full-height"
+        // imageVerticalAlign="bottom"
+        // imageFit="contain"
+        // variant="full-height"
       />
       
        <CustomerZoneFormsAccordion />

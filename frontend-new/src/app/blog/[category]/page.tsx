@@ -100,9 +100,10 @@ export default async function BlogCategoryPage({ params }: PageProps) {
                   <h2 className="text-Text-headings text-xl font-semibold leading-6">
                     {post.title}
                   </h2>
-                  <p className="text-Text-body text-base leading-5 line-clamp-4">
-                    {post.lead}
-                  </p>
+                  <div
+                    className="text-Text-body text-base leading-5 line-clamp-4"
+                    dangerouslySetInnerHTML={{ __html: post.lead || "" }}
+                  />
                 </div>
               </a>
             ))}
