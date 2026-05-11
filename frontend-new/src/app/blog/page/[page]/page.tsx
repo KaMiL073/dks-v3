@@ -103,12 +103,9 @@ export default async function BlogPagePaged({ params }: PageProps) {
                     alt={post.title}
                   />
 
-                  <h2 className="text-Text-headings text-lg md:text-xl font-semibold leading-6">
-                    {post.title}
-                  </h2>
-
+                  <h2 className="text-Text-headings text-xl font-semibold leading-6">{post.title}</h2>
                   <div
-                    className="text-Text-body text-sm md:text-base leading-5 line-clamp-4"
+                    className="text-Text-body text-base leading-5 line-clamp-4"
                     dangerouslySetInnerHTML={{ __html: post.lead || "" }}
                   />
                 </div>

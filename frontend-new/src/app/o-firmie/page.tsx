@@ -132,7 +132,7 @@ export default async function OfferPage() {
       <Breadcrumb />
       <HeroSection
         title="DKS – dostawca sprzętu do druku biurowego, poligraficznego i wielkoformatowego"
-        subtitle="Explore our diverse range of solutions tailored to meet your needs. Whether you're looking for cutting-edge technology or reliable support."
+        // subtitle="Explore our diverse range of solutions tailored to meet your needs. Whether you're looking for cutting-edge technology or reliable support."
         backgroundImage="/static/homepage/Header.webp"
         buttonLabel="Skontaktuj się z nami"
       />
