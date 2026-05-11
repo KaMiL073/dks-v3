@@ -73,28 +73,30 @@ export default async function BlogPage() {
         img="/static/homepage/Header.webp"
       />
 
-      <main className="px-28 py-20 flex gap-12">
+      <main className="w-full max-w-full overflow-x-hidden px-4 sm:px-6 md:px-10 xl:px-28 py-8 md:py-16 xl:py-20 flex flex-col lg:flex-row items-start gap-6 lg:gap-12">
         <BlogCategoriesSidebar categories={categories} />
 
-        <div className="flex-1">
-          <div className="flex flex-wrap gap-12">
+        <div className="w-full flex-1 min-w-0">
+          <div className="grid w-full grid-cols-1 sm:grid-cols-2 2xl:grid-cols-2 gap-6 xl:gap-12">
             {posts.map((post) => (
               <a
                 key={post.id}
                 href={`/blog/${post.categorySlug}/${post.slug}`}
-                className="w-96 min-w-60 flex flex-col gap-4 cursor-pointer"
+                className="w-full max-w-[352px] min-w-0 flex flex-col gap-3 cursor-pointer"
               >
-                <div className="flex flex-col gap-6">
+                <div className="w-full min-w-0 flex flex-col gap-4 md:gap-6">
                   <img
                     src={post.image || "https://placehold.co/352x264"}
-                    className="w-full h-64 object-cover"
+                    className="w-full aspect-[4/3] h-auto object-cover"
                     alt={post.title}
                   />
-                  <h2 className="text-Text-headings text-xl font-semibold leading-6">
+
+                  <h2 className="text-Text-headings text-lg md:text-xl font-semibold leading-6">
                     {post.title}
                   </h2>
 
                   <div
+
                     className="text-Text-body text-base leading-5 line-clamp-4"
                     dangerouslySetInnerHTML={{ __html: post.lead || "" }}
                   />
@@ -103,7 +105,7 @@ export default async function BlogPage() {
             ))}
           </div>
 
-          <div className="mt-12">
+          <div className="mt-10 md:mt-12">
             <Pagination page={page} totalPages={totalPages} basePath="/blog" />
           </div>
         </div>
