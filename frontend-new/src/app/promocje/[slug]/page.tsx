@@ -7,6 +7,7 @@ import {
 } from "@/lib/promotions";
 import DirectusRenderer from "@/components/bloxs/DirectusRenderer";
 import Breadcrumb from "@/app/oferta/components/Breadcrumb";
+import ContactSection from "@/app/(marketing)/ContactSection";
 
 type PageProps = {
   params: Promise<{
@@ -68,6 +69,7 @@ export default async function PromotionPage({ params }: PageProps) {
           </p>
         </section>
       )}
+      <ContactSection />
     </main>
   );
 }

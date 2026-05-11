@@ -63,17 +63,16 @@ export default function ServiceCallForm() {
   const [form, setForm] = useState<ServiceCallFormState>(initialForm);
   const [isSending, setIsSending] = useState(false);
 
-  const fieldWrapClass =
-    "self-stretch flex flex-col justify-start items-start gap-2";
+  const fieldWrapClass = "w-full flex flex-col items-start gap-2";
 
   const labelClass =
-    "self-stretch min-h-5 justify-center text-Text-body text-xl font-normal font-['Montserrat'] leading-6";
+    "w-full text-Text-body text-base md:text-xl font-normal font-['Montserrat'] leading-6";
 
   const inputClass =
-    "self-stretch h-10 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 text-base font-normal font-['Montserrat'] text-Text-body outline-none focus:border-Text-headings";
+    "w-full h-10 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 text-base font-normal font-['Montserrat'] text-Text-body outline-none focus:border-Text-headings";
 
   const textareaClass =
-    "self-stretch h-44 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 py-2 text-base font-normal font-['Montserrat'] text-Text-body outline-none resize-none focus:border-Text-headings";
+    "w-full h-44 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 py-2 text-base font-normal font-['Montserrat'] text-Text-body outline-none resize-none focus:border-Text-headings";
 
   const checkboxClass =
     "w-6 h-6 shrink-0 appearance-none bg-[#F9FAFB] rounded border-2 border-border-primary cursor-pointer checked:bg-surface-action checked:border-surface-action checked:after:content-['✓'] checked:after:block checked:after:text-Text-on-action checked:after:text-center checked:after:leading-[22px] checked:after:text-sm";
@@ -166,32 +165,31 @@ export default function ServiceCallForm() {
   };
 
   return (
-    <div className="self-stretch min-h-[1200px] flex flex-col lg:flex-row justify-start items-start gap-16">
-      <div className="w-96 self-stretch inline-flex flex-col justify-start items-start gap-2.5 overflow-hidden shrink-0">
-        <div className="self-stretch flex flex-col justify-center items-center gap-2.5">
-          <div className="self-stretch">
-            <span className="text-Text-headings text-4xl font-semibold font-['Montserrat'] leading-[56px]">
-              Skontaktuj się z nami
-              <br />
-              <br />
-            </span>
-            <span className="text-Text-headings text-xl font-normal font-['Montserrat'] leading-6">
-              Wypełnij formularz, a nasz zespół odezwie się do Ciebie
-              najszybciej jak to możliwe. Doświadczeni specjaliści zapoznają się
-              z Twoją sprawą i zaproponują najlepsze rozwiązanie.
-            </span>
-          </div>
+    <div className="w-full max-w-full overflow-x-hidden flex flex-col xl:flex-row items-start gap-8 xl:gap-16">
+      <div className="w-full xl:w-96 shrink-0">
+        <div className="w-full">
+          <h2 className="text-Text-headings text-3xl md:text-4xl font-semibold font-['Montserrat'] leading-10 md:leading-[56px]">
+            Skontaktuj się z nami
+          </h2>
+
+          <p className="mt-6 text-Text-headings text-base md:text-xl font-normal font-['Montserrat'] leading-6">
+            Wypełnij formularz, a nasz zespół odezwie się do Ciebie
+            najszybciej jak to możliwe. Doświadczeni specjaliści zapoznają się z
+            Twoją sprawą i zaproponują najlepsze rozwiązanie.
+          </p>
         </div>
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className="flex-1 min-w-[520px] inline-flex flex-col justify-end items-end gap-9"
+        className="w-full flex-1 min-w-0 flex flex-col gap-9"
       >
-        <div className="self-stretch flex flex-col justify-start items-center gap-12">
-          <div className="self-stretch flex flex-col justify-start items-start gap-3">
+        <div className="w-full flex flex-col gap-12">
+          <div className="w-full flex flex-col gap-3">
             <label className={fieldWrapClass}>
-              <span className={labelClass}>Imię i Nazwisko / Nazwa firmy:</span>
+              <span className={labelClass}>
+                Imię i Nazwisko / Nazwa firmy:
+              </span>
               <input
                 type="text"
                 name="name"
@@ -264,7 +262,7 @@ export default function ServiceCallForm() {
             </label>
           </div>
 
-          <div className="self-stretch flex flex-col justify-start items-start gap-3">
+          <div className="w-full flex flex-col gap-3">
             <label className={fieldWrapClass}>
               <span className={labelClass}>Model:</span>
               <input
@@ -309,7 +307,7 @@ export default function ServiceCallForm() {
             </label>
           </div>
 
-          <label className="self-stretch flex flex-col justify-start items-start gap-2">
+          <label className={fieldWrapClass}>
             <span className={labelClass}>Treść wiadomości:</span>
             <textarea
               name="message"
@@ -321,16 +319,18 @@ export default function ServiceCallForm() {
           </label>
         </div>
 
-        <div className="self-stretch flex flex-col gap-6">
-          <label className="self-stretch inline-flex justify-start items-start gap-4">
+        <div className="w-full flex flex-col gap-6">
+          <label className="w-full flex items-start gap-4">
             <input
               type="checkbox"
               name="consentData"
               checked={form.consentData}
               onChange={handleChange}
+              required
               className={checkboxClass}
             />
-            <span className="flex-1 justify-start text-Text-body text-xs font-normal font-['Montserrat'] leading-4">
+
+            <span className="flex-1 min-w-0 text-Text-body text-xs font-normal font-['Montserrat'] leading-4 break-words">
               Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w
               powyższym formularzu przez DKS Sp. z o.o., zgodnie z przepisami
               rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z
@@ -346,7 +346,7 @@ export default function ServiceCallForm() {
             </span>
           </label>
 
-          <label className="self-stretch inline-flex justify-start items-start gap-4">
+          <label className="w-full flex items-start gap-4">
             <input
               type="checkbox"
               name="consentMarketing"
@@ -354,7 +354,8 @@ export default function ServiceCallForm() {
               onChange={handleChange}
               className={checkboxClass}
             />
-            <span className="flex-1 justify-start text-Text-body text-xs font-normal font-['Montserrat'] leading-4">
+
+            <span className="flex-1 min-w-0 text-Text-body text-xs font-normal font-['Montserrat'] leading-4 break-words">
               Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w
               powyższym formularzu przez DKS Sp. z o.o., zgodnie z przepisami
               rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z
@@ -377,7 +378,7 @@ export default function ServiceCallForm() {
         <Button
           type="submit"
           disabled={isSending}
-          className="p-4 bg-surface-action rounded-lg text-Text-on-action text-2xl font-semibold disabled:opacity-60"
+          className="w-full sm:w-auto self-start p-4 bg-surface-action rounded-lg inline-flex justify-center items-center gap-2.5 text-Text-on-action text-lg md:text-2xl font-semibold font-['Montserrat'] leading-7 disabled:opacity-60"
         >
           {isSending ? "Wysyłanie..." : "Wyślij"}
         </Button>

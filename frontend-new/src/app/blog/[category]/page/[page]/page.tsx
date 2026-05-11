@@ -16,7 +16,9 @@ type PageProps = {
   params: Promise<{ category: string; page: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { category: categorySlug, page } = await params;
   const pageNum = Number(page);
 
@@ -63,7 +65,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       locale: "pl_PL",
       type: "website",
     },
-    twitter: { card: "summary", title: `${titleBase} (strona ${pageNum})`, description },
+    twitter: {
+      card: "summary",
+      title: `${titleBase} (strona ${pageNum})`,
+      description,
+    },
   };
 }
 
@@ -81,7 +87,12 @@ export default async function BlogCategoryPagePaged({ params }: PageProps) {
   const currentCategory = categories.find((c) => c.slug === categorySlug);
   if (!currentCategory) return notFound();
 
-  const paged = await getNewsPaged({ page: pageNum, perPage: 12, category: categorySlug });
+  const paged = await getNewsPaged({
+    page: pageNum,
+    perPage: 12,
+    category: categorySlug,
+  });
+
   if (pageNum > paged.totalPages) return notFound();
 
   return (
@@ -93,35 +104,41 @@ export default async function BlogCategoryPagePaged({ params }: PageProps) {
         img="/static/homepage/Header.webp"
       />
 
-      <main className="px-28 py-20 flex gap-12">
-        <BlogCategoriesSidebar categories={categories} activeSlug={categorySlug} />
+      <main className="w-full max-w-full overflow-x-hidden px-4 sm:px-6 md:px-10 xl:px-28 py-8 md:py-16 xl:py-20 flex flex-col lg:flex-row items-start gap-6 lg:gap-12">
+        <BlogCategoriesSidebar
+          categories={categories}
+          activeSlug={categorySlug}
+        />
 
-        <div className="flex-1">
-          <div className="flex flex-wrap gap-12">
+        <div className="w-full flex-1 min-w-0">
+          <div className="grid w-full grid-cols-1 sm:grid-cols-2 2xl:grid-cols-2 gap-6 xl:gap-12">
             {paged.items.map((post) => (
               <a
                 key={post.id}
                 href={`/blog/${post.categorySlug}/${post.slug}`}
-                className="w-96 min-w-60 flex flex-col gap-4 cursor-pointer"
+                className="w-full max-w-[352px] min-w-0 flex flex-col gap-3 cursor-pointer"
               >
-                <div className="flex flex-col gap-6">
+                <div className="w-full min-w-0 flex flex-col gap-4 md:gap-6">
                   <img
                     src={post.image || "https://placehold.co/352x264"}
-                    className="w-full h-64 object-cover"
+                    className="w-full aspect-[4/3] h-auto object-cover"
                     alt={post.title}
                   />
-                  <h2 className="text-Text-headings text-xl font-semibold leading-6">
+
+                  <h2 className="text-Text-headings text-lg md:text-xl font-semibold leading-6">
                     {post.title}
                   </h2>
-                  <p className="text-Text-body text-base leading-5 line-clamp-4">
-                    {post.lead}
-                  </p>
+
+                  <div
+                    className="text-Text-body text-sm md:text-base leading-5 line-clamp-4"
+                    dangerouslySetInnerHTML={{ __html: post.lead || "" }}
+                  />
                 </div>
               </a>
             ))}
           </div>
 
-          <div className="mt-12">
+          <div className="mt-10 md:mt-12">
             <Pagination
               page={paged.page}
               totalPages={paged.totalPages}
