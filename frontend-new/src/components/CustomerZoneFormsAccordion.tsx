@@ -19,13 +19,13 @@ function Chevron({ open }: { open: boolean }) {
   return (
     <span
       className={[
-        "w-12 h-12 flex items-center justify-center shrink-0 text-Text-headings",
+        "w-8 h-8 md:w-10 md:h-10 xl:w-12 xl:h-12 flex items-center justify-center shrink-0 text-Text-headings",
         "transition-transform duration-200",
-        open ? "-rotate-90" : "rotate-90", // ✅ FIX
+        open ? "-rotate-90" : "rotate-90",
       ].join(" ")}
       aria-hidden="true"
     >
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+      <svg className="w-6 h-6 md:w-8 md:h-8" viewBox="0 0 24 24" fill="none">
         <path
           d="M9 18l6-6-6-6"
           stroke="currentColor"
@@ -102,14 +102,13 @@ export default function CustomerZoneFormsAccordion() {
   };
 
   return (
-    <section className="self-stretch px-28 py-20 flex flex-col">
+    <section className="w-full max-w-full overflow-x-hidden px-4 sm:px-6 md:px-10 xl:px-28 py-8 md:py-12 xl:py-20 flex flex-col">
       {items.map((it, index) => {
         const isOpen = open === it.key;
         const isLast = index === items.length - 1;
 
         return (
-          <div key={it.key} className="self-stretch">
-            {/* HEADER */}
+          <div key={it.key} className="w-full">
             <button
               ref={(node) => {
                 headerRefs.current[it.key] = node;
@@ -118,26 +117,25 @@ export default function CustomerZoneFormsAccordion() {
               onClick={() => toggle(it.key)}
               aria-expanded={isOpen}
               className={[
-                "w-full p-12 bg-[#D1D5DC] flex justify-between items-center text-left",
+                "w-full px-4 sm:px-6 md:px-8 xl:px-12 py-4 md:py-6 xl:py-8 bg-[#D1D5DC] flex justify-between items-center gap-4 text-left",
                 "transition-all duration-200",
-                !isLast ? "border-b-4 border-border-primary" : "",
+                !isLast ? "border-b-2 md:border-b-4 border-border-primary" : "",
               ].join(" ")}
             >
-              <div className="text-Text-headings text-4xl font-semibold font-['Montserrat'] leading-[48px]">
+              <div className="min-w-0 text-Text-headings text-lg sm:text-xl md:text-2xl xl:text-4xl font-semibold font-['Montserrat'] leading-6 md:leading-8 xl:leading-[48px] break-words">
                 {it.title}
               </div>
 
               <Chevron open={isOpen} />
             </button>
 
-            {/* CONTENT */}
             {isOpen && (
-              <div className="w-full bg-[#D1D5DC] border-b-4 border-border-primary flex flex-col items-center">
+              <div className="w-full bg-[#D1D5DC] border-b-2 md:border-b-4 border-border-primary flex flex-col items-center">
                 <div
                   ref={(node) => {
                     contentRefs.current[it.key] = node;
                   }}
-                  className="w-full max-w-[1440px] px-28 py-20 scroll-mt-[80px]"
+                  className="w-full max-w-[1440px] px-4 sm:px-6 md:px-8 xl:px-12 py-6 md:py-10 xl:py-16 scroll-mt-[80px]"
                 >
                   {it.key === "contact" && <ContactForm compact />}
                   {it.key === "service" && <ServiceCallForm />}
