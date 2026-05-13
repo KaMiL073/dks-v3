@@ -4,6 +4,7 @@ import HeroSection from "@/app/(marketing)/HeroSection";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import FaqAccordion from "@/components/FaqAccordion";
 import CustomerZoneFormsAccordion from "@/components/CustomerZoneFormsAccordion";
+import { getGroupedFields } from "@/lib/fields";
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl");
 
@@ -34,7 +35,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CertyfikatyPage() {
+export default async function CertyfikatyPage() {
+  const complaintFields = await getGroupedFields("complaint");
+
   return (
     <>
       <Breadcrumb />
@@ -44,12 +47,10 @@ export default function CertyfikatyPage() {
         backgroundImage="/static/homepage/Header.webp"
         contentPosition="left"
       />
-      
-      <CustomerZoneFormsAccordion />
+
+      <CustomerZoneFormsAccordion complaintFields={complaintFields} />
 
       <main className="w-full bg-white flex flex-col gap-12">
-        
-        
         {/* ====== HEADER FAQ ====== */}
         <section className="px-6 md:px-28 py-20 bg-gray-300">
           <h1 className="text-Text-headings text-4xl font-semibold font-['Montserrat'] leading-[56px]">
