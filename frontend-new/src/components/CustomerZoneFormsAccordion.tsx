@@ -1,3 +1,5 @@
+// frontend-new/src/components/CustomerZoneFormsAccordion.tsx
+
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -6,13 +8,26 @@ import ServiceCallForm from "@/components/forms/ServiceCallForm";
 import ConsumablesOrderFormClientZone from "@/components/forms/ConsumablesOrderFormClientZone";
 import CountersFormClientZone from "@/components/forms/CountersFormClientZone";
 import DebtCollectionFormClientZone from "@/components/forms/DebtCollectionFormClientZone";
+import DealerComplaintForm from "@/components/forms/DealerComplaintForm";
 import ContactForm from "./forms/ContactForm";
 
-type SectionKey = "contact" | "service" | "consumables" | "counters" | "debt";
+import type { MappedDirectusFieldGroup } from "@/lib/fields";
+
+type SectionKey =
+  | "contact"
+  | "service"
+  | "consumables"
+  | "counters"
+  | "debt"
+  | "complaint";
 
 type Item = {
   key: SectionKey;
   title: string;
+};
+
+type Props = {
+  complaintFields: MappedDirectusFieldGroup[];
 };
 
 function Chevron({ open }: { open: boolean }) {
@@ -38,7 +53,9 @@ function Chevron({ open }: { open: boolean }) {
   );
 }
 
-export default function CustomerZoneFormsAccordion() {
+export default function CustomerZoneFormsAccordion({
+  complaintFields,
+}: Props) {
   const items: Item[] = useMemo(
     () => [
       { key: "contact", title: "Kontakt" },
@@ -49,6 +66,7 @@ export default function CustomerZoneFormsAccordion() {
       },
       { key: "counters", title: "Liczniki" },
       { key: "debt", title: "Dział windykacji" },
+      { key: "complaint", title: "Reklamacja dealerska" },
     ],
     []
   );
@@ -61,6 +79,7 @@ export default function CustomerZoneFormsAccordion() {
     consumables: null,
     counters: null,
     debt: null,
+    complaint: null,
   });
 
   const contentRefs = useRef<Record<SectionKey, HTMLDivElement | null>>({
@@ -69,6 +88,7 @@ export default function CustomerZoneFormsAccordion() {
     consumables: null,
     counters: null,
     debt: null,
+    complaint: null,
   });
 
   useEffect(() => {
@@ -117,9 +137,11 @@ export default function CustomerZoneFormsAccordion() {
               onClick={() => toggle(it.key)}
               aria-expanded={isOpen}
               className={[
-                "w-full px-4 sm:px-6 md:px-8 xl:px-12 py-4 md:py-6 xl:py-8 bg-[#D1D5DC] flex justify-between items-center gap-4 text-left",
+                "w-full px-12 py-6 bg-[#D1D5DC] flex justify-between items-center gap-10 text-left",
                 "transition-all duration-200",
-                !isLast ? "border-b-2 md:border-b-4 border-border-primary" : "",
+                !isLast
+                  ? "border-b-2 md:border-b-4 border-border-primary"
+                  : "",
               ].join(" ")}
             >
               <div className="min-w-0 text-Text-headings text-lg sm:text-xl md:text-2xl xl:text-4xl font-semibold font-['Montserrat'] leading-6 md:leading-8 xl:leading-[48px] break-words">
@@ -138,12 +160,24 @@ export default function CustomerZoneFormsAccordion() {
                   className="w-full max-w-[1440px] px-4 sm:px-6 md:px-8 xl:px-12 py-6 md:py-10 xl:py-16 scroll-mt-[80px]"
                 >
                   {it.key === "contact" && <ContactForm compact />}
+
                   {it.key === "service" && <ServiceCallForm />}
+
                   {it.key === "consumables" && (
                     <ConsumablesOrderFormClientZone />
                   )}
-                  {it.key === "counters" && <CountersFormClientZone />}
-                  {it.key === "debt" && <DebtCollectionFormClientZone />}
+
+                  {it.key === "counters" && (
+                    <CountersFormClientZone />
+                  )}
+
+                  {it.key === "debt" && (
+                    <DebtCollectionFormClientZone />
+                  )}
+
+                  {it.key === "complaint" && (
+                    <DealerComplaintForm groups={complaintFields} />
+                  )}
                 </div>
               </div>
             )}

@@ -1,3 +1,5 @@
+// frontend-new/src/lib/fields.ts
+
 const DIRECTUS_URL =
   process.env.API_INTERNAL_URL ||
   process.env.DIRECTUS_URL ||
@@ -42,6 +44,8 @@ type DirectusField = {
     sort?: number;
     note?: string | null;
     display?: string | null;
+    group?: string | null;
+    special?: string[] | null;
     translations?: DirectusTranslation[] | null;
     options?: {
       choices?: DirectusChoice[];
@@ -51,6 +55,27 @@ type DirectusField = {
     is_nullable?: boolean;
     default_value?: string | number | boolean | null;
   } | null;
+};
+
+export type MappedDirectusField = {
+  name: string;
+  displayName: string;
+  interface: string;
+  type?: string;
+  required: boolean;
+  hidden: boolean;
+  value: string;
+  options: {
+    text: string;
+    value: string;
+  }[];
+};
+
+export type MappedDirectusFieldGroup = {
+  key: string;
+  displayName: string;
+  sort: number;
+  fields: MappedDirectusField[];
 };
 
 function getTranslation(field: DirectusField) {
@@ -80,7 +105,36 @@ function mapOptions(field: DirectusField) {
   }));
 }
 
-export async function getFields(collection: string) {
+function isGroupField(field: DirectusField) {
+  return (
+    field.meta?.special?.includes("group") ||
+    field.meta?.interface === "group-detail" ||
+    field.meta?.interface === "group-accordion"
+  );
+}
+
+function mapField(field: DirectusField): MappedDirectusField {
+  return {
+    name: field.field ?? "",
+    displayName: getDisplayName(field),
+    interface: field.meta?.interface || "input",
+    type: field.type,
+    required:
+      field.meta?.required === true ||
+      field.schema?.is_nullable === false,
+    hidden: field.meta?.hidden === true,
+    value:
+      field.schema?.default_value === null ||
+      field.schema?.default_value === undefined
+        ? ""
+        : String(field.schema.default_value),
+    options: mapOptions(field),
+  };
+}
+
+export async function getFields(
+  collection: string
+): Promise<MappedDirectusField[]> {
   if (!DIRECTUS_URL) return [];
 
   try {
@@ -105,28 +159,111 @@ export async function getFields(collection: string) {
         if (!field.field) return false;
         if (BLOCKED_FIELDS.includes(field.field)) return false;
         if (field.meta?.readonly) return false;
+        if (field.meta?.hidden) return false;
+        if (isGroupField(field)) return false;
 
         return true;
       })
       .sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0))
-      .map((field) => ({
-        name: field.field ?? "",
-        displayName: getDisplayName(field),
-        interface: field.meta?.interface || "input",
-        type: field.type,
-        required:
-          field.meta?.required === true ||
-          field.schema?.is_nullable === false,
-        hidden: field.meta?.hidden === true,
-        value:
-          field.schema?.default_value === null ||
-          field.schema?.default_value === undefined
-            ? ""
-            : String(field.schema.default_value),
-        options: mapOptions(field),
-      }));
+      .map(mapField);
   } catch (error) {
     console.error("getFields error:", error);
+    return [];
+  }
+}
+
+export async function getGroupedFields(
+  collection: string
+): Promise<MappedDirectusFieldGroup[]> {
+  if (!DIRECTUS_URL) return [];
+
+  try {
+    const res = await fetch(
+      `${DIRECTUS_URL}/fields/${collection}?limit=-1`,
+      {
+        headers: DIRECTUS_TOKEN
+          ? {
+              Authorization: `Bearer ${DIRECTUS_TOKEN}`,
+            }
+          : {},
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      console.warn("Grouped fields fetch failed:", res.status);
+      return [];
+    }
+
+    const json: { data?: DirectusField[] } = await res.json();
+    const allFields = json.data ?? [];
+
+    const groups = allFields
+      .filter((field) => field.field && isGroupField(field))
+      .sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0))
+      .map((field) => ({
+        key: field.field ?? "",
+        displayName: getDisplayName(field),
+        sort: field.meta?.sort ?? 0,
+        fields: [] as MappedDirectusField[],
+      }));
+
+    const normalFields = allFields
+      .filter((field) => {
+        if (!field.field) return false;
+        if (BLOCKED_FIELDS.includes(field.field)) return false;
+        if (field.meta?.readonly) return false;
+        if (field.meta?.hidden) return false;
+        if (isGroupField(field)) return false;
+
+        return true;
+      })
+      .sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0));
+
+    for (const field of normalFields) {
+      const groupKey = field.meta?.group;
+
+      const mappedField = mapField(field);
+
+      if (!groupKey) {
+        let ungrouped = groups.find((group) => group.key === "ungrouped");
+
+        if (!ungrouped) {
+          ungrouped = {
+            key: "ungrouped",
+            displayName: "Pozostałe",
+            sort: 9999,
+            fields: [],
+          };
+
+          groups.push(ungrouped);
+        }
+
+        ungrouped.fields.push(mappedField);
+        continue;
+      }
+
+      const group = groups.find((item) => item.key === groupKey);
+
+      if (!group) {
+        groups.push({
+          key: groupKey,
+          displayName: groupKey,
+          sort: 9999,
+          fields: [mappedField],
+        });
+
+        continue;
+      }
+
+      group.fields.push(mappedField);
+    }
+
+    return groups
+      .filter((group) => group.fields.length > 0)
+      .sort((a, b) => a.sort - b.sort);
+  } catch (error) {
+    console.error("getGroupedFields error:", error);
     return [];
   }
 }
