@@ -6,6 +6,9 @@ import FaqAccordion from "@/components/FaqAccordion";
 import CustomerZoneFormsAccordion from "@/components/CustomerZoneFormsAccordion";
 import { getGroupedFields } from "@/lib/fields";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const baseUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl");
 
 export const metadata: Metadata = {
