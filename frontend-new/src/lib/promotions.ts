@@ -21,25 +21,54 @@ const listFields = [
   "id",
   "name",
   "slug",
+
   "components_promotions.id",
   "components_promotions.sort",
   "components_promotions.collection",
   "components_promotions.item",
   "components_promotions.item.*",
+
+  // rich_content only
+  "components_promotions.item:rich_content.header_type",
+  "components_promotions.item:rich_content.heading_styles",
+  "components_promotions.item:rich_content.subtitle_type",
+  "components_promotions.item:rich_content.subtitle_styles",
 ] as const;
 
 const detailFields = [
   ...listFields,
+
   "status",
   "date_created",
+
+  // rich_content only
+  "components_promotions.item:rich_content.title",
+  "components_promotions.item:rich_content.subtitle",
+  "components_promotions.item:rich_content.content",
+  "components_promotions.item:rich_content.image",
+  "components_promotions.item:rich_content.layout",
+  "components_promotions.item:rich_content.text_button",
+  "components_promotions.item:rich_content.url_button",
+
+  // repeaters
   "components_promotions.item.item.*",
   "components_promotions.item.items.*",
   "components_promotions.item.key_value.*",
   "components_promotions.item.info.*",
+
+  // logos
   "components_promotions.item.logo.*",
+
+  // agenda
   "components_promotions.item.agenda.*",
+  "components_promotions.item.agenda.agenda_id.*",
+  "components_promotions.item.agenda.agenda_id.speakers.*",
+
+  // speakers
   "components_promotions.item.speakers.*",
   "components_promotions.item.speakers.speakers_id.*",
+
+  // consultants / collection
   "components_promotions.item.collection.*",
   "components_promotions.item.collection.consultants_id.*",
 ] as const;
@@ -113,7 +142,11 @@ export async function getPromotionBySlug(slug: string) {
       })
     );
 
-    return normalize<PromotionItem>(res)[0] ?? null;
+    const item = normalize<PromotionItem>(res)[0] ?? null;
+
+    console.log("PROMOTION RAW:", JSON.stringify(item, null, 2));
+
+    return item;
   } catch (error) {
     logDirectusError("getPromotionBySlug error:", error);
     return null;

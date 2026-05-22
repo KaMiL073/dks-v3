@@ -43,16 +43,16 @@ export default function OfferSection() {
               link: "/oferta/materialy-eksploatacyjne/"
             },
             {
-              title: "Oprogramowanie dla biur",
+              title: "Oprogramowanie do druku",
               desc: "Oprogramowanie do zarządzania drukiem, accountingowe, OCR",
               icon: "/static/icons/oprogramowanie.svg",
-              link: "/oferta/oprogramowanie-dla-biura"
+              link: "/oferta/rozwiazania-dla-biura/oprogramowanie-do-druku"
             },
             {
               title: "Oprogramowanie dla poligrafii",
               desc: "Oprogramowanie do profesjonalnych wydruków, oprogramowanie do skanowania",
               icon: "/static/icons/oprogramowanie.svg",
-              link: "/oferta/rozwiazania-dla-poligrafii/software-dla-poligrafii"
+              link: "/oferta/rozwiazania-dla-poligrafii/oprogramowanie-dla-poligrafii"
             },
           ].map((item, i) => (
             <Link href={item.link} key={i}>

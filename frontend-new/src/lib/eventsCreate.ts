@@ -1,3 +1,5 @@
+// frontend-new/src/lib/eventsCreate.ts
+
 import { readItems } from "@directus/sdk";
 import { directus } from "./directus";
 
@@ -74,16 +76,23 @@ export type LogoItem = {
 export type ComponentEventItem = {
   id: number;
   sort?: number | null;
+
   title?: string | null;
   subtitle?: string | null;
+
   content?: string | null;
+
   text_button?: string | null;
   url_button?: string | null;
+
   image?: string | null;
+
   header_type?: string | null;
   heading_styles?: string | null;
+
   subtitle_type?: string | null;
   subtitle_styles?: string | null;
+
   layout?: string | null;
 
   name?: string | null;
@@ -119,19 +128,28 @@ export type EventCreateItem = {
   date_created: string;
   user_updated: string | null;
   date_updated: string | null;
+
   name: string;
   slug: string;
+
   image_email: string | null;
   image: string | null;
   image_mobile: string | null;
   ogimage: string | null;
+
   events_create_id: number | null;
+
   type: string | null;
+
   start_date: string | null;
   end_date: string | null;
+
   location: string | null;
+
   lead: string | null;
+
   speakers: unknown[];
+
   components_event: ComponentEvent[];
 };
 
@@ -142,34 +160,70 @@ const eventFields = [
   "date_created",
   "user_updated",
   "date_updated",
+
   "name",
   "slug",
+
   "image_email",
   "image",
   "image_mobile",
   "ogimage",
+
   "events_create_id",
+
   "type",
+
   "start_date",
   "end_date",
+
   "location",
+
   "lead",
+
   "speakers",
 
+  // COMPONENTS
   "components_event.*",
   "components_event.item.*",
 
+  // rich_content only
+  "components_event.item:rich_content.header_type",
+  "components_event.item:rich_content.heading_styles",
+
+  "components_event.item:rich_content.subtitle_type",
+  "components_event.item:rich_content.subtitle_styles",
+
+  "components_event.item:rich_content.layout",
+
+  "components_event.item:rich_content.title",
+  "components_event.item:rich_content.subtitle",
+
+  "components_event.item:rich_content.content",
+
+  "components_event.item:rich_content.text_button",
+  "components_event.item:rich_content.url_button",
+
+  "components_event.item:rich_content.image",
+
+  // REPEATERS
   "components_event.item.item.*",
   "components_event.item.items.*",
   "components_event.item.key_value.*",
   "components_event.item.info.*",
 
+  // LOGOS
   "components_event.item.logo.*",
+
+  // AGENDA
   "components_event.item.agenda.*",
   "components_event.item.agenda.agenda_id.*",
   "components_event.item.agenda.agenda_id.speakers.*",
+
+  // SPEAKERS
   "components_event.item.speakers.*",
   "components_event.item.speakers.speakers_id.*",
+
+  // CONSULTANTS
   "components_event.item.collection.*",
   "components_event.item.collection.consultants_id.*",
 ] as const;

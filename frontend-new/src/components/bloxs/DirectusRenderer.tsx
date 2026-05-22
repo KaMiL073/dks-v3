@@ -8,6 +8,8 @@ import AgendaSection from "./AgendaSection";
 import SpeakersSection from "./SpeakersSection";
 import EventConsultantsSection from "./EventConsultantsSection";
 import KeyInfo from "./KeyInfo";
+import IconsSection from "./IconsSection";
+import ContentCards from "./ContentCard";
 
 import type { ComponentEventItem } from "@/lib/eventsCreate";
 
@@ -28,6 +30,28 @@ type RendererComponent = {
 };
 
 type RichLayout = "text_left" | "text_right";
+
+type IconItem = {
+  id?: number | string | null;
+  icon?: string | null;
+  image?: string | null;
+  label?: string | null;
+  title?: string | null;
+  description?: string | null;
+};
+
+type CardItem = {
+  id?: number | string | null;
+  title?: string | null;
+  description?: string | null;
+  image?: string | null;
+};
+
+type LogoRelationItem = {
+  id?: number | string | null;
+  logos_id?: number | string | null;
+  directus_files_id?: string | null;
+};
 
 function normalizeLayout(value: unknown): RichLayout | undefined {
   return value === "text_left" || value === "text_right" ? value : undefined;
@@ -129,6 +153,52 @@ function normalizeConsultantRelation(value: unknown) {
   };
 }
 
+function normalizeIconItem(value: unknown): IconItem {
+  if (!isObject(value)) return {};
+
+  return {
+    id:
+      typeof value.id === "number" || typeof value.id === "string"
+        ? value.id
+        : undefined,
+    icon: asString(value.icon),
+    image: asString(value.image),
+    label: asString(value.label),
+    title: asString(value.title),
+    description: asString(value.description),
+  };
+}
+
+function normalizeCardItem(value: unknown): CardItem {
+  if (!isObject(value)) return {};
+
+  return {
+    id:
+      typeof value.id === "number" || typeof value.id === "string"
+        ? value.id
+        : undefined,
+    title: asString(value.title),
+    description: asString(value.description),
+    image: asString(value.image),
+  };
+}
+
+function normalizeLogoItem(value: unknown): LogoRelationItem {
+  if (!isObject(value)) return {};
+
+  return {
+    id:
+      typeof value.id === "number" || typeof value.id === "string"
+        ? value.id
+        : undefined,
+    logos_id:
+      typeof value.logos_id === "number" || typeof value.logos_id === "string"
+        ? value.logos_id
+        : undefined,
+    directus_files_id: asString(value.directus_files_id),
+  };
+}
+
 export default function DirectusRenderer({
   components,
   product,
@@ -219,11 +289,17 @@ export default function DirectusRenderer({
                   url_button: asString(item.url_button),
                   image: asString(item.image),
                   layout: normalizeLayout(item.layout),
+                  header_type: asString(item.header_type),
+                  heading_styles: asString(item.heading_styles),
+                  subtitle_type: asString(item.subtitle_type),
+                  subtitle_styles: asString(item.subtitle_styles),
                 }}
               />
             );
 
-          case "logos":
+          case "logos": {
+            const logoItems = Array.isArray(item.logo) ? item.logo : [];
+
             return (
               <LogosSection
                 key={`logos-${item.id}-${index}`}
@@ -231,19 +307,25 @@ export default function DirectusRenderer({
                   id: Number(item.id),
                   name: asString(item.name) ?? "",
                   description: asString(item.description) ?? "",
-                  logo: Array.isArray(item.logo)
-                    ? item.logo.map((logoItem) => ({
-                        id: Number(logoItem.id),
-                        logos_id:
-                          typeof logoItem.logos_id === "number"
-                            ? logoItem.logos_id
+                  logo: logoItems.map((logoItem) => {
+                    const normalizedLogo = normalizeLogoItem(logoItem);
+
+                    return {
+                      id: Number(normalizedLogo.id ?? 0),
+                      logos_id:
+                        typeof normalizedLogo.logos_id === "number"
+                          ? normalizedLogo.logos_id
+                          : typeof normalizedLogo.logos_id === "string"
+                            ? Number(normalizedLogo.logos_id)
                             : undefined,
-                        directus_files_id: logoItem.directus_files_id,
-                      }))
-                    : [],
+                      directus_files_id:
+                        normalizedLogo.directus_files_id ?? "",
+                    };
+                  }),
                 }}
               />
             );
+          }
 
           case "agenda_event":
             return (
@@ -312,10 +394,67 @@ export default function DirectusRenderer({
                 item={{
                   id: Number(item.id),
                   title: asString(item.title) ?? asString(item.name),
+                  background_color: asString(item.background_color),
+                  alignment: asString(item.alignment),
                   items: keyInfoItems.map((infoItem) => ({
-                    id: infoItem.id,
-                    key: asString(infoItem.key) ?? "",
-                    value: asString(infoItem.value) ?? "",
+                    id:
+                      isObject(infoItem) &&
+                      (typeof infoItem.id === "number" ||
+                        typeof infoItem.id === "string")
+                        ? infoItem.id
+                        : undefined,
+                    key: isObject(infoItem) ? asString(infoItem.key) ?? "" : "",
+                    value: isObject(infoItem)
+                      ? asString(infoItem.value) ?? ""
+                      : "",
+                  })),
+                }}
+              />
+            );
+          }
+
+          case "icons_section": {
+            const iconItems = Array.isArray(item.items)
+              ? item.items.map(normalizeIconItem)
+              : Array.isArray(item.item)
+                ? item.item.map(normalizeIconItem)
+                : [];
+
+            return (
+              <IconsSection
+                key={`icons-${item.id}-${index}`}
+                item={{
+                  id: Number(item.id),
+                  title: asString(item.title) ?? asString(item.name),
+                  items: iconItems.map((iconItem) => ({
+                    id: iconItem.id,
+                    icon: asString(iconItem.icon) ?? asString(iconItem.image),
+                    label: asString(iconItem.label) ?? asString(iconItem.title),
+                    description: asString(iconItem.description),
+                  })),
+                }}
+              />
+            );
+          }
+
+          case "content_card": {
+            const cardItems = Array.isArray(item.items)
+              ? item.items.map(normalizeCardItem)
+              : Array.isArray(item.item)
+                ? item.item.map(normalizeCardItem)
+                : [];
+
+            return (
+              <ContentCards
+                key={`content-card-${item.id}-${index}`}
+                item={{
+                  id: Number(item.id),
+                  title: asString(item.title) ?? asString(item.name),
+                  items: cardItems.map((card) => ({
+                    id: card.id,
+                    title: asString(card.title),
+                    description: asString(card.description),
+                    image: asString(card.image),
                   })),
                 }}
               />
