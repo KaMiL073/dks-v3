@@ -10,7 +10,7 @@ export type PromotionComponent = {
 
 export type PromotionItem = {
   id: number;
-  name?: string | null;
+ name?: string | null;
   slug?: string | null;
   status?: string | null;
   date_created?: string | null;
@@ -28,7 +28,7 @@ const listFields = [
   "components_promotions.item",
   "components_promotions.item.*",
 
-  // rich_content only
+  // rich_content
   "components_promotions.item:rich_content.header_type",
   "components_promotions.item:rich_content.heading_styles",
   "components_promotions.item:rich_content.subtitle_type",
@@ -41,7 +41,19 @@ const detailFields = [
   "status",
   "date_created",
 
-  // rich_content only
+  // hero_section
+  "components_promotions.item:hero_section.title",
+  "components_promotions.item:hero_section.subtitle",
+  "components_promotions.item:hero_section.button_label",
+  "components_promotions.item:hero_section.button_url",
+  "components_promotions.item:hero_section.image",
+  "components_promotions.item:hero_section.background_image",
+  "components_promotions.item:hero_section.variant",
+  "components_promotions.item:hero_section.content_position",
+  "components_promotions.item:hero_section.image_vertical_align",
+  "components_promotions.item:hero_section.image_fit",
+
+  // rich_content
   "components_promotions.item:rich_content.title",
   "components_promotions.item:rich_content.subtitle",
   "components_promotions.item:rich_content.content",
@@ -68,7 +80,7 @@ const detailFields = [
   "components_promotions.item.speakers.*",
   "components_promotions.item.speakers.speakers_id.*",
 
-  // consultants / collection
+  // consultants
   "components_promotions.item.collection.*",
   "components_promotions.item.collection.consultants_id.*",
 ] as const;
@@ -144,7 +156,10 @@ export async function getPromotionBySlug(slug: string) {
 
     const item = normalize<PromotionItem>(res)[0] ?? null;
 
-    console.log("PROMOTION RAW:", JSON.stringify(item, null, 2));
+    console.log(
+      "PROMOTION DATA:",
+      JSON.stringify(item, null, 2)
+    );
 
     return item;
   } catch (error) {
