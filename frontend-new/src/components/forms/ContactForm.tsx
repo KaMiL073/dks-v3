@@ -163,7 +163,7 @@ export default function ContactForm({
         className,
       ].join(" ")}
     >
-      <div className="w-full xl:w-96 shrink-0">
+      <div className="w-full xl:w-96 shrink-0 scroll-mt-20" id="kontakt">
         <div className="w-full">
           <h2 className="text-Text-headings text-3xl md:text-4xl font-semibold font-['Montserrat'] leading-10 md:leading-[56px]">
             Skontaktuj się z nami

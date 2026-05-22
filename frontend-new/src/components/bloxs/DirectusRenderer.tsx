@@ -242,11 +242,12 @@ export default function DirectusRenderer({
                 buttonLabel={
                   asString(item.button_label) ?? asString(item.text_button)
                 }
-                buttonUrl={asString(item.button_url) ?? asString(item.url_button)}
+                buttonUrl={asString(item.button_url)}
                 image={asString(item.image)}
                 backgroundImage={asString(item.background_image)}
                 variant={
-                  item.variant === "boxed-image" || item.variant === "full-height"
+                  item.variant === "boxed-image" ||
+                  item.variant === "full-height"
                     ? item.variant
                     : "full-height"
                 }
@@ -318,8 +319,7 @@ export default function DirectusRenderer({
                           : typeof normalizedLogo.logos_id === "string"
                             ? Number(normalizedLogo.logos_id)
                             : undefined,
-                      directus_files_id:
-                        normalizedLogo.directus_files_id ?? "",
+                      directus_files_id: normalizedLogo.directus_files_id ?? "",
                     };
                   }),
                 }}
@@ -450,8 +450,8 @@ export default function DirectusRenderer({
                 item={{
                   id: Number(item.id),
                   title: asString(item.title) ?? asString(item.name),
-                  items: cardItems.map((card) => ({
-                    id: card.id,
+                  items: cardItems.map((card, cardIndex) => ({
+                    id: card.id ?? cardIndex,
                     title: asString(card.title),
                     description: asString(card.description),
                     image: asString(card.image),
