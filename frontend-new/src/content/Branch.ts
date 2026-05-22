@@ -88,7 +88,7 @@ export const branches: Branch[] = [
                   <h2>Kserokopiarki renomowanych marek na sprzedaż i na wynajem</h2>
                   <p>Dostarczamy <strong>maszyny biurowe i poligraficzne nowe i używane</strong> (poleasingowe). Możesz je kupić lub wynająć: <a title="dzierżawa kserokopiarek" href="https://www.dks.pl/wynajem-urzadzen-wielofunkcyjnych" target="_self">dzierżawa kserokopiarek</a> i drukarek jest ważną częścią naszej działalności. Zamiana dużej inwestycji w zakup sprzętu na relatywnie niski miesięczny czynsz jest szczególnie atrakcyjna dla młodych firm. Wynajem jest też optymalny w sytuacji, w której potrzebujesz większej liczby maszyn drukujących do realizacji projektu o ściśle określonych ramach czasowych. </p>
                   <p>Zachęcamy do kontaktu, sprawdź, jak bardzo korzystne są nasze warunki dzierżawy. Chętnie pomożemy dobrać urządzenia spełniające Twoje wymagania. W czasie trwania kontraktu będziemy dbali o to, aby każdego dnia działały wydajnie i bezawaryjne.</p>
-                  <p>Zatrudniani przez nas handlowcy obsługują Klientów z Warszawy i całego województwa mazowieckiego. Realizujemy umowy z podmiotami z Pruszkowa, Piaseczna, Łomianek, Legionowa, Marek. Zachęcamy do kontaktu telefonicznego lub do odwiedzenia naszego biura przy ul. Kolumba 36.</p>
+                  <p>Zatrudniani przez nas handlowcy obsługują Klientów z Warszawy i całego województwa mazowieckiego. Realizujemy umowy z podmiotami z Pruszkowa, Piaseczna, Łomianek, Legionowa, Marek. Zachęcamy do kontaktu telefonicznego lub do odwiedzenia naszego biura przy ul. Muszkieterów 15,.</p>
                       <h2>Oferta sprzedaży i dzierżawy kserokopiarek w Warszawie</h2>
                   <p>
                       Specjalizujemy się w sprzedaży, dzierżawie oraz serwisie urządzeń drukujących do biur, a także do poligrafii. 
@@ -219,8 +219,9 @@ export const branches: Branch[] = [
     img: '//static/departments/poznan.webp',
     image: "/static/oddzialy/poznan.webp",
     title: 'Urządzenia biurowe i poligraficzne w Poznaniu',
-    description: `<p>Niezależnie od tego, jakie urządzenie drukujące użytkujesz, planujesz kupić, wynająć lub naprawić, w DKS otrzymasz profesjonalne wsparcie. Nasza siedziba przy ul. Chlebowej 4/8 to najlepsze miejsce, aby kupić biznesowe <strong>urządzenia biurowe</strong>. W naszej ofercie dla biur znajdziesz drukarki, kserokopiarki wielofunkcyjne i skanery, a także niszczarki dokumentów.</p>
-                  <p><strong>Zaopatrujemy też drukarnie cyfrowe</strong>: dostarczamy, montujemy i uruchamiamy pojedyncze urządzenia poligraficzne[https://www.dks.pl/oferta/rozwiazania-dla-poligrafii] i całe systemy druku produkcyjnego. Dostarczamy też maszyny do introligatorskiej obróbki wydruków: falcerki, finiszery, gilotyny, foliarki.</p>
+    description: `<p>Niezależnie od tego, jakie urządzenie drukujące użytkujesz, planujesz kupić, wynająć lub naprawić, w DKS otrzymasz profesjonalne wsparcie. Nasza siedziba przy ul. Magazynowa 1B to najlepsze miejsce, aby kupić biznesowe <strong>urządzenia biurowe</strong>. W naszej ofercie dla biur znajdziesz drukarki, kserokopiarki wielofunkcyjne i skanery, a także niszczarki dokumentów.</p>
+                  <p><strong>Zaopatrujemy też drukarnie cyfrowe</strong>: dostarczamy, montujemy i uruchamiamy pojedyncze urządzenia
+                  <a title="poligraficzne" href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii" target="_self">poligraficzne</a> i całe systemy druku produkcyjnego. Dostarczamy też maszyny do introligatorskiej obróbki wydruków: falcerki, finiszery, gilotyny, foliarki.</p>
                   <p>W gronie naszych Klientów znajdują się agencje reklamowe, biura projektowe, punkty świadczące usługi druku i inne przedsiębiorstwa z branży kreatywnej. Do nich adresujemy bogatą ofertę drukarek i ploterów wielkoformatowych, pracujących w technologii tonerowej lub atramentowej.</p>
                   <h2>Najlepsze marki i profesjonalny serwis kserokopiarek </h2>
                   <p>Jesteśmy <strong>autoryzowanym dystrybutorem prestiżowych marek: Konica Minolta, Lexmark, HP, Canon, KIP, Contex</strong>. Dostarczamy urządzenia nowe, ale prowadzimy też <a title="sprzedaż drukarek poleasingowych" href="https://www.dks.pl/oferta" target="_self">sprzedaż drukarek poleasingowych</a>, używanego sprzętu poligraficznego i wielkoformatowego. Oferujemy także dzierżawę kserokopiarek. Prowadzimy serwis, który wyróżnia się profesjonalizmem i krótkim czasem reakcji na zgłoszenia. Przeprowadzamy przeglądy techniczne, świadczymy usługi montażu oraz rozruchu maszyn i systemów. Realizujemy dostawy dowolnie wybranych materiałów eksploatacyjnych.</p>
@@ -456,7 +457,7 @@ export const branches: Branch[] = [
   {
     name: 'bydgoszcz',
     fullName: 'DKS Sp. z o.o. Oddział Bydgoszcz',
-    address: 'ul. Jagiellońska 94c, 85-097 Bydgoszcz',
+    address: 'ul. Jagiellońska 94c, 85-027 Bydgoszcz',
     img: '/static/oddzialy/bydgoszcz.webp',
     image: "/static/oddzialy/bydgoszcz.webp",
     href: '/oddzialy/bydgoszcz',
