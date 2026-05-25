@@ -54,6 +54,16 @@ function Chevron({ open }: { open: boolean }) {
   );
 }
 
+function formatFileSize(size: number) {
+  if (size < 1024) return `${size}B`;
+
+  if (size < 1024 * 1024) {
+    return `${Math.round(size / 1024)}kB`;
+  }
+
+  return `${(size / 1024 / 1024).toFixed(1)}MB`;
+}
+
 export default function DealerComplaintForm({ groups = [] }: Props) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -62,6 +72,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
   );
 
   const [formData, setFormData] = useState<Record<string, string>>({});
+  const [files, setFiles] = useState<File[]>([]);
   const [isSending, setIsSending] = useState(false);
 
   const visibleGroups = useMemo(() => {
@@ -74,9 +85,9 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     const result: Record<string, boolean> = {};
 
     visibleGroups.forEach((group) => {
-      result[group.key] = group.fields.every((field) =>
-        String(formData[field.name] ?? field.value ?? "").trim()
-      );
+      result[group.key] = group.fields.every((field) => {
+        return String(formData[field.name] ?? field.value ?? "").trim();
+      });
     });
 
     return result;
@@ -100,6 +111,82 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(event.target.files ?? []);
+
+    if (selectedFiles.length > 0) {
+      setFiles((prev) => [...prev, ...selectedFiles]);
+    }
+
+    event.target.value = "";
+  };
+
+  const handleRemoveFile = (indexToRemove: number) => {
+    setFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const renderFileField = () => {
+    return (
+      <div className="self-stretch bg-surface-secondary inline-flex flex-col justify-end items-start gap-3">
+        <div className="self-stretch flex flex-col justify-start items-start gap-3">
+          <div className="self-stretch flex flex-col justify-start items-start gap-2">
+            <div className="self-stretch justify-center text-Text-body text-sm md:text-base font-normal font-['Montserrat'] leading-5">
+              Załączniki
+            </div>
+          </div>
+        </div>
+
+        <div className="self-stretch inline-flex justify-start items-center gap-2.5 flex-wrap">
+          <label className="p-4 bg-[#F9FAFB] rounded-lg border border-border-primary flex justify-center items-center gap-2.5 cursor-pointer">
+            <div className="justify-center text-[#4A5565] text-lg md:text-2xl font-semibold font-['Montserrat'] leading-7">
+              Dodaj pliki
+            </div>
+
+            <input
+              id="complaint-files"
+              type="file"
+              multiple
+              onChange={handleFilesChange}
+              className="hidden"
+            />
+          </label>
+
+          {files.map((file, index) => (
+            <div
+              key={`${file.name}-${file.size}-${index}`}
+              className="p-4 bg-[#F9FAFB] rounded-lg border border-border-primary flex justify-start items-center gap-2.5"
+            >
+              <div className="flex justify-start items-center gap-2">
+                <span className="material-symbols-outlined text-[#D1D5DC] text-2xl leading-none">
+                  attach_file
+                </span>
+
+                <div className="justify-center text-[#101828] text-base md:text-lg font-normal font-['Montserrat'] underline leading-7 break-all">
+                  {file.name}
+                </div>
+              </div>
+
+              <div className="justify-center text-Text-disabled text-sm md:text-base font-normal font-['Montserrat'] leading-7 whitespace-nowrap">
+                {formatFileSize(file.size)}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => handleRemoveFile(index)}
+                aria-label={`Usuń plik ${file.name}`}
+                className="w-6 h-6 flex items-center justify-center text-[#4A5565] hover:text-dks-red transition-colors"
+              >
+                <span className="material-symbols-outlined text-2xl leading-none">
+                  delete
+                </span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   };
 
   const renderField = (field: MappedDirectusField) => {
@@ -134,7 +221,10 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       <label key={fieldName} className="w-full flex flex-col gap-2">
         <span className={labelClass}>
           {field.displayName}
-          {field.required && <span className="text-dks-red ml-1">*</span>}
+
+          {field.required && (
+            <span className="text-dks-red ml-1">*</span>
+          )}
         </span>
 
         {isTextarea ? (
@@ -175,6 +265,18 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     );
   };
 
+  const renderGroupFields = (group: MappedDirectusFieldGroup) => {
+    return group.fields.map((field) => (
+      <React.Fragment key={field.name}>
+        {renderField(field)}
+
+        {group.key === "application_details" &&
+          field.name === "description" &&
+          renderFileField()}
+      </React.Fragment>
+    ));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -192,17 +294,21 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
         recaptcha = await executeRecaptcha(FORM_NAME);
       }
 
-      const payload = {
-        ...formData,
-        recaptcha,
-      };
+      const payload = new FormData();
+
+      Object.entries(formData).forEach(([key, value]) => {
+        payload.append(key, value);
+      });
+
+      files.forEach((file) => {
+        payload.append("files", file);
+      });
+
+      payload.append("recaptcha", recaptcha);
 
       const response = await fetch("/api/complaint", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        body: payload,
       });
 
       const data = await response.json();
@@ -212,22 +318,17 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       }
 
       alert("Dziękujemy! Formularz został wysłany.");
+
       setFormData({});
+      setFiles([]);
     } catch (error) {
       console.error("Complaint submit error:", error);
+
       alert("Wystąpił błąd podczas wysyłania formularza.");
     } finally {
       setIsSending(false);
     }
   };
-
-  if (!visibleGroups.length) {
-    return (
-      <div className="w-full p-4 border border-red-500 rounded text-red-600">
-        Brak pól formularza z Directusa.
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
@@ -262,7 +363,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
 
             {isOpen && (
               <div className="w-full px-0 md:px-10 pb-8 flex flex-col gap-4">
-                {group.fields.map(renderField)}
+                {renderGroupFields(group)}
               </div>
             )}
           </section>
