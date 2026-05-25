@@ -176,7 +176,9 @@ export default function CustomerZoneFormsAccordion({
                   )}
 
                   {it.key === "complaint" && (
-                    <DealerComplaintForm groups={complaintFields} />
+                    <>
+                      <DealerComplaintForm groups={complaintFields} />
+                    </>
                   )}
                 </div>
               </div>
