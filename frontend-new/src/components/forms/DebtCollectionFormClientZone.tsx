@@ -1,308 +1,377 @@
+// frontend-new/src/components/forms/DealerComplaintForm.tsx
+
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+
 import Button from "@/components/ui/Button";
 
-type FormState = {
-  name: string;
-  province: string;
-  nip: string;
-  email: string;
-  phone: string;
-  message: string;
-  consentData: boolean;
-  consentMarketing: boolean;
+import type {
+  MappedDirectusField,
+  MappedDirectusFieldGroup,
+} from "@/lib/fields";
+
+type Props = {
+  groups?: MappedDirectusFieldGroup[];
 };
 
-const FORM_NAME = "DebtCollectionForm";
+const FORM_NAME = "ComplaintForm";
 
-const initialForm: FormState = {
-  name: "",
-  province: "pomorskie",
-  nip: "",
-  email: "",
-  phone: "",
-  message: "",
-  consentData: false,
-  consentMarketing: false,
-};
+function StatusIcon({ valid }: { valid: boolean }) {
+  return (
+    <span
+      className={[
+        "w-6 shrink-0 text-3xl font-semibold leading-none",
+        valid ? "text-Text-headings" : "text-dks-red",
+      ].join(" ")}
+      aria-hidden="true"
+    >
+      {valid ? "✓" : "×"}
+    </span>
+  );
+}
 
-export default function DebtCollectionFormClientZone() {
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <span
+      className={[
+        "w-8 h-8 flex items-center justify-center shrink-0 text-Text-headings transition-transform duration-200",
+        open ? "-rotate-90" : "rotate-90",
+      ].join(" ")}
+      aria-hidden="true"
+    >
+      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
+        <path
+          d="M9 18l6-6-6-6"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
+
+function formatFileSize(size: number) {
+  if (size < 1024) return `${size}B`;
+
+  if (size < 1024 * 1024) {
+    return `${Math.round(size / 1024)}kB`;
+  }
+
+  return `${(size / 1024 / 1024).toFixed(1)}MB`;
+}
+
+export default function DealerComplaintForm({ groups = [] }: Props) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  const [form, setForm] = useState<FormState>(initialForm);
+  const [openSection, setOpenSection] = useState<string | null>(
+    groups?.[0]?.key ?? null
+  );
+
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [files, setFiles] = useState<File[]>([]);
   const [isSending, setIsSending] = useState(false);
 
-  const fieldWrapClass = "w-full flex flex-col items-start gap-2";
+  const visibleGroups = useMemo(() => {
+    return groups.filter(
+      (group) => group && Array.isArray(group.fields) && group.fields.length > 0
+    );
+  }, [groups]);
 
-  const labelClass =
-    "w-full text-Text-body text-base md:text-xl font-normal font-['Montserrat'] leading-6";
+  const sectionValidity = useMemo(() => {
+    const result: Record<string, boolean> = {};
+
+    visibleGroups.forEach((group) => {
+      result[group.key] = group.fields.every((field) => {
+        return String(formData[field.name] ?? field.value ?? "").trim();
+      });
+    });
+
+    return result;
+  }, [visibleGroups, formData]);
+
+  const isFormValid = visibleGroups.every(
+    (group) => sectionValidity[group.key]
+  );
 
   const inputClass =
-    "w-full h-10 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 text-base font-normal font-['Montserrat'] text-Text-body outline-none focus:border-Text-headings";
+    "w-full h-12 bg-[#F9FAFB] rounded-lg border border-border-primary px-4 text-base font-normal font-['Montserrat'] text-Text-body outline-none focus:border-Text-headings";
 
   const textareaClass =
-    "w-full h-44 bg-[#F9FAFB] rounded-lg border border-border-primary px-3 py-2 text-base font-normal font-['Montserrat'] text-Text-body outline-none resize-none focus:border-Text-headings";
+    "w-full h-44 bg-[#F9FAFB] rounded-lg border border-border-primary px-4 py-3 text-base font-normal font-['Montserrat'] text-Text-body outline-none resize-none focus:border-Text-headings";
 
-  const checkboxClass =
-    "w-6 h-6 shrink-0 appearance-none bg-[#F9FAFB] rounded border-2 border-border-primary cursor-pointer checked:bg-surface-action checked:border-surface-action checked:after:content-['✓'] checked:after:block checked:after:text-Text-on-action checked:after:text-center checked:after:leading-[22px] checked:after:text-sm";
+  const labelClass =
+    "w-full text-Text-body text-sm md:text-base font-normal font-['Montserrat'] leading-5";
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target;
-    const { name, value } = target;
-
-    if (name === "nip") {
-      if (!/^\d*$/.test(value)) return;
-      if (value.length > 10) return;
-    }
-
-    if (target instanceof HTMLInputElement && target.type === "checkbox") {
-      setForm((prev) => ({
-        ...prev,
-        [name]: target.checked,
-      }));
-      return;
-    }
-
-    setForm((prev) => ({
+  const handleChange = (name: string, value: string) => {
+    setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
+  const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(event.target.files ?? []);
+
+    if (selectedFiles.length > 0) {
+      setFiles((prev) => [...prev, ...selectedFiles]);
+    }
+
+    event.target.value = "";
+  };
+
+  const handleRemoveFile = (indexToRemove: number) => {
+    setFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const FileUploadField = () => {
+    return (
+      <div className="w-full flex flex-col gap-3">
+        <span className={labelClass}>Załączniki</span>
+
+        <div className="self-stretch inline-flex justify-start items-center gap-2.5 flex-wrap">
+          <label className="h-14 px-4 bg-[#F9FAFB] rounded-lg border border-border-primary inline-flex justify-center items-center gap-2.5 cursor-pointer">
+            <span className="material-symbols-outlined text-Text-secondary text-2xl leading-none">
+              attach_file
+            </span>
+
+            <span className="text-Text-secondary text-lg md:text-2xl font-semibold font-['Montserrat'] leading-7">
+              Dodaj pliki
+            </span>
+
+            <input
+              type="file"
+              multiple
+              onChange={handleFilesChange}
+              className="hidden"
+            />
+          </label>
+
+          {files.map((file, index) => (
+            <div
+              key={`${file.name}-${file.size}-${index}`}
+              className="h-14 px-4 bg-[#F9FAFB] rounded-lg border border-border-primary inline-flex justify-start items-center gap-3"
+            >
+              <span className="material-symbols-outlined text-Text-headings text-2xl leading-none">
+                attach_file
+              </span>
+
+              <span className="text-Text-headings text-base md:text-lg font-normal font-['Montserrat'] underline leading-7 max-w-[240px] truncate">
+                {file.name}
+              </span>
+
+              <span className="text-Text-disabled text-sm md:text-base font-normal font-['Montserrat'] leading-7 whitespace-nowrap">
+                {formatFileSize(file.size)}
+              </span>
+
+              <button
+                type="button"
+                onClick={() => handleRemoveFile(index)}
+                aria-label={`Usuń plik ${file.name}`}
+                className="w-6 h-6 flex items-center justify-center text-Text-disabled hover:text-dks-red transition-colors"
+              >
+                <span className="material-symbols-outlined text-2xl leading-none">
+                  delete
+                </span>
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderField = (field: MappedDirectusField) => {
+    const fieldName = field?.name ?? "";
+    const fieldType = field?.type ?? "";
+    const fieldInterface = field?.interface ?? "";
+    const normalizedFieldName = fieldName.toLowerCase();
+
+    const value = formData[fieldName] ?? field.value ?? "";
+
+    const isTextarea =
+      fieldInterface.includes("textarea") ||
+      fieldInterface.includes("multiline") ||
+      normalizedFieldName.includes("description") ||
+      normalizedFieldName.includes("message");
+
+    const isSelect =
+      fieldInterface.includes("select") && field.options.length > 0;
+
+    const inputType =
+      fieldType === "integer" || fieldType === "float"
+        ? "number"
+        : normalizedFieldName.includes("email")
+          ? "email"
+          : normalizedFieldName.includes("phone")
+            ? "tel"
+            : normalizedFieldName.includes("date")
+              ? "date"
+              : "text";
+
+    return (
+      <label key={fieldName} className="w-full flex flex-col gap-2">
+        <span className={labelClass}>
+          {field.displayName}
+
+          {field.required && <span className="text-dks-red ml-1">*</span>}
+        </span>
+
+        {isTextarea ? (
+          <textarea
+            name={fieldName}
+            value={value}
+            required={field.required}
+            onChange={(e) => handleChange(fieldName, e.target.value)}
+            className={textareaClass}
+          />
+        ) : isSelect ? (
+          <select
+            name={fieldName}
+            value={value}
+            required={field.required}
+            onChange={(e) => handleChange(fieldName, e.target.value)}
+            className={inputClass}
+          >
+            <option value="">Wybierz</option>
+
+            {field.options.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.text}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type={inputType}
+            name={fieldName}
+            value={value}
+            required={field.required}
+            onChange={(e) => handleChange(fieldName, e.target.value)}
+            className={inputClass}
+          />
+        )}
+      </label>
+    );
+  };
+
+  const renderGroupFields = (group: MappedDirectusFieldGroup) => {
+    return group.fields.map((field) => (
+      <React.Fragment key={field.name}>
+        {renderField(field)}
+
+        {group.key === "application_details" && field.name === "description" && (
+          <FileUploadField />
+        )}
+      </React.Fragment>
+    ));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.consentData) {
-      alert("❌ Musisz wyrazić zgodę na przetwarzanie danych.");
+    if (!isFormValid) {
+      alert("Uzupełnij wszystkie wymagane pola.");
       return;
     }
 
     try {
       setIsSending(true);
 
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA nie jest gotowa.");
+      let recaptcha = "";
+
+      if (executeRecaptcha) {
+        recaptcha = await executeRecaptcha(FORM_NAME);
       }
 
-      const recaptchaToken = await executeRecaptcha("DebtCollectionForm");
+      const payload = new FormData();
 
-      const payload = {
-        form_name: FORM_NAME,
-        email: form.email,
-        form_data: {
-          name: form.name,
-          province: form.province,
-          nip: form.nip,
-          email: form.email,
-          phone: form.phone,
-          message: form.message,
-          clause_for_answers: form.consentData,
-          clause: form.consentMarketing,
-          consentData: form.consentData,
-          consentMarketing: form.consentMarketing,
-        },
-        recaptchaToken,
-      };
-
-      const resp = await fetch("/api/forms", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      Object.entries(formData).forEach(([key, value]) => {
+        payload.append(key, value);
       });
 
-      const data = await resp.json();
+      files.forEach((file) => {
+        payload.append("files", file);
+      });
 
-      if (!resp.ok) {
-        throw data;
+      payload.append("recaptcha", recaptcha);
+
+      const response = await fetch("/api/complaint", {
+        method: "POST",
+        body: payload,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Submit failed");
       }
 
-      alert("✅ Dziękujemy! Formularz został wysłany.");
-      setForm(initialForm);
-    } catch (err) {
-      console.error("Błąd wysyłki:", err);
-      alert("❌ Ups! Coś poszło nie tak. Spróbuj ponownie.");
+      alert("Dziękujemy! Formularz został wysłany.");
+
+      setFormData({});
+      setFiles([]);
+    } catch (error) {
+      console.error("Complaint submit error:", error);
+
+      alert("Wystąpił błąd podczas wysyłania formularza.");
     } finally {
       setIsSending(false);
     }
   };
 
   return (
-    <div className="w-full max-w-full overflow-x-hidden flex flex-col xl:flex-row items-start gap-8 xl:gap-16">
-      <div className="w-full xl:w-96 shrink-0">
-        <div className="w-full">
-          <h2 className="text-Text-headings text-3xl md:text-4xl font-semibold font-['Montserrat'] leading-10 md:leading-[56px]">
-            Skontaktuj się z nami
-          </h2>
+    <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+      {visibleGroups.map((group) => {
+        const isOpen = openSection === group.key;
+        const isValid = sectionValidity[group.key];
 
-          <p className="mt-6 text-Text-headings text-base md:text-xl font-normal font-['Montserrat'] leading-6">
-            Wypełnij formularz, aby przekazać wiadomość do naszego Działu
-            Windykacji.
-          </p>
-        </div>
-      </div>
+        return (
+          <section
+            key={group.key}
+            className="w-full border-b-2 border-border-primary"
+          >
+            <button
+              type="button"
+              onClick={() =>
+                setOpenSection((prev) =>
+                  prev === group.key ? null : group.key
+                )
+              }
+              className="w-full py-4 flex items-center justify-between gap-4 text-left"
+            >
+              <div className="min-w-0 flex items-center gap-3">
+                <StatusIcon valid={isValid} />
 
-      <form
-        onSubmit={handleSubmit}
-        className="w-full flex-1 min-w-0 flex flex-col gap-9"
-      >
-        <input type="hidden" name="province" value={form.province} readOnly />
+                <h3 className="text-Text-headings text-lg md:text-2xl font-semibold font-['Montserrat'] leading-6 md:leading-8">
+                  {group.displayName}
+                </h3>
+              </div>
 
-        <div className="w-full flex flex-col gap-12">
-          <div className="w-full flex flex-col gap-3">
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>Nazwa firmy:</span>
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                required
-                autoComplete="organization"
-                className={inputClass}
-              />
-            </label>
+              <Chevron open={isOpen} />
+            </button>
 
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>NIP:</span>
-              <input
-                type="text"
-                name="nip"
-                value={form.nip}
-                onChange={handleChange}
-                required
-                inputMode="numeric"
-                pattern="[0-9]{10}"
-                maxLength={10}
-                autoComplete="off"
-                className={inputClass}
-              />
-            </label>
+            {isOpen && (
+              <div className="w-full px-0 md:px-10 pb-8 flex flex-col gap-4">
+                {renderGroupFields(group)}
+              </div>
+            )}
+          </section>
+        );
+      })}
 
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>E-mail:</span>
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                required
-                autoComplete="email"
-                className={inputClass}
-              />
-            </label>
-
-            <label className={fieldWrapClass}>
-              <span className={labelClass}>Telefon:</span>
-              <input
-                type="tel"
-                name="phone"
-                value={form.phone}
-                onChange={handleChange}
-                required
-                pattern="[0-9+]{8,13}"
-                autoComplete="tel"
-                className={inputClass}
-              />
-            </label>
-          </div>
-
-          <label className={fieldWrapClass}>
-            <span className={labelClass}>Treść wiadomości:</span>
-            <textarea
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              required
-              className={textareaClass}
-            />
-          </label>
-        </div>
-
-        <div className="w-full py-9 flex flex-col gap-6">
-          <label className="w-full flex items-start gap-4">
-            <input
-              type="checkbox"
-              name="consentData"
-              checked={form.consentData}
-              onChange={handleChange}
-              required
-              className={checkboxClass}
-            />
-
-            <span className="flex-1 min-w-0 text-Text-body text-xs font-normal font-['Montserrat'] leading-4 break-words">
-              Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w
-              powyższym formularzu przez DKS Sp. z o.o., zgodnie z przepisami
-              rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z
-              dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w
-              związku z przetwarzaniem danych osobowych i w sprawie swobodnego
-              przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne
-              rozporządzenie o ochronie danych), Dz. Urz. UE z 4.5.2016 r. L
-              119, str. 1, w celu udzielenia odpowiedzi na złożone zapytanie.
-              Zgoda jest dobrowolna i w każdym dowolnym momencie można z niej
-              zrezygnować. Żądanie usunięcia danych proszę kierować na adres
-              rodo@dks.pl. Cofnięcie zgody na przetwarzanie danych nie ma wpływu
-              na przetwarzanie danych dokonane przed jego zgłoszeniem.
-            </span>
-          </label>
-
-          <label className="w-full flex items-start gap-4">
-            <input
-              type="checkbox"
-              name="consentMarketing"
-              checked={form.consentMarketing}
-              onChange={handleChange}
-              className={checkboxClass}
-            />
-
-            <span className="flex-1 min-w-0 text-Text-body text-xs font-normal font-['Montserrat'] leading-4 break-words">
-              Wyrażam zgodę na przetwarzanie moich danych osobowych podanych w
-              powyższym formularzu przez DKS Sp. z o.o., zgodnie z przepisami
-              rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z
-              dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w
-              związku z przetwarzaniem danych osobowych i w sprawie swobodnego
-              przepływu takich danych oraz uchylenia dyrektywy 95/46/WE (ogólne
-              rozporządzenie o ochronie danych), Dz. Urz. UE z 4.5.2016 r. L
-              119, str. 1, w celu otrzymywania od DKS Sp. z o.o. treści
-              marketingowych oraz informacji handlowych, w tym informacji o
-              promocjach i ofertach, za pośrednictwem podanego adresu e-mail
-              oraz numeru telefonu. Zgoda jest dobrowolna i w każdym dowolnym
-              momencie można z niej zrezygnować. Żądanie usunięcia danych proszę
-              kierować na adres rodo@dks.pl. Cofnięcie zgody na przetwarzanie
-              danych nie ma wpływu na przetwarzanie danych dokonane przed jego
-              zgłoszeniem.
-            </span>
-          </label>
-
-          <div className="w-full text-Text-body text-xs font-normal font-['Montserrat'] leading-4 break-words">
-            <p>
-              Informujemy, że: Administratorem Pani/Pana danych osobowych jest
-              DKS Sp. z o.o., z siedzibą przy ul. Energetycznej 15, 80-180
-              Kowale, e-mail: rodo@dks.pl.
-            </p>
-            <p>
-              Więcej informacji o tym, jak przetwarzamy Twoje dane znajdziesz w{" "}
-              <a
-                className="text-dks-red underline"
-                href="/klauzula-ochrony-danych-data-protection"
-              >
-                Klauzuli Ochrony Danych.
-              </a>
-            </p>
-          </div>
-        </div>
-
+      <div className="mt-4 flex justify-end">
         <Button
           type="submit"
-          disabled={isSending}
-          className="w-full sm:w-auto self-start p-4 bg-surface-action rounded-lg inline-flex justify-center items-center gap-2.5 text-Text-on-action text-lg md:text-2xl font-semibold font-['Montserrat'] leading-7 disabled:opacity-60"
+          disabled={isSending || !isFormValid}
+          className="w-full sm:w-auto p-4 bg-surface-action rounded-lg inline-flex justify-center items-center text-Text-on-action text-lg md:text-2xl font-semibold font-['Montserrat'] leading-7 disabled:opacity-60"
         >
           {isSending ? "Wysyłanie..." : "Wyślij"}
         </Button>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 }
