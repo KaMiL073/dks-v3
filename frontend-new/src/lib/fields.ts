@@ -2,18 +2,12 @@
 
 import "server-only";
 
-const DIRECTUS_URL =
-  process.env.API_INTERNAL_URL ||
-  process.env.DIRECTUS_INTERNAL_URL ||
-  process.env.DIRECTUS_URL ||
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://directus:8055";
-
-const DIRECTUS_TOKEN =
-  process.env.SERVICE_USER_TOKEN ||
-  process.env.DIRECTUS_TOKEN ||
-  process.env.DIRECTUS_STATIC_TOKEN ||
-  process.env.API_TOKEN;
+import {
+  readCollections,
+  readFieldsByCollection,
+  withToken,
+} from "@directus/sdk";
+import { directus, directusToken } from "@/lib/directus";
 
 const BLOCKED_FIELDS = [
   "id",
@@ -29,15 +23,21 @@ const LANG = "pl-PL";
 
 type DirectusTranslation = {
   language?: string;
+  languages_code?: string;
+  code?: string;
   translation?: string;
 };
 
 type DirectusChoice = {
+  label?: string;
+  name?: string;
   text?: string;
   value?: string;
+  translations?: DirectusTranslation[] | null;
 };
 
 type DirectusField = {
+  collection?: string;
   field?: string;
   type?: string;
   meta?: {
@@ -52,12 +52,28 @@ type DirectusField = {
     special?: string[] | null;
     translations?: DirectusTranslation[] | null;
     options?: {
-      choices?: DirectusChoice[];
+      choices?: DirectusChoice[] | null;
+      items?: DirectusChoice[] | null;
+      options?: DirectusChoice[] | null;
     } | null;
   } | null;
   schema?: {
     is_nullable?: boolean;
     default_value?: string | number | boolean | null;
+  } | null;
+};
+
+type DirectusCollection = {
+  collection?: string;
+  meta?: {
+    note?: string | null;
+    display_template?: string | null;
+    translations?:
+      | {
+          language?: string;
+          translation?: string;
+        }[]
+      | null;
   } | null;
 };
 
@@ -82,10 +98,130 @@ export type MappedDirectusFieldGroup = {
   fields: MappedDirectusField[];
 };
 
+function fallbackField(
+  name: string,
+  displayName: string,
+  options: Partial<MappedDirectusField> = {}
+): MappedDirectusField {
+  return {
+    name,
+    displayName,
+    interface: "input",
+    type: "string",
+    required: true,
+    hidden: false,
+    value: "",
+    options: [],
+    ...options,
+  };
+}
+
+export const debtCollectionFallbackFields: MappedDirectusFieldGroup[] = [
+  {
+    key: "contact",
+    displayName: "Dane kontaktowe",
+    sort: 1,
+    fields: [
+      fallbackField("name", "Osoba kontaktowa"),
+      fallbackField("nip", "NIP"),
+      fallbackField("email", "E-mail"),
+      fallbackField("phone", "Telefon"),
+    ],
+  },
+  {
+    key: "message",
+    displayName: "Wiadomość",
+    sort: 2,
+    fields: [
+      fallbackField("message", "Wiadomość", {
+        interface: "input-multiline",
+      }),
+    ],
+  },
+];
+
+export const complaintFallbackFields: MappedDirectusFieldGroup[] = [
+  {
+    key: "contact_Information",
+    displayName: "Informacje Kontaktowe",
+    sort: 1,
+    fields: [
+      fallbackField("full_name", "Imię i nazwisko"),
+      fallbackField("email", "E-mail"),
+      fallbackField("phone", "Telefon"),
+      fallbackField("company_name", "Firma"),
+      fallbackField("topics", "Temat"),
+    ],
+  },
+  {
+    key: "Hicopy_Distribution_Complaint_Submission_Form",
+    displayName: "Formularz zgłoszenia reklamacyjnego Hicopy Distribution",
+    sort: 2,
+    fields: [
+      fallbackField("Producent", "Producent", {
+        interface: "select-dropdown",
+      }),
+      fallbackField(
+        "device_model",
+        "Nazwa / model reklamowanego urządzenia"
+      ),
+      fallbackField("serial_number", "Numer seryjny"),
+      fallbackField("firmware_version", "Wersja firmware"),
+      fallbackField("purchase_invoice_number", "Numer faktury"),
+    ],
+  },
+  {
+    key: "application_details",
+    displayName: "Szczegóły zgłoszenia",
+    sort: 3,
+    fields: [
+      fallbackField("title", "Temat zgłoszenia"),
+      fallbackField("description", "Opis problemu", {
+        interface: "input-multiline",
+        required: false,
+      }),
+      fallbackField("files", "Załączniki", {
+        interface: "files",
+        required: false,
+      }),
+    ],
+  },
+  {
+    key: "Device_Information",
+    displayName: "Informacje o urządzeniu",
+    sort: 4,
+    fields: [
+      fallbackField("counter", "Licznik"),
+      fallbackField("installation_date", "Data instalacji"),
+      fallbackField("issue_date", "Data wystąpienia problemu"),
+    ],
+  },
+  {
+    key: "Return_Shipping_Address",
+    displayName: "Adres wysyłki zwrotnej",
+    sort: 5,
+    fields: [
+      fallbackField("return_company", "Firma"),
+      fallbackField("return_full_name", "Osoba kontaktowa"),
+      fallbackField("return_phone", "Telefon", {
+        required: false,
+      }),
+      fallbackField("return_address", "Adres", {
+        interface: "input-multiline",
+      }),
+    ],
+  },
+];
+
 function getTranslation(field: DirectusField) {
-  return field.meta?.translations?.find(
-    (translation) => translation.language === LANG
-  )?.translation;
+  const translations = field.meta?.translations ?? [];
+
+  return translations.find((translation) => {
+    const language =
+      translation.language || translation.languages_code || translation.code;
+
+    return language === LANG || language === "pl_PL" || language === "pl";
+  })?.translation;
 }
 
 function getDisplayName(field: DirectusField) {
@@ -101,17 +237,44 @@ function getDisplayName(field: DirectusField) {
 }
 
 function mapOptions(field: DirectusField) {
-  const choices = field.meta?.options?.choices ?? [];
+  const choices =
+    field.meta?.options?.choices ??
+    field.meta?.options?.items ??
+    field.meta?.options?.options ??
+    [];
 
-  return choices.map((choice) => ({
-    text: String(choice.text ?? choice.value ?? ""),
-    value: String(choice.value ?? choice.text ?? ""),
-  }));
+  return choices
+    .map((choice) => {
+      const translatedText = choice.translations?.find((translation) => {
+        const language =
+          translation.language || translation.languages_code || translation.code;
+
+        return language === LANG || language === "pl_PL" || language === "pl";
+      })?.translation;
+
+      const text = String(
+        translatedText ??
+        choice.text ??
+        choice.label ??
+        choice.name ??
+        choice.value ??
+        ""
+      );
+
+      const value = String(
+        choice.value ?? choice.text ?? choice.label ?? choice.name ?? ""
+      );
+
+      return {
+        text,
+        value,
+      };
+    })
+    .filter((choice) => choice.text && choice.value);
 }
 
 function isGroupField(field: DirectusField) {
   return (
-    field.type === "alias" ||
     field.meta?.special?.includes("group") ||
     field.meta?.interface === "group-detail" ||
     field.meta?.interface === "group-accordion"
@@ -138,35 +301,78 @@ function mapField(field: DirectusField): MappedDirectusField {
 
 async function getDirectusFields(collection: string): Promise<DirectusField[]> {
   try {
-    const url = `${DIRECTUS_URL.replace(/\/$/, "")}/fields/${collection}?limit=-1`;
+    const command = readFieldsByCollection(collection);
+    const response = await directus.request(
+      directusToken ? withToken(directusToken, command) : command
+    );
 
-    const response = await fetch(url, {
-      headers: DIRECTUS_TOKEN
-        ? {
-            Authorization: `Bearer ${DIRECTUS_TOKEN}`,
-          }
-        : {},
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      console.error("getDirectusFields failed:", {
-        collection,
-        status: response.status,
-        body: text,
-      });
-
-      return [];
-    }
-
-    const json: { data?: DirectusField[] } = await response.json();
-
-    return Array.isArray(json.data) ? json.data : [];
+    return Array.isArray(response) ? (response as DirectusField[]) : [];
   } catch (error) {
-    console.error(`getDirectusFields(${collection}) error:`, error);
+    console.error(
+      `getDirectusFields(${collection}) error:`,
+      error instanceof Error ? error.message : error
+    );
     return [];
   }
+}
+
+async function getDirectusCollections(): Promise<DirectusCollection[]> {
+  try {
+    const command = readCollections();
+    const response = await directus.request(
+      directusToken ? withToken(directusToken, command) : command
+    );
+
+    return Array.isArray(response)
+      ? (response as DirectusCollection[])
+      : [];
+  } catch (error) {
+    console.error(
+      "getDirectusCollections error:",
+      error instanceof Error ? error.message : error
+    );
+    return [];
+  }
+}
+
+function normalizeSearchValue(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ł/g, "l");
+}
+
+function collectionMatchesTerms(
+  collection: DirectusCollection,
+  terms: string[]
+) {
+  const values = [
+    collection.collection,
+    collection.meta?.note,
+    collection.meta?.display_template,
+    ...(collection.meta?.translations?.map(
+      (translation) => translation.translation
+    ) ?? []),
+  ]
+    .filter((value): value is string => Boolean(value))
+    .map(normalizeSearchValue);
+
+  return terms.some((term) => {
+    const normalizedTerm = normalizeSearchValue(term);
+
+    return values.some((value) => value.includes(normalizedTerm));
+  });
+}
+
+function shouldRenderField(field: DirectusField) {
+  if (!field.field) return false;
+  if (BLOCKED_FIELDS.includes(field.field)) return false;
+  if (field.meta?.readonly) return false;
+  if (field.meta?.hidden) return false;
+  if (isGroupField(field)) return false;
+
+  return true;
 }
 
 export async function getFields(
@@ -175,15 +381,7 @@ export async function getFields(
   const allFields = await getDirectusFields(collection);
 
   return allFields
-    .filter((field) => {
-      if (!field.field) return false;
-      if (BLOCKED_FIELDS.includes(field.field)) return false;
-      if (field.meta?.readonly) return false;
-      if (field.meta?.hidden) return false;
-      if (isGroupField(field)) return false;
-
-      return true;
-    })
+    .filter(shouldRenderField)
     .sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0))
     .map(mapField);
 }
@@ -204,15 +402,7 @@ export async function getGroupedFields(
     }));
 
   const normalFields = allFields
-    .filter((field) => {
-      if (!field.field) return false;
-      if (BLOCKED_FIELDS.includes(field.field)) return false;
-      if (field.meta?.readonly) return false;
-      if (field.meta?.hidden) return false;
-      if (isGroupField(field)) return false;
-
-      return true;
-    })
+    .filter(shouldRenderField)
     .sort((a, b) => (a.meta?.sort ?? 0) - (b.meta?.sort ?? 0));
 
   for (const field of normalFields) {
@@ -256,4 +446,38 @@ export async function getGroupedFields(
   return groups
     .filter((group) => group.fields.length > 0)
     .sort((a, b) => a.sort - b.sort);
+}
+
+export async function getFirstGroupedFields(
+  collections: string[],
+  searchTerms: string[] = []
+): Promise<MappedDirectusFieldGroup[]> {
+  for (const collection of collections) {
+    const groups = await getGroupedFields(collection);
+
+    if (groups.length > 0) {
+      return groups;
+    }
+  }
+
+  if (searchTerms.length > 0) {
+    const directusCollections = await getDirectusCollections();
+
+    const matchedCollections = directusCollections
+      .filter((collection) => collectionMatchesTerms(collection, searchTerms))
+      .map((collection) => collection.collection)
+      .filter((collection): collection is string => Boolean(collection));
+
+    for (const collection of matchedCollections) {
+      if (collections.includes(collection)) continue;
+
+      const groups = await getGroupedFields(collection);
+
+      if (groups.length > 0) {
+        return groups;
+      }
+    }
+  }
+
+  return [];
 }

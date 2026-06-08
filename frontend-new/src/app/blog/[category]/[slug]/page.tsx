@@ -106,17 +106,17 @@ export default async function BlogArticlePage({ params }: PageProps) {
     <>
       <TopSectionHeader title={post.title} img="/static/homepage/Header.webp" subtitle={""} />
 
-      <div className="self-stretch px-28 py-20 inline-flex justify-start items-start gap-12">
+      <main className="w-full max-w-full overflow-x-hidden px-4 sm:px-6 md:px-10 xl:px-28 py-8 md:py-16 xl:py-20 flex flex-col lg:flex-row items-start gap-6 lg:gap-12">
         <BlogCategoriesSidebar categories={categories} activeSlug={category} />
 
-        <div className="flex-1 inline-flex flex-col justify-center items-start gap-12">
+        <div className="w-full flex-1 min-w-0 flex flex-col justify-center items-start gap-8 md:gap-12">
           <img
-            className="self-stretch h-80 object-cover"
+            className="w-full h-56 md:h-80 object-cover"
             src={post.image || "https://placehold.co/752x350"}
             alt={post.title ?? ""}
           />
 
-          <div className="self-stretch text-Text-headings text-4xl font-semibold leading-[48px]">
+          <div className="self-stretch text-Text-headings text-2xl md:text-4xl font-semibold leading-8 md:leading-[48px]">
             {post.title}
           </div>
 
@@ -133,7 +133,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
           </div>
 
           <div
-            className="self-stretch text-Text-body text-base leading-5 prose prose-lg max-w-none"
+            className="rich-content self-stretch"
             dangerouslySetInnerHTML={{ __html: post.content || "" }}
           />
 
@@ -143,7 +143,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
                 Polecane artykuły
               </div>
 
-              <div className="inline-flex gap-6">
+              <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-6">
                 {recommended.map((item) => {
                   const itemCategorySlug = item.categorySlug ?? category;
 
@@ -151,7 +151,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
                     <a
                       key={item.id}
                       href={`/blog/${itemCategorySlug}/${item.slug}`}
-                      className="flex-1 min-w-60 flex flex-col gap-4"
+                      className="w-full min-w-0 flex flex-col gap-4"
                     >
                       <div className="flex flex-col gap-6">
                         <img
@@ -192,7 +192,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </>
   );
 }

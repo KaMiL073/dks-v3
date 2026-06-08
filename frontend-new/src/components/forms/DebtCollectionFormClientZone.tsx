@@ -1,8 +1,6 @@
-// frontend-new/src/components/forms/DealerComplaintForm.tsx
-
 "use client";
 
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import Button from "@/components/ui/Button";
@@ -16,63 +14,23 @@ type Props = {
   groups?: MappedDirectusFieldGroup[];
 };
 
-const FORM_NAME = "ComplaintForm";
+const FORM_NAME = "DebtCollectionForm";
 
-function StatusIcon({ valid }: { valid: boolean }) {
+function isInformationalField(field: MappedDirectusField) {
+  const fieldInterface = field?.interface ?? "";
+
   return (
-    <span
-      className={[
-        "w-6 shrink-0 text-3xl font-semibold leading-none",
-        valid ? "text-Text-headings" : "text-dks-red",
-      ].join(" ")}
-      aria-hidden="true"
-    >
-      {valid ? "✓" : "×"}
-    </span>
+    fieldInterface.includes("presentation-notice") ||
+    fieldInterface.includes("notice") ||
+    fieldInterface.includes("information") ||
+    fieldInterface.includes("info")
   );
 }
 
-function Chevron({ open }: { open: boolean }) {
-  return (
-    <span
-      className={[
-        "w-8 h-8 flex items-center justify-center shrink-0 text-Text-headings transition-transform duration-200",
-        open ? "-rotate-90" : "rotate-90",
-      ].join(" ")}
-      aria-hidden="true"
-    >
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M9 18l6-6-6-6"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    </span>
-  );
-}
-
-function formatFileSize(size: number) {
-  if (size < 1024) return `${size}B`;
-
-  if (size < 1024 * 1024) {
-    return `${Math.round(size / 1024)}kB`;
-  }
-
-  return `${(size / 1024 / 1024).toFixed(1)}MB`;
-}
-
-export default function DealerComplaintForm({ groups = [] }: Props) {
+export default function DebtCollectionFormClientZone({ groups = [] }: Props) {
   const { executeRecaptcha } = useGoogleReCaptcha();
 
-  const [openSection, setOpenSection] = useState<string | null>(
-    groups?.[0]?.key ?? null
-  );
-
   const [formData, setFormData] = useState<Record<string, string>>({});
-  const [files, setFiles] = useState<File[]>([]);
   const [isSending, setIsSending] = useState(false);
 
   const visibleGroups = useMemo(() => {
@@ -81,20 +39,30 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     );
   }, [groups]);
 
-  const sectionValidity = useMemo(() => {
-    const result: Record<string, boolean> = {};
+  const completeFormData = useMemo(() => {
+    const data: Record<string, string> = {};
 
     visibleGroups.forEach((group) => {
-      result[group.key] = group.fields.every((field) => {
-        return String(formData[field.name] ?? field.value ?? "").trim();
+      group.fields.forEach((field) => {
+        if (isInformationalField(field)) return;
+
+        data[field.name] = String(formData[field.name] ?? field.value ?? "");
       });
     });
 
-    return result;
+    return data;
   }, [visibleGroups, formData]);
 
-  const isFormValid = visibleGroups.every(
-    (group) => sectionValidity[group.key]
+  const requiredFields = useMemo(() => {
+    return visibleGroups.flatMap((group) =>
+      group.fields.filter(
+        (field) => field.required && !isInformationalField(field)
+      )
+    );
+  }, [visibleGroups]);
+
+  const isFormValid = requiredFields.every((field) =>
+    String(completeFormData[field.name] ?? "").trim()
   );
 
   const inputClass =
@@ -113,84 +81,22 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     }));
   };
 
-  const handleFilesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = Array.from(event.target.files ?? []);
-
-    if (selectedFiles.length > 0) {
-      setFiles((prev) => [...prev, ...selectedFiles]);
+  const renderField = (field: MappedDirectusField) => {
+    if (isInformationalField(field)) {
+      return (
+        <div
+          key={field.name}
+          className="w-full text-Text-body text-sm md:text-base font-normal font-['Montserrat'] leading-6"
+          dangerouslySetInnerHTML={{ __html: String(field.value ?? "") }}
+        />
+      );
     }
 
-    event.target.value = "";
-  };
-
-  const handleRemoveFile = (indexToRemove: number) => {
-    setFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
-  };
-
-  const FileUploadField = () => {
-    return (
-      <div className="w-full flex flex-col gap-3">
-        <span className={labelClass}>Załączniki</span>
-
-        <div className="self-stretch inline-flex justify-start items-center gap-2.5 flex-wrap">
-          <label className="h-14 px-4 bg-[#F9FAFB] rounded-lg border border-border-primary inline-flex justify-center items-center gap-2.5 cursor-pointer">
-            <span className="material-symbols-outlined text-Text-secondary text-2xl leading-none">
-              attach_file
-            </span>
-
-            <span className="text-Text-secondary text-lg md:text-2xl font-semibold font-['Montserrat'] leading-7">
-              Dodaj pliki
-            </span>
-
-            <input
-              type="file"
-              multiple
-              onChange={handleFilesChange}
-              className="hidden"
-            />
-          </label>
-
-          {files.map((file, index) => (
-            <div
-              key={`${file.name}-${file.size}-${index}`}
-              className="h-14 px-4 bg-[#F9FAFB] rounded-lg border border-border-primary inline-flex justify-start items-center gap-3"
-            >
-              <span className="material-symbols-outlined text-Text-headings text-2xl leading-none">
-                attach_file
-              </span>
-
-              <span className="text-Text-headings text-base md:text-lg font-normal font-['Montserrat'] underline leading-7 max-w-[240px] truncate">
-                {file.name}
-              </span>
-
-              <span className="text-Text-disabled text-sm md:text-base font-normal font-['Montserrat'] leading-7 whitespace-nowrap">
-                {formatFileSize(file.size)}
-              </span>
-
-              <button
-                type="button"
-                onClick={() => handleRemoveFile(index)}
-                aria-label={`Usuń plik ${file.name}`}
-                className="w-6 h-6 flex items-center justify-center text-Text-disabled hover:text-dks-red transition-colors"
-              >
-                <span className="material-symbols-outlined text-2xl leading-none">
-                  delete
-                </span>
-              </button>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  const renderField = (field: MappedDirectusField) => {
     const fieldName = field?.name ?? "";
     const fieldType = field?.type ?? "";
     const fieldInterface = field?.interface ?? "";
     const normalizedFieldName = fieldName.toLowerCase();
-
-    const value = formData[fieldName] ?? field.value ?? "";
+    const value = completeFormData[fieldName] ?? "";
 
     const isTextarea =
       fieldInterface.includes("textarea") ||
@@ -199,7 +105,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       normalizedFieldName.includes("message");
 
     const isSelect =
-      fieldInterface.includes("select") && field.options.length > 0;
+      fieldInterface.includes("select") || field.options.length > 0;
 
     const inputType =
       fieldType === "integer" || fieldType === "float"
@@ -216,7 +122,6 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       <label key={fieldName} className="w-full flex flex-col gap-2">
         <span className={labelClass}>
           {field.displayName}
-
           {field.required && <span className="text-dks-red ml-1">*</span>}
         </span>
 
@@ -225,7 +130,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
             name={fieldName}
             value={value}
             required={field.required}
-            onChange={(e) => handleChange(fieldName, e.target.value)}
+            onChange={(event) => handleChange(fieldName, event.target.value)}
             className={textareaClass}
           />
         ) : isSelect ? (
@@ -233,7 +138,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
             name={fieldName}
             value={value}
             required={field.required}
-            onChange={(e) => handleChange(fieldName, e.target.value)}
+            onChange={(event) => handleChange(fieldName, event.target.value)}
             className={inputClass}
           >
             <option value="">Wybierz</option>
@@ -250,7 +155,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
             name={fieldName}
             value={value}
             required={field.required}
-            onChange={(e) => handleChange(fieldName, e.target.value)}
+            onChange={(event) => handleChange(fieldName, event.target.value)}
             className={inputClass}
           />
         )}
@@ -258,20 +163,8 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     );
   };
 
-  const renderGroupFields = (group: MappedDirectusFieldGroup) => {
-    return group.fields.map((field) => (
-      <React.Fragment key={field.name}>
-        {renderField(field)}
-
-        {group.key === "application_details" && field.name === "description" && (
-          <FileUploadField />
-        )}
-      </React.Fragment>
-    ));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
 
     if (!isFormValid) {
       alert("Uzupełnij wszystkie wymagane pola.");
@@ -281,27 +174,23 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     try {
       setIsSending(true);
 
-      let recaptcha = "";
+      let recaptchaToken = "";
 
       if (executeRecaptcha) {
-        recaptcha = await executeRecaptcha(FORM_NAME);
+        recaptchaToken = await executeRecaptcha(FORM_NAME);
       }
 
-      const payload = new FormData();
-
-      Object.entries(formData).forEach(([key, value]) => {
-        payload.append(key, value);
-      });
-
-      files.forEach((file) => {
-        payload.append("files", file);
-      });
-
-      payload.append("recaptcha", recaptcha);
-
-      const response = await fetch("/api/complaint", {
+      const response = await fetch("/api/forms", {
         method: "POST",
-        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          form_name: FORM_NAME,
+          email: completeFormData.email ?? "",
+          form_data: completeFormData,
+          recaptchaToken,
+        }),
       });
 
       const data = await response.json();
@@ -311,57 +200,28 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       }
 
       alert("Dziękujemy! Formularz został wysłany.");
-
       setFormData({});
-      setFiles([]);
     } catch (error) {
-      console.error("Complaint submit error:", error);
-
+      console.error("Debt collection submit error:", error);
       alert("Wystąpił błąd podczas wysyłania formularza.");
     } finally {
       setIsSending(false);
     }
   };
 
+  if (visibleGroups.length === 0) {
+    return null;
+  }
+
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
-      {visibleGroups.map((group) => {
-        const isOpen = openSection === group.key;
-        const isValid = sectionValidity[group.key];
-
-        return (
-          <section
-            key={group.key}
-            className="w-full border-b-2 border-border-primary"
-          >
-            <button
-              type="button"
-              onClick={() =>
-                setOpenSection((prev) =>
-                  prev === group.key ? null : group.key
-                )
-              }
-              className="w-full py-4 flex items-center justify-between gap-4 text-left"
-            >
-              <div className="min-w-0 flex items-center gap-3">
-                <StatusIcon valid={isValid} />
-
-                <h3 className="text-Text-headings text-lg md:text-2xl font-semibold font-['Montserrat'] leading-6 md:leading-8">
-                  {group.displayName}
-                </h3>
-              </div>
-
-              <Chevron open={isOpen} />
-            </button>
-
-            {isOpen && (
-              <div className="w-full px-0 md:px-10 pb-8 flex flex-col gap-4">
-                {renderGroupFields(group)}
-              </div>
-            )}
-          </section>
-        );
-      })}
+      {visibleGroups.map((group) => (
+        <section key={group.key} className="w-full flex flex-col gap-4">
+          <div className="w-full flex flex-col gap-4">
+            {group.fields.map(renderField)}
+          </div>
+        </section>
+      ))}
 
       <div className="mt-4 flex justify-end">
         <Button
