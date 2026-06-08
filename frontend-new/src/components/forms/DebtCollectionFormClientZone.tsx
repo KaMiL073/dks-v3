@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import Button from "@/components/ui/Button";
+import FormInfoModalField from "@/components/forms/FormInfoModalField";
 
 import type {
   MappedDirectusField,
@@ -84,10 +85,11 @@ export default function DebtCollectionFormClientZone({ groups = [] }: Props) {
   const renderField = (field: MappedDirectusField) => {
     if (isInformationalField(field)) {
       return (
-        <div
+        <FormInfoModalField
           key={field.name}
-          className="w-full text-Text-body text-sm md:text-base font-normal font-['Montserrat'] leading-6"
-          dangerouslySetInnerHTML={{ __html: String(field.value ?? "") }}
+          title={field.displayName}
+          icon={field.icon}
+          html={String(field.value ?? "")}
         />
       );
     }
