@@ -55,6 +55,9 @@ type DirectusField = {
       choices?: DirectusChoice[] | null;
       items?: DirectusChoice[] | null;
       options?: DirectusChoice[] | null;
+      label?: string | Record<string, string> | null;
+      icon?: string | null;
+      text?: string | Record<string, string> | null;
     } | null;
   } | null;
   schema?: {
@@ -85,6 +88,7 @@ export type MappedDirectusField = {
   required: boolean;
   hidden: boolean;
   value: string;
+  icon?: string;
   options: {
     text: string;
     value: string;
@@ -226,14 +230,25 @@ function getTranslation(field: DirectusField) {
 
 function getDisplayName(field: DirectusField) {
   const translation = getTranslation(field);
+  const optionLabel = getLocalizedOptionValue(field.meta?.options?.label);
 
   return (
     translation ||
+    optionLabel ||
     field.meta?.note ||
     field.meta?.display ||
     field.field ||
     ""
   );
+}
+
+function getLocalizedOptionValue(
+  value?: string | Record<string, string> | null
+) {
+  if (!value) return "";
+  if (typeof value === "string") return value;
+
+  return value[LANG] || value.pl_PL || value.pl || Object.values(value)[0] || "";
 }
 
 function mapOptions(field: DirectusField) {
@@ -282,6 +297,8 @@ function isGroupField(field: DirectusField) {
 }
 
 function mapField(field: DirectusField): MappedDirectusField {
+  const optionText = getLocalizedOptionValue(field.meta?.options?.text);
+
   return {
     name: field.field ?? "",
     displayName: getDisplayName(field),
@@ -291,10 +308,12 @@ function mapField(field: DirectusField): MappedDirectusField {
       field.meta?.required === true || field.schema?.is_nullable === false,
     hidden: field.meta?.hidden === true,
     value:
-      field.schema?.default_value === null ||
+      optionText ||
+      (field.schema?.default_value === null ||
       field.schema?.default_value === undefined
         ? ""
-        : String(field.schema.default_value),
+        : String(field.schema.default_value)),
+    icon: field.meta?.options?.icon || undefined,
     options: mapOptions(field),
   };
 }
