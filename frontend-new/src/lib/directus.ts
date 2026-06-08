@@ -58,7 +58,11 @@ function resolveBackendUrl(): string {
 
   if (internal) return internal.replace(/\/$/, "");
 
-  const raw = cleanEnv(process.env.NEXT_PUBLIC_BACKEND_URL);
+  const raw =
+    cleanEnv(process.env.DIRECTUS_URL) ||
+    cleanEnv(process.env.NEXT_PUBLIC_DIRECTUS_URL) ||
+    cleanEnv(process.env.NEXT_PUBLIC_API_URL) ||
+    cleanEnv(process.env.NEXT_PUBLIC_BACKEND_URL);
 
   if (!raw) return "http://directus:8055";
 
@@ -70,22 +74,31 @@ function resolveBackendUrl(): string {
 }
 
 function resolveToken(): string | null {
-  const token = cleanEnv(process.env.SERVICE_USER_TOKEN);
+  const token =
+    cleanEnv(process.env.SERVICE_USER_TOKEN) ||
+    cleanEnv(process.env.DIRECTUS_TOKEN) ||
+    cleanEnv(process.env.DIRECTUS_STATIC_TOKEN) ||
+    cleanEnv(process.env.API_TOKEN);
+
   return token || null;
 }
 
 const BACKEND_URL = resolveBackendUrl();
 const TOKEN = resolveToken();
 
-const base = createDirectus<DirectusSchema>(BACKEND_URL).with(rest());
+export const directusToken = TOKEN;
 
 export const directus: DirectusClient<DirectusSchema> &
   RestClient<DirectusSchema> &
   Partial<StaticTokenClient<DirectusSchema>> = TOKEN
-  ? (base.with(staticToken(TOKEN)) as DirectusClient<DirectusSchema> &
+  ? (createDirectus<DirectusSchema>(BACKEND_URL)
+      .with(staticToken(TOKEN))
+      .with(rest()) as DirectusClient<DirectusSchema> &
       RestClient<DirectusSchema> &
       StaticTokenClient<DirectusSchema>)
-  : (base as DirectusClient<DirectusSchema> &
+  : (createDirectus<DirectusSchema>(BACKEND_URL).with(
+      rest()
+    ) as DirectusClient<DirectusSchema> &
       RestClient<DirectusSchema> &
       Partial<StaticTokenClient<DirectusSchema>>);
 

@@ -4,7 +4,11 @@ import HeroSection from "@/app/(marketing)/HeroSection";
 import Breadcrumb from "../oferta/components/Breadcrumb";
 import FaqAccordion from "@/components/FaqAccordion";
 import CustomerZoneFormsAccordion from "@/components/CustomerZoneFormsAccordion";
-import { getGroupedFields } from "@/lib/fields";
+import {
+  complaintFallbackFields,
+  debtCollectionFallbackFields,
+  getFirstGroupedFields,
+} from "@/lib/fields";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -39,7 +43,24 @@ export const metadata: Metadata = {
 };
 
 export default async function CertyfikatyPage() {
-  const complaintFields = await getGroupedFields("complaint");
+  const [debtFields, complaintFields] = await Promise.all([
+    getFirstGroupedFields(
+      [
+        "debt_collection",
+        "debt_collection_form",
+        "DebtCollectionForm",
+        "windykacja",
+      ],
+      ["windykacja", "dział windykacji", "debt collection"]
+    ),
+    getFirstGroupedFields(["complaint", "Complaint"]),
+  ]);
+
+  const resolvedDebtFields =
+    debtFields.length > 0 ? debtFields : debtCollectionFallbackFields;
+
+  const resolvedComplaintFields =
+    complaintFields.length > 0 ? complaintFields : complaintFallbackFields;
 
   return (
     <>
@@ -51,7 +72,10 @@ export default async function CertyfikatyPage() {
         contentPosition="left"
       />
 
-      <CustomerZoneFormsAccordion complaintFields={complaintFields} />
+      <CustomerZoneFormsAccordion
+        debtFields={resolvedDebtFields}
+        complaintFields={resolvedComplaintFields}
+      />
 
       <main className="w-full bg-white flex flex-col gap-12">
         {/* ====== HEADER FAQ ====== */}

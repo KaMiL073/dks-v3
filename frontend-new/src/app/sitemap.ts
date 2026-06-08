@@ -9,10 +9,14 @@ export const revalidate = 3600;
 
 const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl").replace(
   /\/$/,
-  ""
+  "",
 );
 
+const now = new Date();
+
 const offerCategoryPaths = [
+  "/oferta/produkty",
+
   "/oferta/rozwiazania-dla-biura",
   "/oferta/rozwiazania-dla-biura/drukarki-i-urzadzenia-wielofunkcyjne",
   "/oferta/rozwiazania-dla-biura/oprogramowanie-do-druku",
@@ -54,26 +58,45 @@ type BranchLike = {
   href?: string;
 };
 
+function toDate(value: unknown): Date {
+  if (typeof value !== "string" || !value.trim()) {
+    return now;
+  }
+
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime()) ? now : date;
+}
+
+function normalizePath(path: string): string {
+  if (path === "/") return "";
+
+  return path.startsWith("/") ? path : `/${path}`;
+}
+
+function uniqueRoutes(routes: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  return Array.from(new Map(routes.map((item) => [item.url, item])).values());
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = getStaticAppRoutes().map(
     (route) => ({
-      url: `${baseUrl}${route === "/" ? "" : route}`,
-      lastModified: new Date(),
-      changeFrequency: (route === "/" ? "daily" : "weekly") as
-        | "daily"
-        | "weekly",
+      url: `${baseUrl}${normalizePath(route)}`,
+      lastModified: now,
+      changeFrequency: route === "/" ? "daily" : "weekly",
       priority:
         route === "/"
           ? 1
           : route === "/oferta"
-          ? 0.9
-          : route === "/kariera"
-          ? 0.85
-          : 0.8,
-    })
+            ? 0.9
+            : route === "/kariera"
+              ? 0.85
+              : 0.8,
+    }),
   );
 
   const jobs = await getJobSlugs();
+
   const jobRoutes: MetadataRoute.Sitemap = jobs
     .filter(
       (job): job is { slug: string } =>
@@ -81,67 +104,79 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         typeof job === "object" &&
         "slug" in job &&
         typeof job.slug === "string" &&
-        job.slug.length > 0
+        job.slug.length > 0,
     )
     .map((job) => ({
       url: `${baseUrl}/kariera/${job.slug}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
+      lastModified: now,
+      changeFrequency: "weekly",
       priority: 0.7,
     }));
 
   const posts = await getAllNewsSlugs();
+
   const postRoutes: MetadataRoute.Sitemap = posts
     .filter(
       (post) =>
         typeof post.slug === "string" &&
         post.slug.length > 0 &&
         typeof post.categorySlug === "string" &&
-        post.categorySlug.length > 0
+        post.categorySlug.length > 0,
     )
     .map((post) => ({
       url: `${baseUrl}/blog/${post.categorySlug}/${post.slug}`,
-      lastModified: post.date_created
-        ? new Date(post.date_created)
-        : new Date(),
-      changeFrequency: "monthly" as const,
+      lastModified: toDate(post.date_created),
+      changeFrequency: "monthly",
       priority: 0.6,
     }));
 
   const products = await getAllOfferPages();
-  const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${baseUrl}/oferta/produkty/${product.slug}`,
-    lastModified: product.updatedAt ? new Date(product.updatedAt) : new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
+
+  const productRoutes: MetadataRoute.Sitemap = products
+    .filter(
+      (product) =>
+        typeof product.slug === "string" && product.slug.length > 0,
+    )
+    .map((product) => ({
+      url: `${baseUrl}/oferta/produkty/${product.slug}`,
+      lastModified: toDate(product.updatedAt),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    }));
 
   const offerCategoryRoutes: MetadataRoute.Sitemap = offerCategoryPaths.map(
     (path) => ({
       url: `${baseUrl}${path}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
-      priority: path === "/oferta/marki" ? 0.75 : 0.8,
-    })
+      lastModified: now,
+      changeFrequency: "weekly",
+      priority:
+        path === "/oferta/produkty"
+          ? 0.85
+          : path === "/oferta/marki"
+            ? 0.75
+            : 0.8,
+    }),
   );
 
   const branchRoutes: MetadataRoute.Sitemap = (branches as BranchLike[])
-    .filter((branch) => typeof branch.href === "string" && branch.href.startsWith("/oddzialy/"))
+    .filter(
+      (branch) =>
+        typeof branch.href === "string" &&
+        branch.href.startsWith("/oddzialy/"),
+    )
     .map((branch) => ({
-      url: `${baseUrl}${branch.href!}`,
-      lastModified: new Date(),
-      changeFrequency: "weekly" as const,
+      url: `${baseUrl}${branch.href}`,
+      lastModified: now,
+      changeFrequency: "weekly",
       priority: 0.8,
     }));
 
-  const allRoutes = [
+  return uniqueRoutes([
     ...staticRoutes,
-    ...jobRoutes,
-    ...postRoutes,
-    ...productRoutes,
     ...offerCategoryRoutes,
+    ...productRoutes,
+    ...postRoutes,
+    ...jobRoutes,
     ...branchRoutes,
-  ];
-
-  return Array.from(new Map(allRoutes.map((item) => [item.url, item])).values());
+  ]);
 }

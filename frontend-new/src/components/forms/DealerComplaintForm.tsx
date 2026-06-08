@@ -54,6 +54,69 @@ function Chevron({ open }: { open: boolean }) {
   );
 }
 
+function InfoModalField({
+  title,
+  html,
+}: {
+  title?: string;
+  html: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  if (!html.trim()) return null;
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="w-fit inline-flex items-center gap-2 text-Text-body hover:text-dks-red transition-colors"
+      >
+        <span className="material-symbols-outlined text-3xl leading-none">
+          info
+        </span>
+
+        {title && (
+          <span className="text-sm md:text-base font-normal font-['Montserrat'] leading-5">
+            {title}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="max-w-[1200px] min-w-96 p-10 bg-white rounded-lg shadow-[4px_4px_8px_0px_rgba(0,0,0,0.25)] outline outline-1 outline-offset-[-1px] outline-border-primary inline-flex flex-col justify-center items-center gap-6 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-label={title || "Informacja"}
+          >
+            <div
+              className="self-stretch text-center justify-start text-black text-xl font-normal font-['Montserrat'] leading-6"
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+
+            <button
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+              className="w-16 h-16 relative overflow-hidden flex items-center justify-center"
+            >
+              <span className="material-symbols-outlined text-[#E7000B] text-9xl leading-none">
+                close
+              </span>
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
 function formatFileSize(size: number) {
   if (size < 1024) return `${size}B`;
 
@@ -62,6 +125,39 @@ function formatFileSize(size: number) {
   }
 
   return `${(size / 1024 / 1024).toFixed(1)}MB`;
+}
+
+function isInformationalField(field: MappedDirectusField) {
+  const fieldInterface = field?.interface ?? "";
+
+  return (
+    fieldInterface.includes("presentation-notice") ||
+    fieldInterface.includes("notice") ||
+    fieldInterface.includes("information") ||
+    fieldInterface.includes("info")
+  );
+}
+
+function isFileField(field: MappedDirectusField) {
+  const fieldName = field?.name?.toLowerCase() ?? "";
+  const fieldInterface = field?.interface ?? "";
+
+  return (
+    fieldName === "files" ||
+    fieldInterface.includes("file") ||
+    fieldInterface.includes("image")
+  );
+}
+
+function isProducerField(fieldName: string) {
+  const normalizedFieldName = fieldName.toLowerCase();
+
+  return (
+    normalizedFieldName === "producer" ||
+    normalizedFieldName === "producent" ||
+    normalizedFieldName.includes("producer") ||
+    normalizedFieldName.includes("producent")
+  );
 }
 
 export default function DealerComplaintForm({ groups = [] }: Props) {
@@ -85,9 +181,16 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     const result: Record<string, boolean> = {};
 
     visibleGroups.forEach((group) => {
-      result[group.key] = group.fields.every((field) => {
-        return String(formData[field.name] ?? field.value ?? "").trim();
-      });
+      result[group.key] = group.fields
+        .filter(
+          (field) =>
+            field.required &&
+            !isInformationalField(field) &&
+            !isFileField(field)
+        )
+        .every((field) => {
+          return String(formData[field.name] ?? field.value ?? "").trim();
+        });
     });
 
     return result;
@@ -197,6 +300,20 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
 
     const value = formData[fieldName] ?? field.value ?? "";
 
+    if (isFileField(field)) {
+      return <React.Fragment key={fieldName}>{renderFileField()}</React.Fragment>;
+    }
+
+    if (isInformationalField(field)) {
+      return (
+        <InfoModalField
+          key={fieldName}
+          title={field.displayName}
+          html={String(field.value ?? "")}
+        />
+      );
+    }
+
     const isTextarea =
       fieldInterface.includes("textarea") ||
       fieldInterface.includes("multiline") ||
@@ -204,7 +321,9 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
       normalizedFieldName.includes("message");
 
     const isSelect =
-      fieldInterface.includes("select") && field.options.length > 0;
+      fieldInterface.includes("select") ||
+      field.options.length > 0 ||
+      isProducerField(fieldName);
 
     const inputType =
       fieldType === "integer" || fieldType === "float"
@@ -222,9 +341,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
         <span className={labelClass}>
           {field.displayName}
 
-          {field.required && (
-            <span className="text-dks-red ml-1">*</span>
-          )}
+          {field.required && <span className="text-dks-red ml-1">*</span>}
         </span>
 
         {isTextarea ? (
@@ -269,10 +386,6 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     return group.fields.map((field) => (
       <React.Fragment key={field.name}>
         {renderField(field)}
-
-        {group.key === "application_details" &&
-          field.name === "description" &&
-          renderFileField()}
       </React.Fragment>
     ));
   };

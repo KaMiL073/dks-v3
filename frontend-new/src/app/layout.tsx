@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Montserrat } from "next/font/google";
 
 import "./globals.css";
+import "@/styles/rich-content.scss";
 
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/navigation/Footer";

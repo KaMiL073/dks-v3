@@ -27,7 +27,8 @@ type Item = {
 };
 
 type Props = {
-  complaintFields: MappedDirectusFieldGroup[];
+  debtFields?: MappedDirectusFieldGroup[];
+  complaintFields?: MappedDirectusFieldGroup[];
 };
 
 function Chevron({ open }: { open: boolean }) {
@@ -54,7 +55,8 @@ function Chevron({ open }: { open: boolean }) {
 }
 
 export default function CustomerZoneFormsAccordion({
-  complaintFields,
+  debtFields = [],
+  complaintFields = [],
 }: Props) {
   const items: Item[] = useMemo(
     () => [
@@ -137,7 +139,7 @@ export default function CustomerZoneFormsAccordion({
               onClick={() => toggle(it.key)}
               aria-expanded={isOpen}
               className={[
-                "w-full px-12 py-6 bg-[#D1D5DC] flex justify-between items-center gap-10 text-left",
+                "w-full px-4 sm:px-6 md:px-8 xl:px-12 py-4 md:py-5 xl:py-6 bg-[#D1D5DC] flex justify-between items-center gap-4 md:gap-8 xl:gap-10 text-left",
                 "transition-all duration-200",
                 !isLast
                   ? "border-b-2 md:border-b-4 border-border-primary"
@@ -160,25 +162,16 @@ export default function CustomerZoneFormsAccordion({
                   className="w-full max-w-[1440px] px-4 sm:px-6 md:px-8 xl:px-12 py-6 md:py-10 xl:py-16 scroll-mt-[80px]"
                 >
                   {it.key === "contact" && <ContactForm compact />}
-
                   {it.key === "service" && <ServiceCallForm />}
-
                   {it.key === "consumables" && (
                     <ConsumablesOrderFormClientZone />
                   )}
-
-                  {it.key === "counters" && (
-                    <CountersFormClientZone />
-                  )}
-
+                  {it.key === "counters" && <CountersFormClientZone />}
                   {it.key === "debt" && (
-                    <DebtCollectionFormClientZone />
+                    <DebtCollectionFormClientZone groups={debtFields} />
                   )}
-
                   {it.key === "complaint" && (
-                    <>
-                      <DealerComplaintForm groups={complaintFields} />
-                    </>
+                    <DealerComplaintForm groups={complaintFields} />
                   )}
                 </div>
               </div>
