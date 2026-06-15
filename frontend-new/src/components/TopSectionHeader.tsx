@@ -31,7 +31,7 @@ export default function TopSectionHeader({
       }}
     >
       <div className="flex-1 flex flex-col justify-center items-start gap-8 md:gap-12 max-w-[710px]">
-        <div
+        <h1
           className="
             text-Text-headings
             text-3xl md:text-5xl lg:text-6xl
@@ -40,7 +40,7 @@ export default function TopSectionHeader({
           "
         >
           {title}
-        </div>
+        </h1>
 
         {subtitle && (
           <div

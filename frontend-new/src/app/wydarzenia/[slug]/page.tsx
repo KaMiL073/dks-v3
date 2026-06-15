@@ -47,12 +47,27 @@ export async function generateMetadata({
       };
     }
 
+    const title = event.seo_title?.trim() || event.name;
+    const description = event.lead || "Wydarzenie DKS";
+
     return {
-      title: event.name,
-      description: event.lead ?? "Wydarzenie DKS",
+      title,
+      description,
       openGraph: {
-        title: event.name,
-        description: event.lead ?? "Wydarzenie DKS",
+        title,
+        description,
+        url: `/wydarzenia/${slug}`,
+        siteName: "DKS",
+        locale: "pl_PL",
+        type: "website",
+      },
+      twitter: {
+        card: "summary",
+        title,
+        description,
+      },
+      alternates: {
+        canonical: `/wydarzenia/${slug}`,
       },
     };
   } catch {

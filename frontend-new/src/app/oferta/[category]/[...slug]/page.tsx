@@ -1,11 +1,15 @@
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
+import type { Metadata } from "next";
 import type { ComponentProps } from "react";
 
 import { getProductBySlug } from "@/lib/products";
 import ProductPage from "./ProductPage";
 import JsonLd from "@/components/seo/JsonLd";
 import ClientCategoryPage from "@/app/oferta/[category]/ClientCategoryPage";
+import { Heading1 } from "@/components/ui/Typography/Heading1";
+import getDescription from "@/content/oferta";
+import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
 
 export interface FilterField {
   field: string;
@@ -15,10 +19,19 @@ export interface FilterField {
 
 type ProductPageProduct = ComponentProps<typeof ProductPage>["product"];
 
+type OfferDesc = {
+  title?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  leftColumn?: string;
+  rightColumn?: string;
+};
+
 type ProductLike = {
   id: string | number;
   slug?: string;
   model?: string;
+  seo_title?: unknown;
   seo_description?: unknown;
   short_description?: unknown;
   description?: unknown;
@@ -76,6 +89,88 @@ function asOptionalString(v: unknown): string | undefined {
   return typeof v === "string" ? v : undefined;
 }
 
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { category, slug } = await params;
+
+  if (!Array.isArray(slug) || slug.length === 0) {
+    return {};
+  }
+
+  if (slug.length === 1) {
+    const subcategory = slug[0];
+    const desc = mergeOfferPageDescription(
+      await getOfferPageDescription([
+        subcategory,
+        `/oferta/${category}/${subcategory}`,
+      ]),
+      getDescription(subcategory) as OfferDesc | undefined
+    );
+
+    const title = desc?.seoTitle || desc?.title || subcategory.replaceAll("-", " ");
+    const description =
+      desc?.seoDescription || "Poznaj ofertę DKS – sprawdź dostępne produkty i rozwiązania.";
+    const url = absUrl(`/oferta/${category}/${subcategory}`);
+    const ogImage = absUrl("/og/oferta.jpg");
+
+    return {
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        url,
+        siteName: "DKS",
+        locale: "pl_PL",
+        type: "website",
+        images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        images: [ogImage],
+      },
+      alternates: { canonical: url },
+    };
+  }
+
+  const productSlug = slug[slug.length - 1];
+
+  if (!productSlug) {
+    return {};
+  }
+
+  const product = (await getProductBySlug(productSlug)) as ProductLike | null;
+
+  if (!product) {
+    return {
+      title: "Produkt DKS",
+      description: "Poznaj szczegóły produktu w ofercie DKS.",
+    };
+  }
+
+  const title = asOptionalString(product.seo_title)?.trim() || product.model || "Produkt DKS";
+  const description =
+    toPlainText(product.seo_description, 155) ||
+    toPlainText(product.short_description, 155) ||
+    toPlainText(product.description, 155) ||
+    "Poznaj szczegóły produktu w ofercie DKS.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
+
 export default async function ProductCatchAllPage({ params }: PageProps) {
   const { category, slug } = await params;
 
@@ -90,9 +185,27 @@ export default async function ProductCatchAllPage({ params }: PageProps) {
       notFound();
     }
 
+    const desc = mergeOfferPageDescription(
+      await getOfferPageDescription([
+        subcategory,
+        `/oferta/${category}/${subcategory}`,
+      ]),
+      getDescription(subcategory) as OfferDesc | undefined
+    );
+    const heading = desc?.title ?? subcategory.replaceAll("-", " ");
+
     return (
       <div className="p-6 xl:px-28 py-20">
-        <ClientCategoryPage category={category} subcategory={subcategory} initialPage={1} />
+        <div className="self-stretch py-12">
+          <Heading1 variant="semibold">{heading}</Heading1>
+        </div>
+
+        <ClientCategoryPage
+          category={category}
+          subcategory={subcategory}
+          initialPage={1}
+          initialDescription={desc}
+        />
       </div>
     );
   }
@@ -113,6 +226,7 @@ export default async function ProductCatchAllPage({ params }: PageProps) {
     ...raw,
     slug: asOptionalString(raw.slug),
     model: asOptionalString(raw.model),
+    seo_title: asOptionalString(raw.seo_title),
     seo_description: asOptionalString(raw.seo_description),
     short_description: asOptionalString(raw.short_description),
     description: asOptionalString(raw.description),
@@ -304,7 +418,6 @@ export default async function ProductCatchAllPage({ params }: PageProps) {
 //       filters = data.filters ?? [];
 //     }
 //   } catch (e) {
-//     console.log("🟠 [catch-all] filters fetch error:", e);
 //   }
 
 //   return (

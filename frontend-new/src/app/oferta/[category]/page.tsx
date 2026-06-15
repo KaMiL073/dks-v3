@@ -6,6 +6,7 @@ import ClientCategoryPage from "./ClientCategoryPage";
 import { Heading1 } from "@/components/ui/Typography/Heading1";
 
 import getDescription from "@/content/oferta";
+import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
 
 type OfferDesc = {
   title?: string;
@@ -34,7 +35,10 @@ function absUrl(pathname: string) {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { category } = await params;
 
-  const desc = getDescription(category) as OfferDesc | undefined;
+  const desc = mergeOfferPageDescription(
+    await getOfferPageDescription([category, `/oferta/${category}`]),
+    getDescription(category) as OfferDesc | undefined
+  );
 
   const title = desc?.seoTitle || desc?.title || category.replaceAll("-", " ");
   const description =
@@ -75,15 +79,19 @@ export default async function CategoryPage({ params }: PageProps) {
     notFound();
   }
 
-  const desc = getDescription(category) as OfferDesc | undefined;
+  const desc = mergeOfferPageDescription(
+    await getOfferPageDescription([category, `/oferta/${category}`]),
+    getDescription(category) as OfferDesc | undefined
+  );
+  const heading = desc?.title ?? category.replaceAll("-", " ");
 
   return (
     <div className="p-6 xl:px-28 py-20">
       <div className="self-stretch py-12">
-        <Heading1 variant="semibold">{desc?.title ?? category.replaceAll("-", " ")}</Heading1>
+        <Heading1 variant="semibold">{heading}</Heading1>
       </div>
 
-      <ClientCategoryPage category={category} initialPage={1} />
+      <ClientCategoryPage category={category} initialPage={1} initialDescription={desc} />
     </div>
   );
 }

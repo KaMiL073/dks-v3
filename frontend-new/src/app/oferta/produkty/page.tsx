@@ -1,21 +1,37 @@
+import type { Metadata } from "next";
 import RichContentStatic from "@/components/RichContentStatic";
 import TopSectionHeader from "@/components/TopSectionHeader";
 import OfferSection from "@/app/(marketing)/OfferSection";
 import PartnersSection from "@/app/(marketing)/PartnersSection";
+import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
 
-export const metadata = {
-  title: "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne",
-  description:
-    "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.",
+const fallbackTitle = "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne";
+const fallbackDescription =
+  "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const desc = mergeOfferPageDescription(
+    await getOfferPageDescription(["oferta/produkty", "/oferta/produkty"]),
+    {
+      seoTitle: fallbackTitle,
+      seoDescription: fallbackDescription,
+    }
+  );
+
+  const title = desc?.seoTitle || fallbackTitle;
+  const description = desc?.seoDescription || fallbackDescription;
+
+  return {
+    title,
+    description,
   keywords:
     "drukarki biurowe, drukarki laserowe, kserokopiarki, urządzenia wielofunkcyjne, MFP, plotery, maszyny poligraficzne, drukarki wielkoformatowe, druk cyfrowy, urządzenia do biura, Canon, HP, Konica Minolta, Kyocera, Lexmark",
   alternates: {
     canonical: "https://dks.pl/oferta/produkty",
   },
   openGraph: {
-    title: "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne",
-    description:
-      "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.",
+    title,
+    description,
     url: "https://dks.pl/oferta/produkty",
     siteName: "DKS",
     locale: "pl_PL",
@@ -29,12 +45,16 @@ export const metadata = {
       },
     ],
   },
-};
+  };
+}
 
-export default function ProductsPage() {
+export default async function ProductsPage() {
+  const desc = await getOfferPageDescription(["oferta/produkty", "/oferta/produkty"]);
+  const heading = desc?.title || "Produkty";
+
   return (
     <>
-      <TopSectionHeader title="Produkty" img="/static/homepage/Header.webp" />
+      <TopSectionHeader title={heading} img="/static/homepage/Header.webp" />
 
       <OfferSection />
 

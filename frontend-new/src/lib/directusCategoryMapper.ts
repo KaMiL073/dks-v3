@@ -158,7 +158,6 @@ export async function resolveCategoryToCollection(slug: string): Promise<string>
 //   });
 
 //   if (found) {
-//     // console.log(`✅ [DirectusMapper] Zmapowano slug '${slug}' → '${found.collection}'`);
 //     return found.collection;
 //   }
 
@@ -168,7 +167,6 @@ export async function resolveCategoryToCollection(slug: string): Promise<string>
 //   );
 
 //   if (byName) {
-//     // console.log(`✅ [DirectusMapper] Zmapowano slug '${slug}' → '${byName.collection}' (po nazwie)`);
 //     return byName.collection;
 //   }
 

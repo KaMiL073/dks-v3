@@ -1,10 +1,46 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import HeroSection from "@/app/(marketing)/HeroSection";
 import { getEventsCreate, type EventCreateItem } from "@/lib/eventsCreate";
+import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const desc = mergeOfferPageDescription(
+    await getOfferPageDescription(["wydarzenia", "/wydarzenia"]),
+    {
+      seoTitle: "Wydarzenia | DKS",
+      seoDescription: "Sprawdź aktualne wydarzenia DKS.",
+    }
+  );
+
+  const title = desc?.seoTitle || "Wydarzenia | DKS";
+  const description = desc?.seoDescription || "Sprawdź aktualne wydarzenia DKS.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: "/wydarzenia",
+      siteName: "DKS",
+      locale: "pl_PL",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: "/wydarzenia",
+    },
+  };
+}
 
 function getEventImage(image?: string | null) {
   if (!image) return null;
@@ -13,6 +49,8 @@ function getEventImage(image?: string | null) {
 
 export default async function EventsPage() {
   let events: EventCreateItem[] = [];
+  const desc = await getOfferPageDescription(["wydarzenia", "/wydarzenia"]);
+  const heading = desc?.title || "Wydarzenia";
 
   try {
     events = await getEventsCreate();
@@ -23,7 +61,7 @@ export default async function EventsPage() {
   return (
     <main>
       <HeroSection
-        title="Wydarzenia"
+        title={heading}
         backgroundImage="/static/homepage/Header.webp"
         contentPosition="left"
         imageVerticalAlign="bottom"

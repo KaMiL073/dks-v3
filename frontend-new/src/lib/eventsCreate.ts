@@ -130,6 +130,7 @@ export type EventCreateItem = {
   date_updated: string | null;
 
   name: string;
+  seo_title: string | null;
   slug: string;
 
   image_email: string | null;
@@ -162,6 +163,7 @@ const eventFields = [
   "date_updated",
 
   "name",
+  "seo_title",
   "slug",
 
   "image_email",

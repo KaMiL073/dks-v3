@@ -1,10 +1,26 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/ui/Typography/Heading1";
+import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
 
-export const metadata: Metadata = {
-  title: "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne",
-  description:
-    "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.",
+const fallbackTitle = "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne";
+const fallbackDescription =
+  "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const desc = mergeOfferPageDescription(
+    await getOfferPageDescription(["oferta", "/oferta"]),
+    {
+      seoTitle: fallbackTitle,
+      seoDescription: fallbackDescription,
+    }
+  );
+
+  const title = desc?.seoTitle || fallbackTitle;
+  const description = desc?.seoDescription || fallbackDescription;
+
+  return {
+    title,
+    description,
   keywords: [
     "drukarki biurowe",
     "drukarki laserowe",
@@ -26,9 +42,8 @@ export const metadata: Metadata = {
     canonical: "https://dks.pl/oferta",
   },
   openGraph: {
-    title: "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne",
-    description:
-      "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.",
+    title,
+    description,
     url: "https://dks.pl/oferta",
     siteName: "DKS",
     locale: "pl_PL",
@@ -42,15 +57,18 @@ export const metadata: Metadata = {
       },
     ],
   },
-};
+  };
+}
 
-export default function OfferPage() {
+export default async function OfferPage() {
+  const desc = await getOfferPageDescription(["oferta", "/oferta"]);
+  const heading =
+    desc?.title || "Kserokopiarki wielofunkcyjne, maszyny poligraficzne i wielkoformatowe";
+
   return (
     <>
       <header className="w-full px-4 sm:px-10 lg:px-28 pt-16">
-        <Heading1 variant="semibold">
-          Kserokopiarki wielofunkcyjne, maszyny poligraficzne i wielkoformatowe
-        </Heading1>
+        <Heading1 variant="semibold">{heading}</Heading1>
       </header>
 
       <main className="w-full px-4 sm:px-10 lg:px-28 py-20 bg-white inline-flex flex-col justify-start items-start gap-12 overflow-hidden">

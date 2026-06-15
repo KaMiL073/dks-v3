@@ -38,9 +38,28 @@ export async function generateMetadata({
     };
   }
 
+  const title = promo.seo_title?.trim() || (promo.name ? `${promo.name} | DKS` : "Promocja | DKS");
+  const description = promo.seo_description?.trim() || "Promocja DKS";
+
   return {
-    title: promo.name ?? "Promocja | DKS",
-    description: "Promocja DKS",
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: `/promocje/${slug}`,
+      siteName: "DKS",
+      locale: "pl_PL",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: `/promocje/${slug}`,
+    },
   };
 }
 

@@ -94,11 +94,12 @@ export default async function BlogCategoryPagePaged({ params }: PageProps) {
   });
 
   if (pageNum > paged.totalPages) return notFound();
+  const heading = `${currentCategory.name} - strona ${pageNum}`;
 
   return (
     <>
       <TopSectionHeader
-        title={`Blog: ${currentCategory.name}`}
+        title={heading}
         subtitle=""
         description="Oferujemy kompleksowy serwis urządzeń wielofunkcyjnych, obejmujący wszystkie wiodące marki dostępne na polskim rynku."
         img="/static/homepage/Header.webp"

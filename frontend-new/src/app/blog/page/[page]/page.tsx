@@ -76,11 +76,12 @@ export default async function BlogPagePaged({ params }: PageProps) {
     ...item,
     id: String(item.id),
   }));
+  const heading = `Blog DKS - strona ${pageNum}`;
 
   return (
     <>
       <TopSectionHeader
-        title="Blog"
+        title={heading}
         description="Oferujemy kompleksowy serwis urządzeń wielofunkcyjnych, obejmujący wszystkie wiodące marki dostępne na polskim rynku."
         img="/static/homepage/Header.webp"
       />
