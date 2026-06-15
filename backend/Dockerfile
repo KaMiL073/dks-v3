@@ -1,43 +1,39 @@
-FROM node:20-alpine AS builder
+# backend/Dockerfile
+FROM node:22-bookworm-slim
 
-RUN apk add --no-cache git
 WORKDIR /directus
-COPY package*.json ./
+ENV TZ=Europe/Warsaw
 
-# Install all deps to build extensions
-RUN npm install
+# narzędzia pod natywne moduły
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    python3 \
+    make \
+    g++ \
+    pkg-config \
+    ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
 
-# Copy full code
+# najpierw manifesty, żeby lepiej działał cache
+COPY package.json package-lock.json* ./
+
+# instalacja zależności
+# npm ci tylko gdy lock istnieje i jest zgodny
+RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
+
+# reszta kodu
 COPY . .
 
-# Build extensions (Directus CLI)
-RUN npx directus extensions build
-
-#
-# Final image
-#
-FROM node:20-alpine
-WORKDIR /directus
-ENV TZ='Europe/Warsaw'
-
-# Copy node_modules and built extensions / app files
-COPY --from=builder --chown=node:node /directus/node_modules ./node_modules
-COPY --from=builder --chown=node:node /directus/extensions/.registry ./extensions/.registry
-COPY --from=builder --chown=node:node /directus ./
-
-
-# --- Katalogi, które Directus musi mieć na zapis ---
+# runtime dirs + prawa
 RUN mkdir -p /directus/uploads /directus/.cache /directus/.temp \
-    && chown -R node:node /directus/uploads /directus/.cache /directus/.temp \
-    && chmod -R 775 /directus/uploads /directus/.cache /directus/.temp
+  && chown -R node:node /directus
 
-ENV NODE_ENV=production \
-    LOG_LEVEL=warn \
-    LOG_STYLE=raw
+ENV NODE_ENV=production
+ENV LOG_LEVEL=warn
+ENV LOG_STYLE=raw
 
 EXPOSE 8055
-
-RUN chmod +x ./dev/start.sh ./dev/start_dev.sh
-
 USER node
-ENTRYPOINT ["./dev/start.sh"]
+
+# start directusa
+CMD ["npx", "--no-install", "directus", "start"]

@@ -149,3 +149,5 @@ backend/extensions/**/dist/
 backend/extensions/remadays/
 backend/extensions/.registry/
 backend/extensions/templates/*.liquid
+
+frontend-new/public/static/
