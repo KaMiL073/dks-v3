@@ -27,8 +27,6 @@ export default function DirectusRenderer({ components }: { components: DirectusB
         const { collection, item } = block;
         if (!collection || !item) return null;
 
-        console.log("🧩 Renderuję blok:", collection, item);
-
         // 🧱 1. HERO SECTION
         if (collection === "component_hero_section") {
           return (

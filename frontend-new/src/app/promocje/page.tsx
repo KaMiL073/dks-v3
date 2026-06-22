@@ -1,5 +1,44 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getPromotions, type PromotionItem } from "@/lib/promotions";
+import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export async function generateMetadata(): Promise<Metadata> {
+  const desc = mergeOfferPageDescription(
+    await getOfferPageDescription(["promocje", "/promocje"]),
+    {
+      seoTitle: "Promocje | DKS",
+      seoDescription: "Sprawdź aktualne promocje DKS.",
+    }
+  );
+
+  const title = desc?.seoTitle || "Promocje | DKS";
+  const description = desc?.seoDescription || "Sprawdź aktualne promocje DKS.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: "/promocje",
+      siteName: "DKS",
+      locale: "pl_PL",
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    alternates: {
+      canonical: "/promocje",
+    },
+  };
+}
 
 function getHeroImage(promo: PromotionItem) {
   const components = Array.isArray(promo.components_promotions)
@@ -34,11 +73,13 @@ function getImageUrl(image?: string | null) {
 }
 
 export default async function PromotionsPage() {
+  const desc = await getOfferPageDescription(["promocje", "/promocje"]);
   const promotions = await getPromotions();
+  const heading = desc?.title || "Promocje";
 
   return (
     <main className="px-6 py-20 lg:px-28">
-      <h1 className="mb-12 text-4xl font-semibold">Promocje</h1>
+      <h1 className="mb-12 text-4xl font-semibold">{heading}</h1>
 
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
         {promotions.map((promo) => {

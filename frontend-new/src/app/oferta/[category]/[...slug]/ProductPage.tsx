@@ -495,8 +495,6 @@ export default function ProductPage({
       .slice(0, 8);
   }, [typeItemForPrimaryCategory, normalizedKeyMap, filtersMeta]);
 
-  console.log("resolvedFilters:", JSON.stringify(resolvedFilters, null, 2));
-
   const isMissingProduct = !product;
 
   return (

@@ -31,13 +31,11 @@ export async function initializeVisualEditor() {
 
       await apply({
         directusUrl: backendUrl,
-        onSaved: async (data) => {
-          console.log('Content saved:', data);
+        onSaved: async () => {
           window.location.reload();
         },
       });
 
-      console.log('Directus Visual Editor initialized');
       isApplied = true;
     } catch (error) {
       console.error('Failed to initialize visual editor:', error);

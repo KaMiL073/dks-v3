@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const baseUrl = siteBaseUrl();
-  const title = post.title ?? "";
+  const title = post.seo_title?.trim() || post.title || "";
   const description = post.lead?.slice(0, 155) ?? "";
 
   const canonicalPath = `/blog/${category}/${post.slug ?? slug}`;

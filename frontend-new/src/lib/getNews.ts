@@ -7,6 +7,7 @@ import { readItems } from "@directus/sdk";
 export interface News {
   id: string;
   title: string;
+  seo_title: string | null;
   lead: string;
   slug: string;
   image: string | null;
@@ -43,6 +44,7 @@ type NewsCategoryRow = {
 type NewsRow = {
   id?: unknown;
   title?: unknown;
+  seo_title?: unknown;
   lead?: unknown;
   slug?: unknown;
   content?: unknown;
@@ -95,6 +97,7 @@ function mapNewsItem(row: NewsRow): News {
   return {
     id: pickString(row.id) ?? "",
     title: pickString(row.title) ?? "",
+    seo_title: pickString(row.seo_title) ?? null,
     lead: pickString(row.lead) ?? "",
     slug: pickString(row.slug) ?? "",
     date_created: pickString(row.date_created) ?? "",
@@ -195,6 +198,7 @@ export async function getNewsPaged(
         fields: [
           "id",
           "title",
+          "seo_title",
           "lead",
           "slug",
           "image",
@@ -260,6 +264,7 @@ export default async function getNews(
         fields: [
           "id",
           "title",
+          "seo_title",
           "lead",
           "slug",
           "image",
@@ -299,6 +304,7 @@ export async function getSinglePost(slug: string): Promise<SinglePost | null> {
         fields: [
           "id",
           "title",
+          "seo_title",
           "lead",
           "slug",
           "content",
@@ -349,6 +355,7 @@ export async function getRecommended(
         fields: [
           "id",
           "title",
+          "seo_title",
           "lead",
           "slug",
           "image",
@@ -379,6 +386,7 @@ export async function getLatestCaseStudies(limit = 3): Promise<News[]> {
         fields: [
           "id",
           "title",
+          "seo_title",
           "lead",
           "slug",
           "image",

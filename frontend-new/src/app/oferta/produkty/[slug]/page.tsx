@@ -2,6 +2,7 @@ import "server-only";
 
 import { notFound } from "next/navigation";
 import { readFieldsByCollection } from "@directus/sdk";
+import type { Metadata } from "next";
 
 import ProductPage from "@/app/oferta/[category]/[...slug]/ProductPage";
 import { directus } from "@/lib/directus";
@@ -34,7 +35,10 @@ interface Product {
   id: string | number;
   model?: string;
   slug?: string;
+  seo_title?: string;
+  seo_description?: string;
   description?: string;
+  short_description?: string;
   price?: number;
   primarycategory?: string | null;
   main_image?: string | { id?: string } | null;
@@ -87,6 +91,24 @@ function pickString(value: unknown): string | undefined {
   }
 
   return undefined;
+}
+
+function toPlainText(input?: unknown, maxLen = 300): string {
+  const str = typeof input === "string" ? input : "";
+  if (!str) return "";
+
+  const noHtml = str
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<\/?[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return noHtml.length > maxLen ? `${noHtml.slice(0, maxLen - 1)}…` : noHtml;
 }
 
 function normalize(value: unknown): string {
@@ -189,7 +211,10 @@ function normalizeProduct(product: LibProduct): Product {
     id: product.id,
     model: product.model,
     slug: product.slug,
+    seo_title: product.seo_title,
+    seo_description: product.seo_description,
     description: product.description,
+    short_description: product.short_description,
     price: product.price,
     primarycategory: product.primarycategory ?? null,
     main_image: normalizeMainImage(product.main_image),
@@ -366,6 +391,40 @@ type PageParams = {
 type PageProps = {
   params: Promise<PageParams>;
 };
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  const product = await getProductBySlug(slug);
+
+  if (!product) {
+    return {
+      title: "Produkt DKS",
+      description: "Poznaj szczegóły produktu w ofercie DKS.",
+    };
+  }
+
+  const title = product.seo_title?.trim() || product.model || "Produkt DKS";
+  const description =
+    toPlainText(product.seo_description, 155) ||
+    toPlainText(product.short_description, 155) ||
+    toPlainText(product.description, 155) ||
+    "Poznaj szczegóły produktu w ofercie DKS.";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
 
 export default async function ProductSlugPage({ params }: PageProps) {
   const { slug } = await params;

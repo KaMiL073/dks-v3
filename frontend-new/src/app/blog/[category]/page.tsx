@@ -80,7 +80,7 @@ export default async function BlogCategoryPage({ params }: PageProps) {
   return (
     <>
       <TopSectionHeader
-        title={`Blog: ${currentCategory.name}`}
+        title={currentCategory.name}
         subtitle=""
         description="Oferujemy kompleksowy serwis urządzeń wielofunkcyjnych, obejmujący wszystkie wiodące marki dostępne na polskim rynku."
         img="/static/homepage/Header.webp"

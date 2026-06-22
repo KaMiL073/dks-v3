@@ -5,7 +5,6 @@ import { useRouter, usePathname } from "next/navigation";
 
 import FiltersMenu, { FilterOption } from "@/app/oferta/components/FiltersMenu";
 import ProductsList from "@/app/oferta/components/ProductsList";
-import getDescription from "@/content/oferta";
 import JsonLd from "@/components/seo/JsonLd";
 import Pagination from "@/components/Pagination";
 
@@ -37,6 +36,12 @@ type ProductsApiResponse = {
   products: Product[];
 };
 
+type OfferPageDescription = {
+  title?: string;
+  leftColumn?: string;
+  rightColumn?: string;
+};
+
 function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl").replace(/\/$/, "");
 }
@@ -58,10 +63,12 @@ export default function ClientCategoryPage({
   category,
   subcategory,
   initialPage = 1,
+  initialDescription,
 }: {
   category: string;
   subcategory?: string;
   initialPage?: number;
+  initialDescription?: OfferPageDescription | null;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -85,7 +92,7 @@ export default function ClientCategoryPage({
     return p.toString();
   }, [category, subcategory]);
 
-  const description = useMemo(() => getDescription(activeCategory), [activeCategory]);
+  const description = useMemo(() => initialDescription ?? undefined, [initialDescription]);
   const hasDescription = Boolean(description?.leftColumn || description?.rightColumn);
 
   const itemListSchema = useMemo(() => {

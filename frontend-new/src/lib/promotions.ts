@@ -10,7 +10,9 @@ export type PromotionComponent = {
 
 export type PromotionItem = {
   id: number;
- name?: string | null;
+  name?: string | null;
+  seo_title?: string | null;
+  seo_description?: string | null;
   slug?: string | null;
   status?: string | null;
   date_created?: string | null;
@@ -20,6 +22,8 @@ export type PromotionItem = {
 const listFields = [
   "id",
   "name",
+  "seo_title",
+  "seo_description",
   "slug",
 
   "components_promotions.id",
@@ -155,11 +159,6 @@ export async function getPromotionBySlug(slug: string) {
     );
 
     const item = normalize<PromotionItem>(res)[0] ?? null;
-
-    console.log(
-      "PROMOTION DATA:",
-      JSON.stringify(item, null, 2)
-    );
 
     return item;
   } catch (error) {
