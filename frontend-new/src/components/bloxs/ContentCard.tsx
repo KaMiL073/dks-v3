@@ -60,7 +60,7 @@ export default function ContentCards({
                       alt={card.title || "Card image"}
                       fill
                       unoptimized
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
                 ) : null}

@@ -3,9 +3,6 @@ import crypto from 'crypto';
 
 console.log('LOADED form-data-create (HMAC + mail routing) v2026-02-26');
 
-// -------------------------------------
-// Deterministyczny JSON (MUSI być identyczny jak w Next)
-// -------------------------------------
 function stableStringify(obj) {
   if (obj === null) return 'null';
 
@@ -24,6 +21,7 @@ function stableStringify(obj) {
         return s === undefined ? 'null' : s;
       })
       .join(',');
+
     return `[${items}]`;
   }
 
@@ -39,9 +37,6 @@ function stableStringify(obj) {
   return `{${props.join(',')}}`;
 }
 
-// -------------------------------------
-// HMAC verify
-// -------------------------------------
 function verifySig(payload) {
   const secret = process.env.FORMS_HMAC_SECRET;
   if (!secret) throw new Error('Missing FORMS_HMAC_SECRET');
@@ -53,7 +48,6 @@ function verifySig(payload) {
   delete copy.__sig;
 
   const body = stableStringify(copy);
-
   const expected = crypto.createHmac('sha256', secret).update(body).digest('hex');
 
   if (sig !== expected) {
@@ -68,9 +62,6 @@ function verifySig(payload) {
   console.log('✅ HMAC OK', { len: body.length, hash: sig.slice(0, 12) });
 }
 
-// -------------------------------------
-// Helpers / config
-// -------------------------------------
 const normalize = (v) => (v ?? '').toString().trim();
 const normalizeProvince = (v) => normalize(v).toLowerCase();
 const normalizeEmail = (v) => normalize(v).toLowerCase();
@@ -86,16 +77,13 @@ const ALLOWED_FORM_NAMES = new Set([
   'DebtCollectionForm',
 ]);
 
-// Kanonizacja do template/routingu (jak wcześniej)
 const canonicalFormTypeMap = {
   ServiceCallFormClientZone: 'ServiceCallForm',
   ServiceCallFormAlternative: 'ServiceCallForm',
   ServiceCallClientZone: 'ServiceCallForm',
-  // wcześniej: ConsumablesOrderForm leciał jak ServiceCallForm
   ConsumablesOrderForm: 'ServiceCallForm',
 };
 
-// Mapy mailowe (działy)
 const mailerMap = {
   ContactForm: {
     pomorskie: 'info.gdansk@dks.pl',
@@ -167,9 +155,6 @@ function getOfficeEmail(formType, province) {
   return map[province] ?? null;
 }
 
-// -------------------------------------
-// Extension
-// -------------------------------------
 export default ({ action }, { services }) => {
   const { MailService } = services;
 
@@ -177,13 +162,10 @@ export default ({ action }, { services }) => {
     const { schema } = context;
     const mailService = new MailService({ schema });
 
-    // 1) HMAC verify
     verifySig(payload);
 
-    // usuń __sig zanim zapisze się do DB / poleci do maila
     delete payload.__sig;
 
-    // 2) formType allow-list + canonicalizacja
     const rawFormType = normalize(payload?.form_name);
     if (!rawFormType) throw new Error('Missing form_name');
 
@@ -193,30 +175,47 @@ export default ({ action }, { services }) => {
 
     const formType = canonicalFormTypeMap[rawFormType] ?? rawFormType;
 
-    // 3) dane (province, email)
-    const province = normalizeProvince(payload?.province ?? payload?.form_data?.province);
-    const clientEmail = normalizeEmail(payload?.email ?? payload?.form_data?.email);
+    let province = normalizeProvince(
+      payload?.province ?? payload?.form_data?.province
+    );
+
+    const clientEmail = normalizeEmail(
+      payload?.email ?? payload?.form_data?.email
+    );
+
+    if (formType === 'DebtCollectionForm' && !province) {
+      province = 'pomorskie';
+    }
 
     if (!province) throw new Error('Missing province');
     if (!clientEmail) throw new Error('Missing email');
 
     const officeEmail = getOfficeEmail(formType, province);
+
     if (!officeEmail) {
-      console.error('❌ No office email for', { formType, province, rawFormType });
+      console.error('❌ No office email for', {
+        formType,
+        province,
+        rawFormType,
+      });
+
       throw new Error(`No office email for ${formType}/${province}`);
     }
 
-    // (opcjonalnie) ochrona: CountersForm nie może iść na info.*
     if (formType === 'CountersForm' && officeEmail.includes('info.')) {
       throw new Error(`Invalid routing CountersForm -> ${officeEmail}`);
     }
 
-    console.log('📩 FORM ROUTE:', { rawFormType, formType, province, officeEmail, clientEmail });
+    console.log('📩 FORM ROUTE:', {
+      rawFormType,
+      formType,
+      province,
+      officeEmail,
+      clientEmail,
+    });
 
-    // 4) template data (jak wcześniej)
     const templateData = { data: payload?.form_data ?? payload };
 
-    // 5) mail do działu
     await mailService.send({
       from: 'www@dks.pl',
       to: officeEmail,
@@ -227,7 +226,6 @@ export default ({ action }, { services }) => {
       },
     });
 
-    // 6) mail do klienta
     await mailService.send({
       from: 'www@dks.pl',
       to: clientEmail,
@@ -238,7 +236,11 @@ export default ({ action }, { services }) => {
       },
     });
 
-    console.log('✅ Mails sent', { formType, officeEmail, clientEmail });
+    console.log('✅ Mails sent', {
+      formType,
+      officeEmail,
+      clientEmail,
+    });
 
     return payload;
   });

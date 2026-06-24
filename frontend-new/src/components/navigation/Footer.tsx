@@ -16,7 +16,7 @@ export default function Footer() {
           <p className="text-Text-body text-xl font-normal leading-normal">
             Jesteśmy tutaj, aby odpowiedzieć na Twoje pytania i pomóc w każdej sprawie.
           </p>
-          <Button>Porozmawiajmy</Button>
+          <Button href="/kontakt">Porozmawiajmy</Button>
         </div>
 
         {/* Firma + Social + Menu + Kontakt */}
@@ -207,7 +207,7 @@ export default function Footer() {
               Jesteśmy tutaj, aby odpowiedzieć na Twoje pytania i pomóc w każdej sprawie.
             </p>
           </div>
-          <Button>Porozmawiajmy</Button>
+          <Button href="/kontakt">Porozmawiajmy</Button>
         </div>
       </div>
     </footer>
