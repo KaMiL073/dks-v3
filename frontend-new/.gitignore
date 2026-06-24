@@ -75,29 +75,28 @@ backend/uploads/
 backend/database/
 backend/cache/
 
-# artefakty rozszerzeñ Directusa (NIE wersjonujemy)
+# artefakty rozszerzeñ Directusa
 backend/extensions/.registry/
 backend/extensions/**/node_modules/
 backend/extensions/**/dist/
 
-# lokalne / generowane rozszerzenia
+# lokalne rozszerzenia (nie wersjonujemy)
 backend/extensions/remadays/
-backend/extensions/complaint/
 backend/extensions/set-canonical-url/
+backend/extensions/complaint/
+backend/extensions/events/
+backend/extensions/primary-category/
 
-# szablony generowane / modyfikowane runtime
+# szablony generowane runtime
 backend/extensions/templates/*.liquid
 
 # -------------------------
-# AppleDouble (czêsty problem przy Docker + macOS)
-# -------------------------
-._*
-
-# -------------------------
-# Frontend public assets (jeœli generowane)
+# Frontend generated assets
 # -------------------------
 frontend-new/public.zip
 frontend-new/products_error.json
+frontend-new/public/storage/
+frontend-new/public/images/
 
 # -------------------------
 # Vercel
@@ -116,8 +115,22 @@ next-env.d.ts
 coverage/
 
 # -------------------------
-# Misc
+# Secrets
 # -------------------------
 *.pem
 *.crt
 *.key
+
+# -------------------------
+# Local garbage / accidental files
+# -------------------------
+=
+CACHED
+ERROR
+transferring
+[frontend-new
+frontend-new@0.1.0
+next
+
+# lokalny package-lock w katalogu g³ównym
+package-lock.json
