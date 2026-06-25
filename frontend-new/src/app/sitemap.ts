@@ -5,7 +5,8 @@ import { getAllNewsSlugs } from "@/lib/getNews";
 import { getAllOfferPages } from "@/lib/products";
 import { branches } from "@/content/Branch";
 
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl").replace(
   /\/$/,
