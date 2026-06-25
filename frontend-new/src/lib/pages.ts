@@ -82,6 +82,42 @@ function expandPathVariants(values: string[]) {
   return Array.from(variants);
 }
 
+async function getKnownPagesDescription(
+  slugValues: string[]
+): Promise<OfferPageDescription | undefined> {
+  for (const slugValue of slugValues) {
+    try {
+      const dataRaw = await directus.request(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (readItems as any)("pages", {
+          fields: ["url", "name", "title", "description"],
+          filter: {
+            url: { _eq: slugValue },
+          },
+          limit: 1,
+        })
+      );
+
+      const items: Record<string, unknown>[] = Array.isArray(dataRaw)
+        ? (dataRaw as Record<string, unknown>[])
+        : [];
+      const page = items[0];
+
+      if (!page) continue;
+
+      return {
+        title: pickValue(page, "name"),
+        seoTitle: pickValue(page, "title"),
+        seoDescription: pickValue(page, "description"),
+      };
+    } catch {
+      return undefined;
+    }
+  }
+
+  return undefined;
+}
+
 export function mergeOfferPageDescription(
   primary?: OfferPageDescription,
   fallback?: OfferPageDescription
@@ -108,6 +144,9 @@ export async function getOfferPageDescription(
     );
 
     if (slugValues.length === 0) return undefined;
+
+    const knownPagesDescription = await getKnownPagesDescription(slugValues);
+    if (knownPagesDescription) return knownPagesDescription;
 
     const fieldsRaw = await directus.request(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
