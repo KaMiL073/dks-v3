@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 import ProductPage from "@/app/oferta/[category]/[...slug]/ProductPage";
 import { directus } from "@/lib/directus";
 import { getProductBySlug, type Product as LibProduct } from "@/lib/products";
+import { absoluteTitle, productTitle } from "@/lib/seo";
 
 interface ProductImage {
   directus_files_id?: string | { id?: string } | null;
@@ -109,6 +110,13 @@ function toPlainText(input?: unknown, maxLen = 300): string {
     .trim();
 
   return noHtml.length > maxLen ? `${noHtml.slice(0, maxLen - 1)}…` : noHtml;
+}
+
+function getCanonical(product: LibProduct, fallbackSlug: string) {
+  const canonical = product.canonical?.trim();
+  if (canonical) return canonical;
+
+  return `/oferta/produkty/${product.slug || fallbackSlug}`;
 }
 
 function normalize(value: unknown): string {
@@ -404,7 +412,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const title = product.seo_title?.trim() || product.model || "Produkt DKS";
+  const canonicalPath = getCanonical(product, slug);
+  const title = productTitle(product);
   const description =
     toPlainText(product.seo_description, 155) ||
     toPlainText(product.short_description, 155) ||
@@ -412,11 +421,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     "Poznaj szczegóły produktu w ofercie DKS.";
 
   return {
-    title,
+    title: absoluteTitle(title),
     description,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       title,
       description,
+      url: canonicalPath,
     },
     twitter: {
       card: "summary",

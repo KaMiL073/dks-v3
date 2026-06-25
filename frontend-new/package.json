@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p 3000",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:canonical": "node --test tests/canonical-links.test.mjs",
+    "test:canonical:prod": "CANONICAL_BASE_URL=https://dks.pl node --test tests/canonical-links.test.mjs",
+    "check:seo": "node tests/check-seo-guidelines.mjs"
   },
   "dependencies": {
     "@directus/sdk": "^20.1.0",

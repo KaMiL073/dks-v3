@@ -1,5 +1,6 @@
 import { directus } from "@/lib/directus";
 import { readCollections } from "@directus/sdk";
+import { categoriesMap } from "@/lib/categories";
 
 /** Typ metadanych kolekcji w Directusie */
 interface DirectusCollectionMeta {
@@ -21,6 +22,10 @@ let cachedCollections: DirectusCollection[] | null = null;
 let lastFetchTime = 0;
 const CACHE_TTL = 60 * 1000; // 1 minuta
 
+const collectionToSlugMap = Object.fromEntries(
+  Object.entries(categoriesMap).map(([slug, collection]) => [collection, slug])
+);
+
 /**
  * 📦 Pobiera listę kolekcji z Directusa z cachingiem
  */
@@ -32,10 +37,16 @@ export async function getAllCollections(): Promise<DirectusCollection[]> {
     return cachedCollections;
   }
 
-  const collections = (await directus.request(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (readCollections as any)()
-  )) as DirectusCollection[];
+  let collections: DirectusCollection[] = [];
+
+  try {
+    collections = (await directus.request(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (readCollections as any)()
+    )) as DirectusCollection[];
+  } catch {
+    collections = [];
+  }
 
   cachedCollections = collections;
   lastFetchTime = now;
@@ -48,8 +59,9 @@ export async function getAllCollections(): Promise<DirectusCollection[]> {
  * Szuka po `meta.display_template` lub po nazwie kolekcji
  */
 export async function mapSlugToCollection(slug: string): Promise<string | null> {
-  const collections = await getAllCollections();
   const normalizedSlug = slug.toLowerCase().trim();
+
+  const collections = await getAllCollections();
 
   // 🔹 Szukamy kolekcji po display_template
   const found = collections.find((col) => {
@@ -66,6 +78,9 @@ export async function mapSlugToCollection(slug: string): Promise<string | null> 
 
   if (byName) return byName.collection;
 
+  const mappedCollection = categoriesMap[normalizedSlug];
+  if (mappedCollection) return mappedCollection;
+
   console.warn(`⚠️ [DirectusMapper] Nie znaleziono kolekcji dla slug: '${slug}'`);
   return null;
 }
@@ -73,12 +88,18 @@ export async function mapSlugToCollection(slug: string): Promise<string | null> 
 export async function mapCollectionToSlug(
   collection: string
 ): Promise<string | null> {
-  const collections = await getAllCollections();
   const normalized = collection.toLowerCase().trim();
+
+  const collections = await getAllCollections();
 
   const found = collections.find(
     (col) => col.collection.toLowerCase().trim() === normalized
   );
+
+  if (found?.meta?.display_template) return found.meta.display_template;
+
+  const mappedSlug = collectionToSlugMap[normalized];
+  if (mappedSlug) return mappedSlug;
 
   return found?.meta?.display_template ?? null;
 }

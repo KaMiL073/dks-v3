@@ -100,6 +100,12 @@ function valueMatches(itemValue: unknown, expectedValues: string[]) {
   });
 }
 
+function addCollectionCandidate(target: string[], value: string | null | undefined) {
+  const normalized = value?.trim();
+  if (!normalized) return;
+  if (!target.includes(normalized)) target.push(normalized);
+}
+
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -120,12 +126,15 @@ export async function GET(request: Request) {
       );
     }
 
-    const allowedCollections = [categoryCollection];
+    const allowedCollections: string[] = [];
+    addCollectionCandidate(allowedCollections, categoryCollection);
+    addCollectionCandidate(allowedCollections, categorySlug);
 
     const subcategorySlug = searchParams.get("subcategory");
     if (subcategorySlug) {
       const subCol = await mapSlugToCollection(subcategorySlug);
-      if (subCol) allowedCollections.push(subCol);
+      addCollectionCandidate(allowedCollections, subCol);
+      addCollectionCandidate(allowedCollections, subcategorySlug);
     }
 
     const baseFilter: Record<string, unknown> = {

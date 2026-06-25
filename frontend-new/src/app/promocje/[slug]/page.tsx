@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import {
+  getPromotionHeroTitle,
   getPromotionBySlug,
   getPromotionsSlugs,
 } from "@/lib/promotions";
@@ -38,7 +39,8 @@ export async function generateMetadata({
     };
   }
 
-  const title = promo.seo_title?.trim() || (promo.name ? `${promo.name} | DKS` : "Promocja | DKS");
+  const heroTitle = getPromotionHeroTitle(promo);
+  const title = promo.seo_title?.trim() || (heroTitle ? `${heroTitle} | DKS` : "Promocja | DKS");
   const description = promo.seo_description?.trim() || "Promocja DKS";
 
   return {

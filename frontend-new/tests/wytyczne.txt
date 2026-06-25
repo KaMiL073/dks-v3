@@ -1,0 +1,682 @@
+1. Optymalizacja meta-tagów title pod kątem duplikatów na kluczowych URL-ach
+
+Proszę o zmianę title z "Cyfrowa rewolucja - odkryj nowe horyzonty w świecie opakowań. | DKS" na "Cyfrowa rewolucja w świecie opakowań | Blog DKS" dla https://dks.pl/blog/aktualnosci/cyfrowa-rewolucja-odkryj-nowe-horyzonty-w-swiecie-opakowan
+
+Proszę o zmianę title z "CYFROWA REWOLUCJA - ODKRYJ NOWE HORYZONTY W ŚWIECIE OPAKOWAŃ. | DKS" na "Cyfrowa rewolucja - wydarzenie DKS" dla https://dks.pl/wydarzenia/cyfrowa-rewolucja
+
+Proszę o zmianę title z "DKS" na "PaperCut i Safe Q - oprogramowanie do druku | DKS" dla https://dks.pl/oferta/rozwiazania-dla-biura/oprogramowanie-do-druku
+
+Proszę o zmianę title z "DKS" na "Promocje na drukarki, kserokopiarki i urządzenia biurowe | DKS" dla https://dks.pl/promocje
+
+Proszę o zmianę title z "DKS" na "Wydarzenia, szkolenia i aktualności branżowe | DKS" dla https://dks.pl/wydarzenia
+
+Proszę o zmianę title z "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne | DKS" na "Oferta DKS - drukarki, kserokopiarki i rozwiązania dla firm" dla https://dks.pl/oferta
+
+Proszę o zmianę title z "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne | DKS" na "Drukarki, kserokopiarki i urządzenia biurowe | DKS" dla https://dks.pl/oferta/produkty
+
+Dla kart produktowych, które obecnie mają meta title ustawiony jako samo "DKS", proszę wdrożyć szablonowy meta title w formacie:
+
+Jeżeli CMS pozwala pobrać nazwę marki / producenta, rekomendowany jest wariant rozszerzony:
+
+Przykładowo:
+
+Proszę o zmianę title z "DKS" na "IM C2010 | DKS" dla https://dks.pl/oferta/produkty/im-c2010
+
+Proszę o zmianę title z "DKS" na "XC-2335 | DKS" dla https://dks.pl/oferta/produkty/xc-2335
+
+Proszę o zmianę title z "DKS" na "XM5370 | DKS" dla https://dks.pl/oferta/produkty/xm5370
+
+Proszę o zmianę title z "DKS" na "M3346 | DKS" dla https://dks.pl/oferta/produkty/m3346
+
+Proszę o zmianę title z "DKS" na "Bizhub 3602P | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-3602p
+
+Proszę o zmianę title z "DKS" na "Bizhub 4752 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-4752
+
+Proszę o zmianę title z "DKS" na "Bizhub C287 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-c287
+
+Proszę o zmianę title z "DKS" na "AccurioPress C4080 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/accuriopress-c4080
+
+Proszę o zmianę title z "DKS" na "AccurioPress C2060 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/accuriopress-c2060
+
+Proszę o zmianę title z "DKS" na "Bizhub 4000i | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-4000i
+
+Proszę o zmianę title z "DKS" na "Bizhub C300i | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-c300i
+
+Proszę o zmianę title z "DKS" na "Bizhub C558 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-c558
+
+Proszę o zmianę title z "DKS" na "AccurioPress C5080 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/accurio-press-c5080
+
+Proszę o zmianę title z "DKS" na "Bizhub C308 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-c308
+
+Proszę o zmianę title z "DKS" na "Bizhub C451i | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/bizhub-c451i
+
+Proszę o zmianę title z "DKS" na "AccurioWide 200 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/accuriowide-200
+
+Proszę o zmianę title z "DKS" na "AccurioLabel 230 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/accurio-label-230
+
+Proszę o zmianę title z "DKS" na "AccurioLabel 400 | Konica Minolta | DKS" dla https://dks.pl/oferta/produkty/accurio-label-400
+
+Proszę o zmianę title z "DKS" na "Lexmark XC9235 | Lexmark | DKS" dla https://dks.pl/oferta/produkty/xc9235
+
+Proszę o zmianę title z "DKS" na "Lexmark XC4150 | Lexmark | DKS" dla https://dks.pl/oferta/produkty/xc4150
+
+Proszę o zmianę title z "DKS" na "Lexmark XC6152 | Lexmark | DKS" dla https://dks.pl/oferta/produkty/xc6152
+
+Proszę o zmianę title z "DKS" na "HP DesignJet T850 MFP | HP | DKS" dla https://dks.pl/oferta/produkty/hp-design-jet-t850-mfp
+
+Proszę o zmianę title z "DKS" na "HP DesignJet T2600 PS 36-in MFP | HP | DKS" dla https://dks.pl/oferta/produkty/hp-design-jet-t2600-ps-36-in-mfp
+
+Proszę o zmianę title z "DKS" na "HP DesignJet Z9 | HP | DKS" dla https://dks.pl/oferta/produkty/hp-design-jet-z9
+
+Proszę o zmianę title z "DKS" na "HP DesignJet T950 MFP | HP | DKS" dla https://dks.pl/oferta/produkty/hp-design-jet-t950-mfp
+
+Proszę o zmianę title z "DKS" na "Canon imagePRESS V1000 | Canon | DKS" dla https://dks.pl/oferta/produkty/image-press-v1000
+
+Proszę o zmianę title z "DKS" na "Canon imagePRESS V1350 | Canon | DKS" dla https://dks.pl/oferta/produkty/canon-image-press-v1350
+
+Proszę o zmianę title z "DKS" na "Canon imagePRESS V900 | Canon | DKS" dla https://dks.pl/oferta/produkty/canon-image-press-v900
+
+Proszę o zmianę title z "DKS" na "Canon imagePROGRAF TX-3200 | Canon | DKS" dla https://dks.pl/oferta/produkty/image-prograf-tx-3200
+
+Proszę o zmianę title z "DKS" na "Canon imagePROGRAF TM-255 | Canon | DKS" dla https://dks.pl/oferta/produkty/image-prograf-tm-255
+
+Proszę o zmianę title z "DKS" na "ColorPainter M-64s | DKS" dla https://dks.pl/oferta/produkty/colorpainter-m-64s
+
+Proszę o zmianę title z "DKS" na "Estefold 2300 | DKS" dla https://dks.pl/oferta/produkty/estefold-2300
+
+Proszę o zmianę title z "DKS" na "Estefold 2300W | DKS" dla https://dks.pl/oferta/produkty/estefold-2300w
+
+Proszę o zmianę title z "DKS" na "Revoria Press PC1120 | DKS" dla https://dks.pl/oferta/produkty/revoria-press-pc-1120
+
+
+2. Dodanie nagłówków H1:
+
+Proszę o dodanie nagłówka H1: PaperCut i Safe Q - oprogramowanie do zarządzania drukiem dla https://dks.pl/oferta/rozwiazania-dla-biura/oprogramowanie-do-druku
+
+Proszę o dodanie nagłówka H1: Blog DKS dla https://dks.pl/blog
+
+Proszę o dodanie nagłówka H1: Dzierżawa czy zakup kserokopiarki - która opcja bardziej opłaca się Twojej firmie? dla https://dks.pl/blog/rozwiazania-dla-biura/dzierzawa-czy-zakup-kserokopiarki-ktora-opcja-bardziej-oplaca-sie-twojej-firmie
+
+Proszę o dodanie nagłówka H1: Microsoft OAuth 2.0 - obowiązkowa zmiana, której nie możesz zignorować dla https://dks.pl/blog/oprogramowanie/microsoft-o-auth-2-0-nadchodzi-obowiazkowa-zmiana-ktorej-nie-mozesz-zignorowac
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 2 dla https://dks.pl/blog/page/2
+
+Proszę o dodanie nagłówka H1: Oprogramowanie dla https://dks.pl/blog/oprogramowanie
+
+Proszę o dodanie nagłówka H1: Case study dla https://dks.pl/blog/case-study
+
+Proszę o dodanie nagłówka H1: Dlaczego dzierżawa kserokopiarek wielofunkcyjnych to opłacalna opcja dla firm? dla https://dks.pl/blog/rozwiazania-dla-biura/dlaczego-dzierzawa-kserokopiarek-wielofunkcyjnych-to-oplacalna-opcja-dla-firm
+
+Proszę o dodanie nagłówka H1: Rozwiązania dla poligrafii dla https://dks.pl/blog/rozwiazania-dla-poligrafii
+
+Proszę o dodanie nagłówka H1: DKS wzmacnia swoją pozycję w segmencie heavy production dla https://dks.pl/blog/rozwiazania-dla-poligrafii/dks-wzmacnia-swoja-pozycje-w-segmencie-heavy-production-kolejne-wdrozenia-produkcyjnych-systemow-drukujacych-w-polskich-drukarniach-
+
+Proszę o dodanie nagłówka H1: Jak wybrać urządzenia drukujące do biura w duchu zrównoważonego rozwoju? dla https://dks.pl/blog/rozwiazania-dla-biura/jak-wybrac-urzadzenia-drukujace-do-biura-w-duchu-zrownowazonego-rozwoju
+
+Proszę o dodanie nagłówka H1: Najem komputerów Lenovo dla firm - dlaczego przedsiębiorstwa rezygnują z zakupu sprzętu? dla https://dks.pl/blog/rozwiazania-dla-biura/najem-komputerow-lenovo-dla-firm-dlaczego-coraz-wiecej-przedsiebiorstw-rezygnuje-z-zakupu-sprzetu
+
+Proszę o dodanie nagłówka H1: Biznes w formie - DKS na Rema Days 2026 dla https://dks.pl/blog/aktualnosci/biznes-w-formie-dks-na-rema-days-2026
+
+Proszę o dodanie nagłówka H1: Rozwiązania dla biura dla https://dks.pl/blog/rozwiazania-dla-biura
+
+Proszę o dodanie nagłówka H1: Jak wymienić toner w urządzeniach Konica Minolta bizhub C3350i, C3351i, C4050i i C4051i? dla https://dks.pl/blog/serwis/jak-wymienic-toner-w-urzadzeniach-konica-minolta-bizhub-c3350i-c3351i-c4050i-i-c4051i-
+
+Proszę o dodanie nagłówka H1: Brother - idealny partner dla biura w erze cyfrowej i hybrydowej pracy dla https://dks.pl/blog/rozwiazania-dla-biura/brother-idealny-partner-dla-biura-w-erze-cyfrowej-i-hybrydowej-pracy
+
+Proszę o dodanie nagłówka H1: Serwis dla https://dks.pl/blog/serwis
+
+Proszę o dodanie nagłówka H1: Umowa serwisowa, która działa za Ciebie dla https://dks.pl/blog/aktualnosci/umowa-serwisowa-ktora-dziala-za-ciebie
+
+Proszę o dodanie nagłówka H1: Kserokopiarki kolorowe czy czarno-białe - jaki model wybrać do biura? dla https://dks.pl/blog/rozwiazania-dla-biura/kserokopiarki-kolorowe-czy-czarno-biale-jaki-model-wybrac-do-biura
+
+Proszę o dodanie nagłówka H1: Rozwiązania wielkoformatowe dla https://dks.pl/blog/rozwiazania-wielkoformatowe
+
+Proszę o dodanie nagłówka H1: Aktualności dla https://dks.pl/blog/aktualnosci
+
+Proszę o dodanie nagłówka H1: Rola serwisu w utrzymaniu sprawności urządzeń wielofunkcyjnych dla https://dks.pl/blog/serwis/rola-serwisu-w-utrzymaniu-sprawnosci-urzadzen-wielofunkcyjnych
+
+Proszę o dodanie nagłówka H1: Drukowanie na własne potrzeby jest łatwe - firmowy print room od podstaw dla https://dks.pl/blog/aktualnosci/drukowanie-na-wlasne-potrzeby-jest-latwe-firmowy-print-room-od-podstaw
+
+Proszę o dodanie nagłówka H1: Ekologiczne stoisko DKS na Rema Days 2025 dla https://dks.pl/blog/aktualnosci/ekologiczne-stoisko-dks-na-rema-days-2025
+
+Proszę o dodanie nagłówka H1: Aktualności - strona 2 dla https://dks.pl/blog/aktualnosci/page/2
+
+Proszę o dodanie nagłówka H1: Zastosowania wielkoformatowego druku cyfrowego dla https://dks.pl/blog/rozwiazania-wielkoformatowe/zastosowania-wielkoformatowego-druku-cyfrowego
+
+Proszę o dodanie nagłówka H1: Konferencja - odkryj potencjał druku wielkoformatowego dla https://dks.pl/blog/rozwiazania-wielkoformatowe/konferencja-odkryj-potencjal-druku-wielkoformatowego
+
+Proszę o dodanie nagłówka H1: Czym są składarki wielkoformatowe? dla https://dks.pl/blog/rozwiazania-wielkoformatowe/czym-sa-skladarki-wielkoformatowe
+
+Proszę o dodanie nagłówka H1: Czy opłaca się korzystać z poleasingowego sprzętu drukującego? dla https://dks.pl/blog/rozwiazania-dla-biura/czy-oplaca-sie-korzystac-z-poleasingowego-sprzetu-drukujacego
+
+Proszę o dodanie nagłówka H1: Dlaczego drukarki Brother są idealnym rozwiązaniem dla biur? dla https://dks.pl/blog/rozwiazania-dla-biura/4-dlaczego-drukarki-brother-sa-idealnym-rozwiazaniem-dla-biur
+
+Proszę o dodanie nagłówka H1: Czym różni się drukarka laserowa do domu i do biura? dla https://dks.pl/blog/rozwiazania-dla-biura/czym-rozni-sie-drukarka-laserowa-do-domu-i-do-biura
+
+Proszę o dodanie nagłówka H1: Rozwiązania dla biura - strona 2 dla https://dks.pl/blog/rozwiazania-dla-biura/page/2
+
+Proszę o dodanie nagłówka H1: Zakup, wynajem czy leasing sprzętu drukującego? dla https://dks.pl/blog/rozwiazania-dla-biura/zakup-wynajem-czy-leasing-sprzetu-drukujacego
+
+Proszę o dodanie nagłówka H1: Dni otwarte 22-23 maja w Gdańsku dla https://dks.pl/blog/rozwiazania-dla-poligrafii/dni-otwarte-22-23-maja-w-gdansku
+
+Proszę o dodanie nagłówka H1: Dni otwarte DKS w Rzeszowie 26-27 czerwca dla https://dks.pl/blog/rozwiazania-dla-poligrafii/dni-otwarte-dks-w-rzeszowie-26-27-czerwca
+
+Proszę o dodanie nagłówka H1: Dni otwarte w warszawskim oddziale DKS 10-11 kwietnia dla https://dks.pl/blog/rozwiazania-dla-poligrafii/10-11-kwietnia-dni-otwarte-w-warszawskim-oddziale-dks
+
+Proszę o dodanie nagłówka H1: Zastosowania monochromatycznego i kolorowego druku produkcyjnego dla https://dks.pl/blog/rozwiazania-dla-poligrafii/zastosowania-monochromatycznego-i-kolorowego-druku-produkcyjnego
+
+Proszę o dodanie nagłówka H1: Rozwiązania dla poligrafii - strona 2 dla https://dks.pl/blog/rozwiazania-dla-poligrafii/page/2
+
+Proszę o dodanie nagłówka H1: Czym różni się druk cyfrowy i druk offsetowy? dla https://dks.pl/blog/rozwiazania-dla-poligrafii/czym-rozni-sie-druk-cyfrowy-i-druk-offsetowy
+
+Proszę o dodanie nagłówka H1: Ile minut trwa druk książki na poligraficznej maszynie cyfrowej? dla https://dks.pl/blog/rozwiazania-dla-poligrafii/ile-minut-trwa-druk-ksiazki-na-poligraficznej-maszynie-cyfrowej
+
+Proszę o dodanie nagłówka H1: Uszlachetnij i wzbogać swój biznes dla https://dks.pl/blog/rozwiazania-dla-poligrafii/uszlachetnij-i-wzbogac-swoj-biznes
+
+Proszę o dodanie nagłówka H1: Dni otwarte DKS we Wrocławiu 7-8 sierpnia dla https://dks.pl/blog/rozwiazania-dla-poligrafii/7-8-sierpnia-dni-otwarte-dks-we-wroclawiu
+
+Proszę o dodanie nagłówka H1: Zastosowania druku 3D dla https://dks.pl/blog/rozwiazania-dla-poligrafii/zastosowania-druku-3d
+
+Proszę o dodanie nagłówka H1: Dni otwarte DKS w oddziale Katowice 10-11 lipca dla https://dks.pl/blog/rozwiazania-dla-poligrafii/10-11-lipca-dni-otwarte-dks-w-oddziale-katowice
+
+Proszę o dodanie nagłówka H1: Ekologiczne papiery premium - jakość i zrównoważona przyszłość dla https://dks.pl/blog/rozwiazania-dla-poligrafii/ekologiczne-papiery-premium-jakosc-i-zrownowazona-przyszlosc
+
+Proszę o dodanie nagłówka H1: Systemy druku - ograniczenie kosztów związanych z wydrukiem w firmie dla https://dks.pl/blog/oprogramowanie/systemy-druku-ograniczenie-kosztow-zwiazanych-z-wydrukiem-w-firmie
+
+Proszę o dodanie nagłówka H1: 5 korzyści z elektronicznego obiegu dokumentów w firmie dla https://dks.pl/blog/oprogramowanie/5-korzysci-z-elektronicznego-obiegu-dokumentow-w-firmie
+
+Proszę o dodanie nagłówka H1: DKS główny dostawca urządzeń do druku dla Wielkopolskiego Centrum Zdrowia Dziecka w Poznaniu dla https://dks.pl/blog/case-study/dks-glowny-dostawca-urzadzen-do-druku-dla-wielkopolskiego-centrum-zdrowia-dziecka-w-poznaniu
+
+Proszę o dodanie nagłówka H1: Czy drukarka monitoruje zużycie materiałów eksploatacyjnych? dla https://dks.pl/blog/oprogramowanie/czy-drukarka-monitoruje-zuzycie-materialow-eksploatacyjnych
+
+Proszę o dodanie nagłówka H1: Akademia DKS vol. 3 dla https://dks.pl/blog/aktualnosci/akademia-dks-vol3
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 3 dla https://dks.pl/blog/page/3
+
+Proszę o dodanie nagłówka H1: Rola serwisu w utrzymaniu sprawności urządzeń wielofunkcyjnych A3 laser dla https://dks.pl/blog/serwis/rola-serwisu-w-utrzymaniu-sprawnosci-urzadzen-wielofunkcyjnych-a3-laser-
+
+Proszę o dodanie nagłówka H1: Skanery Canon w DKS dla https://dks.pl/blog/aktualnosci/skanery-canon-w-dks
+
+Proszę o dodanie nagłówka H1: Ploter atramentowy a efektywność produkcji - co warto wiedzieć? dla https://dks.pl/blog/rozwiazania-wielkoformatowe/ploter-atramentowy-a-efektywnosc-produkcji-co-warto-wiedziec
+
+Proszę o dodanie nagłówka H1: DKS Konwent Informatyków 2025 dla https://dks.pl/blog/aktualnosci/dks-konwent-informatykow-2025
+
+Proszę o dodanie nagłówka H1: Jak Nesperta obniżyła koszty IT? dla https://dks.pl/blog/case-study/jak-nesperta-obnizyla-koszty-it
+
+Proszę o dodanie nagłówka H1: OfficeTech Day 2025 dla https://dks.pl/blog/aktualnosci/officetech-day-2025
+
+Proszę o dodanie nagłówka H1: Sezon na maturę dla https://dks.pl/blog/aktualnosci/sezon-na-mature
+
+Proszę o dodanie nagłówka H1: Wynajem sprzętu biurowego - rozwiązanie dla małych firm dla https://dks.pl/blog/rozwiazania-dla-biura/wynajem-sprzetu-biurowego-rozwiazanie-dla-malych-firm
+
+Proszę o dodanie nagłówka H1: Laptop dla nauczyciela - bon 2500 zł dla https://dks.pl/blog/aktualnosci/laptop-dla-nauczyciela-bon-2500-zl
+
+Proszę o dodanie nagłówka H1: Dlaczego warto rozważyć leasing drukarek Lexmark dla swojego biura? dla https://dks.pl/blog/rozwiazania-dla-biura/dlaczego-warto-rozwazyc-leasing-drukarek-lexmark-dla-swojego-biura
+
+Proszę o dodanie nagłówka H1: Archiwizacja dokumentacji medycznej dla https://dks.pl/blog/aktualnosci/archiwizacja-dokumentacji-medycznej
+
+Proszę o dodanie nagłówka H1: Kto potrzebuje programów do optycznego rozpoznawania znaków? dla https://dks.pl/blog/oprogramowanie/kto-potrzebuje-programow-do-optycznego-rozpoznawania-znakow
+
+Proszę o dodanie nagłówka H1: Jak zapewnić bezpieczeństwo drukowanym dokumentom? dla https://dks.pl/blog/oprogramowanie/jak-zapewnic-bezpieczenstwo-drukowanym-dokumentom
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 4 dla https://dks.pl/blog/page/4
+
+Proszę o dodanie nagłówka H1: Firma DKS zaprasza na cykl dni otwartych dla https://dks.pl/blog/rozwiazania-dla-poligrafii/firma-dks-zaprasza-na-cykl-dni-otwartych
+
+Proszę o dodanie nagłówka H1: Na jakich maszynach można drukować etykiety w małych nakładach? dla https://dks.pl/blog/rozwiazania-dla-biura/na-jakich-maszynach-mozna-drukowac-etykiety-w-malych-nakladach
+
+Proszę o dodanie nagłówka H1: Czym kierować się przy wyborze urządzenia do druku w formacie A3? dla https://dks.pl/blog/rozwiazania-dla-biura/czym-kierowac-sie-przy-wyborze-urzadzenia-do-druku-w-formacie-a3
+
+Proszę o dodanie nagłówka H1: Na co zwrócić uwagę przy wyborze wielofunkcyjnego urządzenia drukującego? dla https://dks.pl/blog/rozwiazania-dla-biura/na-co-zwrocic-uwage-przy-wyborze-wielofunkcyjnego-urzadzenia-drukujacego
+
+Proszę o dodanie nagłówka H1: Dlaczego w biurach dominują drukarki laserowe? dla https://dks.pl/blog/rozwiazania-dla-biura/dlaczego-w-biurach-dominuja-drukarki-laserowe
+
+Proszę o dodanie nagłówka H1: Czy każda cyfrowa kserokopiarka to multi-function printer? dla https://dks.pl/blog/rozwiazania-dla-biura/czy-kazda-cyfrowa-kserokopiarka-to-multi-function-printer
+
+Proszę o dodanie nagłówka H1: Jakie zalety ma czarno-biała drukarka biurowa? dla https://dks.pl/blog/rozwiazania-dla-biura/jakie-zalety-ma-czarno-biaa-drukarka-biurowa
+
+Proszę o dodanie nagłówka H1: Audyt i optymalizacja środowiska druku dla https://dks.pl/blog/rozwiazania-dla-biura/audyt-optymalizacja-srodowiska-druku
+
+Proszę o dodanie nagłówka H1: Czy w biurze potrzebna jest drukarka obsługująca format A3? dla https://dks.pl/blog/rozwiazania-dla-biura/czy-w-biurze-potrzebna-jest-drukarka-obslugujaca-format-a3
+
+Proszę o dodanie nagłówka H1: 5 argumentów za wynajmem biurowego sprzętu drukującego dla https://dks.pl/blog/rozwiazania-dla-biura/5-argumentow-za-wynajmem-biurowego-sprzetu-drukujacego
+
+Proszę o dodanie nagłówka H1: Jak drukować ze smartfona? dla https://dks.pl/blog/rozwiazania-dla-biura/jak-drukowac-ze-smartfona
+
+Proszę o dodanie nagłówka H1: Rozwiązania dla biura - strona 3 dla https://dks.pl/blog/rozwiazania-dla-biura/page/3
+
+Proszę o dodanie nagłówka H1: Czym kierować się przy wyborze urządzeń drukujących do firmy? dla https://dks.pl/blog/rozwiazania-dla-biura/czym-kierowac-sie-przy-wyborze-urzadzen-drukujacych-do-firmy
+
+Proszę o dodanie nagłówka H1: DKS na VIII Forum Kierowników IT w Administracji dla https://dks.pl/blog/aktualnosci/dks-na-viii-forum-kierownikow-it-w-administracji
+
+Proszę o dodanie nagłówka H1: Jeden dostawca, wiele możliwości - DKS dla https://dks.pl/blog/aktualnosci/jeden-dostawca-wiele-mozliwosci-dks
+
+Proszę o dodanie nagłówka H1: DKS na 7. Ogólnopolskim Konwencie Informatyków dla https://dks.pl/blog/aktualnosci/dks-na-7-ogolnopolskim-konwencie-informatykow-nowe-technologie-i-wyzwania-dla-administracji-publicznej
+
+Proszę o dodanie nagłówka H1: 10 kwietnia - Metropolitalne Targi Pracy dla https://dks.pl/blog/aktualnosci/10-kwietnia-metropolitalne-targi-pracy
+
+Proszę o dodanie nagłówka H1: Bezpieczeństwo systemów informatycznych w administracji publicznej dla https://dks.pl/blog/aktualnosci/bezpieczenstwo-systemow-informatycznych-w-administracji-publicznej-na-vii-konwencie-informatykow-warmii-i-mazur
+
+Proszę o dodanie nagłówka H1: Czym różni się biurowy i poligraficzny sprzęt drukujący? dla https://dks.pl/blog/aktualnosci/czym-rozni-sie-biurowy-i-poligraficzny-sprzet-drukujacy
+
+Proszę o dodanie nagłówka H1: Eko-optymalizacja w praktyce dla https://dks.pl/blog/aktualnosci/eko-optymalizacja-w-praktyce
+
+Proszę o dodanie nagłówka H1: Tak było, czyli podsumowanie cyklu dni otwartych 2019 dla https://dks.pl/blog/aktualnosci/tak-bylo-czyli-podsumowanie-cyklu-dni-otwartych-2019r
+
+Proszę o dodanie nagłówka H1: Cyfrowa rewolucja - odkryj nowe horyzonty w świecie opakowań dla https://dks.pl/blog/aktualnosci/cyfrowa-rewolucja-odkryj-nowe-horyzonty-w-swiecie-opakowan
+
+Proszę o dodanie nagłówka H1: DKS na targach FestiwalDruku.pl dla https://dks.pl/blog/aktualnosci/dks-na-targach-festiwaldruku-pl
+
+Proszę o dodanie nagłówka H1: DKS partnerem Bitwy Bramkarskiej 2019 dla https://dks.pl/blog/aktualnosci/dks-partnerem-bitwy-bramkarskiej-2019
+
+Proszę o dodanie nagłówka H1: Gala z okazji 30-lecia istnienia DKS dla https://dks.pl/blog/aktualnosci/gala-z-okazji-30-lecia-istnienia-dks
+
+Proszę o dodanie nagłówka H1: Aktualności - strona 3 dla https://dks.pl/blog/aktualnosci/page/3
+
+Proszę o dodanie nagłówka H1: Wynajem kserokopiarki - sposób na oszczędności w Twojej firmie dla https://dks.pl/blog/rozwiazania-dla-biura/wynajem-kserokopiarki-sposob-na-oszczednosci-w-twojej-firmie
+
+Proszę o dodanie nagłówka H1: RemaDays dla https://dks.pl/wydarzenia/remadays
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 5 dla https://dks.pl/blog/page/5
+
+Proszę o dodanie nagłówka H1: Jak ograniczyć konieczność wzywania serwisanta urządzeń wielofunkcyjnych? dla https://dks.pl/blog/rozwiazania-dla-biura/jak-ograniczyc-koniecznosc-wzywania-serwisanta-urzadzen-wielofunkcyjnych
+
+Proszę o dodanie nagłówka H1: Kserokopiarki - na czym polega dzierżawa? dla https://dks.pl/blog/rozwiazania-dla-biura/kserokopiarki-na-czym-polega-dzierzawa
+
+Proszę o dodanie nagłówka H1: Czy tonery i serwis są wliczone w cenę wynajmu kserokopiarki? dla https://dks.pl/blog/rozwiazania-dla-biura/czy-tonery-i-serwis-sa-wliczone-w-cene-wynajmu-kserokopiarki
+
+Proszę o dodanie nagłówka H1: Jaką wybrać kserokopiarkę? dla https://dks.pl/blog/rozwiazania-dla-biura/jaka-wybrac-kserokopiarke
+
+Proszę o dodanie nagłówka H1: Urządzenie wielofunkcyjne, kserokopiarka A4, A3 czy drukarka? dla https://dks.pl/blog/rozwiazania-dla-biura/urzadzenie-wielofunkcyjne-kserokopiarka-a4-a3-czy-drukarka
+
+Proszę o dodanie nagłówka H1: Kserokopiarka do szkoły - jak wybrać? dla https://dks.pl/blog/rozwiazania-dla-biura/kserokopiarka-do-szkoly-jak-wybrac
+
+Proszę o dodanie nagłówka H1: Rozwiązania dla biura - strona 4 dla https://dks.pl/blog/rozwiazania-dla-biura/page/4
+
+Proszę o dodanie nagłówka H1: Polecani producenci kserokopiarek dla https://dks.pl/blog/rozwiazania-dla-biura/polecani-producenci-kserokopiarek
+
+Proszę o dodanie nagłówka H1: Jaka drukarka do małej i średniej firmy? dla https://dks.pl/blog/rozwiazania-dla-biura/jaka-drukarka-do-malej-i-sredniej-firmy
+
+Proszę o dodanie nagłówka H1: Dlaczego warto drukować w kolorze? dla https://dks.pl/blog/rozwiazania-dla-biura/dlaczego-warto-drukowac-w-kolorze
+
+Proszę o dodanie nagłówka H1: Kserokopiarki - zakup czy wynajem? dla https://dks.pl/blog/rozwiazania-dla-biura/kserokopiarki-zakup-czy-wynajem
+
+Proszę o dodanie nagłówka H1: Kserokopiarka - niezbędne wyposażenie biura dla https://dks.pl/blog/rozwiazania-dla-biura/kserokopiarka-niezbedne-wyposazenie-biura
+
+Proszę o dodanie nagłówka H1: Skanowanie - co warto wiedzieć? dla https://dks.pl/blog/rozwiazania-dla-biura/skanowanie-co-warto-wiedziec
+
+Proszę o dodanie nagłówka H1: Cyfrowa rewolucja dla https://dks.pl/wydarzenia/cyfrowa-rewolucja
+
+Proszę o dodanie nagłówka H1: DKS na targach RemaDays 13-15 lutego 2019 dla https://dks.pl/blog/aktualnosci/dks-na-targach-remadays-13-15-lutego-2019
+
+Proszę o dodanie nagłówka H1: Gala z okazji 25-lecia istnienia DKS dla https://dks.pl/blog/aktualnosci/gala-z-okazji-25-lecia-istnienia-dks
+
+Proszę o dodanie nagłówka H1: DKS na targach Paperworld 2019 Frankfurt dla https://dks.pl/blog/aktualnosci/dks-na-targach-paperworld-2019-frankfurt
+
+Proszę o dodanie nagłówka H1: Akademia DKS dla https://dks.pl/wydarzenia/akademia-dks
+
+Proszę o dodanie nagłówka H1: Ekologia przyszłości - ekoinwestycje drogą do sukcesu dla https://dks.pl/wydarzenia/ekologia-przyszlosci-ekoinwestycje-droga-do-sukcesu
+
+Proszę o dodanie nagłówka H1: Rodzaje ploterów wielkoformatowych - jaki ploter wybrać? dla https://dks.pl/blog/rozwiazania-dla-biura/rodzaje-ploterow-wielkoformatowych-jaki-wybrac-ploter
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 6 dla https://dks.pl/blog/page/6
+
+Proszę o dodanie nagłówka H1: Zarządzanie i bezpieczeństwo druku dla https://dks.pl/blog/rozwiazania-dla-biura/zarzadzanie-i-bezpieczenstwo-druku
+
+Proszę o dodanie nagłówka H1: Funkcje kserokopiarki dla https://dks.pl/blog/rozwiazania-dla-biura/funkcje-kserokopiarki
+
+Proszę o dodanie nagłówka H1: Korzyści systemów accountingowych - jak zarządzać wydrukiem, skanem i kopią? dla https://dks.pl/blog/rozwiazania-dla-biura/korzysci-systemow-accoutingowych-jak-latwo-zarzadzac-wydrukiem-skanem-i-kopia
+
+Proszę o dodanie nagłówka H1: Dni otwarte DKS Poznań 1-2 października 2019 dla https://dks.pl/blog/rozwiazania-dla-biura/dni-otwarte-dks-poznan-1-2-pazdziernika-2019
+
+Proszę o dodanie nagłówka H1: Bezpieczeństwo druku - jak zadbać o dane? dla https://dks.pl/blog/rozwiazania-dla-biura/bezpieczenstwo-druku-jak-zadbac-o-dane
+
+Proszę o dodanie nagłówka H1: DKS Print Evolution Journey - premiery i znane rozwiązania na RemaDays dla https://dks.pl/blog/rozwiazania-dla-biura/dks-print-evolution-journey-premiery-i-znane-rozwiazania-na-remadays
+
+Proszę o dodanie nagłówka H1: Kamera termowizyjna Mobotix M16TB wykrywająca osoby z podwyższoną temperaturą dla https://dks.pl/blog/rozwiazania-dla-biura/kamera-termowizyjna-mobotix-m16tb-wykrywajaca-osoby-z-podwyzszona-temperatura
+
+Proszę o dodanie nagłówka H1: Najnowsze drukarki HP dla https://dks.pl/blog/rozwiazania-dla-biura/najnowsze-drukarki-hp
+
+Proszę o dodanie nagłówka H1: Jak działa kserokopiarka? dla https://dks.pl/blog/rozwiazania-dla-biura/jak-dziala-kserokopiarka
+
+Proszę o dodanie nagłówka H1: Kserokopiarka mono czy kolor? dla https://dks.pl/blog/rozwiazania-dla-biura/kserokopiarka-mono-czy-kolor
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 7 dla https://dks.pl/blog/page/7
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 8 dla https://dks.pl/blog/page/8
+
+Proszę o dodanie nagłówka H1: Blog DKS - strona 9 dla https://dks.pl/blog/page/9
+
+
+3. Przekierowania 404
+
+
+https://dks.pl/wynajem-urzadzen-wielofunkcyjnych
+-> 301 -> https://dks.pl/oferta/rozwiazania-dla-biura
+
+https://dks.pl/materialy-eksploatacyjne
+-> 301 -> https://dks.pl/oferta/materialy-eksploatacyjne
+
+https://dks.pl/oferta/produkty/oprogramowanie-dla-poligrafii
+-> 301 -> https://dks.pl/oferta/rozwiazania-dla-poligrafii
+
+https://dks.pl/oferta/oprogramowanie-dla-poligrafii-i-cad-gis
+-> 301 -> https://dks.pl/oferta/rozwiazania-dla-poligrafii
+
+https://dks.pl/promocje/skanery-canon
+-> 301 -> https://dks.pl/oferta/produkty
+
+https://dks.pl/laptop-dla-nauczyciela
+-> 301 -> https://dks.pl/promocje
+
+https://dks.pl/eksport
+-> 301 -> https://dks.pl/
+
+https://dks.pl/export
+-> 301 -> https://dks.pl/
+
+https://dks.pl/oferta/marki
+-> 301 -> https://dks.pl/oferta/produkty
+
+4. Prosimy o wdrożenie self-canonicali na obecnych adresach
+
+Brak linków kanonicznych:
+https://dks.pl/oferta/rozwiazania-dla-biura
+https://dks.pl/serwis-urzadzen-produkcyjnych
+https://dks.pl/oferta/rozwiazania-dla-poligrafii
+https://dks.pl/oferta/rozwiazania-dla-biura/oprogramowanie-do-druku
+https://dks.pl/oferta/produkty/im-c2010
+https://dks.pl/oferta/produkty/xc-2335
+https://dks.pl/oferta/materialy-eksploatacyjne
+https://dks.pl/backend/assets/c0bb826a-8774-4d2e-8eba-3920580ea415.pdf
+https://dks.pl/oddzialy/warszawa
+https://dks.pl/oddzialy/bialystok
+https://dks.pl/oddzialy/lodz
+https://dks.pl/oddzialy/krakow
+https://dks.pl/oddzialy/katowice
+https://dks.pl/oddzialy/poznan
+https://dks.pl/oddzialy/szczecin
+https://dks.pl/oddzialy/wroclaw
+https://dks.pl/oddzialy/gdansk
+https://dks.pl/oddzialy/olsztyn
+https://dks.pl/oddzialy/bydgoszcz
+https://dks.pl/oddzialy/rzeszow
+https://dks.pl/promocje/idealne-urzadzenia-biurowe-na-wynajem
+https://dks.pl/wydarzenia/officetech-day
+https://dks.pl/wydarzenia/remadays
+https://dks.pl/promocje
+https://dks.pl/oferta/oprogramowanie-dla-biura
+https://dks.pl/oferta/produkty/xm5370
+https://dks.pl/oferta/produkty/c342xc0-zwrotna-kaseta-z-tonerem-cyjan-o-bardzo-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/b342000-zwrotna-kaseta-z-tonerem-lexmarka
+https://dks.pl/oferta/produkty/m3346
+https://dks.pl/wydarzenia
+https://dks.pl/wydarzenia/cyfrowa-rewolucja
+https://dks.pl/oferta/produkty/c284e
+https://dks.pl/oferta/produkty/bizhub-3602p
+https://dks.pl/oferta/produkty/bizhub-4752
+https://dks.pl/oferta/produkty/bizhub-c287
+https://dks.pl/oferta/produkty/accuriopress-c4080
+https://dks.pl/oferta/produkty/accuriopress-c2060
+https://dks.pl/oferta/produkty/bizhub-4000i
+https://dks.pl/oferta/produkty/accurioprint-c4065
+https://dks.pl/oferta/produkty/bizhub-301i
+https://dks.pl/oferta/produkty/bizhub-c300i
+https://dks.pl/oferta/produkty/bizhub-558
+https://dks.pl/oferta/produkty/c364e
+https://dks.pl/oferta/produkty/bizhub-c558
+https://dks.pl/oferta/produkty/accurio-press-c5080
+https://dks.pl/oferta/produkty/bizhub-4051i
+https://dks.pl/oferta/produkty/bizhub-c308
+https://dks.pl/oferta/produkty/bizhub-4702p
+https://dks.pl/oferta/produkty/364e
+https://dks.pl/oferta/produkty/bizhub-185
+https://dks.pl/oferta/produkty/bizhub-c301i
+https://dks.pl/oferta/produkty/accurio-print-2100
+https://dks.pl/oferta/produkty/bizhub-451i
+https://dks.pl/oferta/produkty/c4065
+https://dks.pl/oferta/produkty/bizhub-c227
+https://dks.pl/oferta/produkty/bizhub-c4001i
+https://dks.pl/oferta/produkty/bizhub-226
+https://dks.pl/oferta/produkty/bizhub-227
+https://dks.pl/oferta/produkty/accurioprint-c3070l
+https://dks.pl/oferta/produkty/bizhub-4402p
+https://dks.pl/oferta/produkty/bizhub-press-c1070
+https://dks.pl/oferta/produkty/konica-minolta-accurio-print-c751-flux
+https://dks.pl/oferta/produkty/bizhub-c257i
+https://dks.pl/oferta/produkty/accurio-press-6772-p
+https://dks.pl/oferta/produkty/bizhub-c458
+https://dks.pl/oferta/produkty/bizhub-458
+https://dks.pl/oferta/produkty/accuriopress-c3080p
+https://dks.pl/oferta/produkty/bizhub-3300p
+https://dks.pl/oferta/produkty/284e
+https://dks.pl/oferta/produkty/accuriopress-c14000
+https://dks.pl/oferta/produkty/bizhub-press-c1085
+https://dks.pl/oferta/produkty/bizhub-c451i
+https://dks.pl/oferta/produkty/konica-minolta-accurio-press-c7100-seria
+https://dks.pl/oferta/produkty/c361i
+https://dks.pl/oferta/produkty/bizhub-c3851fs
+https://dks.pl/oferta/produkty/c224e
+https://dks.pl/oferta/produkty/bizhub-c368
+https://dks.pl/oferta/produkty/bizhub-368
+https://dks.pl/oferta/produkty/accuriopress-c6100
+https://dks.pl/oferta/produkty/bizhub-3622
+https://dks.pl/oferta/produkty/c454e
+https://dks.pl/oferta/produkty/bizhub-c3851
+https://dks.pl/oferta/produkty/accuriowide-200
+https://dks.pl/oferta/produkty/accurioprint-c2060l
+https://dks.pl/oferta/produkty/bizhub-c250i
+https://dks.pl/oferta/produkty/bizhub-4422
+https://dks.pl/oferta/produkty/konica-minolta-accurio-press-c14010-seria
+https://dks.pl/oferta/produkty/accuriopress-c12000
+https://dks.pl/oferta/produkty/bizhub-c251i
+https://dks.pl/oferta/produkty/bizhub-press-c1060
+https://dks.pl/oferta/produkty/konica-minolta-accurio-press-c14010-s-seria
+https://dks.pl/oferta/produkty/bizhub-4052
+https://dks.pl/oferta/produkty/bizhub-306
+https://dks.pl/oferta/produkty/accurio-print-7136-p
+https://dks.pl/oferta/produkty/accurio-shine-3600
+https://dks.pl/oferta/produkty/accuriopress-c6085
+https://dks.pl/oferta/produkty/mgi-jetvarnish-3d-one
+https://dks.pl/oferta/produkty/accurio-print-7136-seria
+https://dks.pl/oferta/produkty/bizhub-c658
+https://dks.pl/oferta/produkty/bizhub-308
+https://dks.pl/oferta/produkty/acurioprintpress-c3080
+https://dks.pl/oferta/produkty/accurio-label-230
+https://dks.pl/oferta/produkty/accuriopress-c2070p
+https://dks.pl/oferta/produkty/bizhub-c3351
+https://dks.pl/oferta/produkty/bizhub-c3110
+https://dks.pl/oferta/produkty/454e
+https://dks.pl/oferta/produkty/bizhub-c3301i
+https://dks.pl/oferta/produkty/accurio-label-400
+https://dks.pl/oferta/produkty/accurioprint-press-c3070
+https://dks.pl/oferta/produkty/bizhub-c258
+https://dks.pl/oferta/produkty/mobotix-m16tb
+https://dks.pl/oferta/produkty/accuriopress-c4070
+https://dks.pl/oferta/produkty/accurio-print-c5065
+https://dks.pl/oferta/produkty/b342X00-zwrotna-kaseta-z-tonerem-lexmarka-o-bardzo-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/konica-minolta-accurio-jet-km-1e
+https://dks.pl/oferta/produkty/b342h00-zwrotna-kaseta-z-tonerem-o-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/xc9225
+https://dks.pl/oferta/produkty/m5255
+https://dks.pl/oferta/produkty/xm9145
+https://dks.pl/oferta/produkty/c332hm0-wklad-drukujacy-magenta-o-wysokiej-wydajnosci-z-programu-zwrotu
+https://dks.pl/oferta/produkty/xc9235
+https://dks.pl/oferta/produkty/lexmark-b222x00-zwrotna-kaseta-z-tonerem-czarnym-o-bardzo-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/c3220m0-wklad-drukujacy-magenta-z-programu-zwrotu
+https://dks.pl/oferta/produkty/xm7370
+https://dks.pl/oferta/produkty/xm9155
+https://dks.pl/oferta/produkty/c2326
+https://dks.pl/oferta/produkty/c342xk0-wrotna-kaseta-z-tonerem-czarnym-o-bardzo-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/m3250
+https://dks.pl/oferta/produkty/c9235
+https://dks.pl/oferta/produkty/c342xy0-zwrotna-kaseta-z-tonerem-zoltym-o-bardzo-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/c332hy0-wklad-drukujacy-zolty-o-wysokiej-wydajnosci-z-programu-zwrotu
+https://dks.pl/oferta/produkty/m5270
+https://dks.pl/oferta/produkty/xc4150
+https://dks.pl/oferta/produkty/xm1246
+https://dks.pl/oferta/produkty/xm7355
+https://dks.pl/oferta/produkty/b222h00-zwrotna-kaseta-z-tonerem-czarnym-o-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/xc6152
+https://dks.pl/oferta/produkty/xc9265
+https://dks.pl/oferta/produkty/lexmark-xc-9635
+https://dks.pl/oferta/produkty/xc2235
+https://dks.pl/oferta/produkty/xc-2326
+https://dks.pl/oferta/produkty/20n0w00-wklad-drukujacy-cyjan-o-wysokiej-wydajnosci-z-programu-zwrotu-lexmark
+https://dks.pl/oferta/produkty/xm1342
+https://dks.pl/oferta/produkty/c4150
+https://dks.pl/oferta/produkty/xc4140
+https://dks.pl/oferta/produkty/mx-5365
+https://dks.pl/oferta/produkty/c3220c0-wklad-drukujacy-cyjan-z-programu-zwrotu
+https://dks.pl/oferta/produkty/c3220y0-wklad-drukujacy-zolty-z-programu-zwrotu-lexmark
+https://dks.pl/oferta/produkty/c3220k0-wklad-drukujacy-czarny-z-programu-zwrotu
+https://dks.pl/oferta/produkty/xm3250
+https://dks.pl/oferta/produkty/xc8155
+https://dks.pl/oferta/produkty/xc9245
+https://dks.pl/oferta/produkty/xm5365
+https://dks.pl/oferta/produkty/c332hc0-wklad-drukujacy-cyjan-o-wysokiej-wydajnosci-z-programu-zwrotu
+https://dks.pl/oferta/produkty/b222000-zwrotna-kaseta-z-tonerem-czarnym
+https://dks.pl/oferta/produkty/xm-3346
+https://dks.pl/oferta/produkty/c6160
+https://dks.pl/oferta/produkty/c332hk0-wklad-drukujacy-czarny-o-wysokiej-wydajnosci-z-programu-zwrotu
+https://dks.pl/oferta/produkty/c342xm0-zwrotna-kaseta-z-tonerem-magenta-o-o-bardzo-wysokiej-wydajnosci
+https://dks.pl/oferta/produkty/xc8160
+https://dks.pl/oferta/produkty/xm9165
+https://dks.pl/oferta/produkty/xc9255
+https://dks.pl/oferta/produkty/xc4240
+https://dks.pl/wydarzenia/akademia-dks
+https://dks.pl/wydarzenia/ekologia-przyszlosci-ekoinwestycje-droga-do-sukcesu
+https://dks.pl/oferta/produkty/estefold-2300w
+https://dks.pl/oferta/produkty/estefold-2300
+https://dks.pl/oferta/produkty/oce-colorado-1640
+https://dks.pl/oferta/produkty/colorpainter-m-64s
+https://dks.pl/oferta/produkty/revoria-press-pc-1120
+https://dks.pl/oferta/produkty/image-press-v1000
+https://dks.pl/oferta/produkty/hp-design-jet-t850-mfp
+https://dks.pl/oferta/produkty/hp-laser-jet-managed-mfp-e62655dn
+https://dks.pl/oferta/produkty/hp-color-laser-jet-managed-mfp-e786dn
+https://dks.pl/oferta/produkty/hp-design-jet-t2600-ps-36-in-mfp
+https://dks.pl/oferta/produkty/test111
+https://dks.pl/oferta/produkty/laser-jet-e77825z
+https://dks.pl/oferta/produkty/laser-jet-e87640dn
+https://dks.pl/oferta/produkty/hp-design-jet-t830-24-in-mfp
+https://dks.pl/oferta/produkty/laser-jet-e72535dn
+https://dks.pl/oferta/produkty/laser-jet-e87650z
+https://dks.pl/oferta/produkty/test
+https://dks.pl/oferta/produkty/hp-design-jet-z9
+https://dks.pl/oferta/produkty/laser-jet-e77830z
+https://dks.pl/oferta/produkty/hp-design-jet-z6-24-in-post-script-printer
+https://dks.pl/oferta/produkty/laser-jet-e72525dn
+https://dks.pl/oferta/produkty/hp-color-laser-jet-managed-mfp-e877dn
+https://dks.pl/oferta/produkty/laser-jet-e77830dn
+https://dks.pl/oferta/produkty/laser-jet-e87660dn
+https://dks.pl/oferta/produkty/hp-design-jet-t850-printer
+https://dks.pl/oferta/produkty/hp-laser-jet-managed-e40040dn
+https://dks.pl/oferta/produkty/laser-jet-e72530dn
+https://dks.pl/oferta/produkty/hp-design-jet-t1700-44-in-printer
+https://dks.pl/oferta/produkty/hp-design-jet-t1600-36-in-printer
+https://dks.pl/oferta/produkty/laser-jet-e87640z
+https://dks.pl/oferta/produkty/hp-design-jet-t650-36-in-printer
+https://dks.pl/oferta/produkty/laser-jet-e87660z
+https://dks.pl/oferta/produkty/hp-laser-jet-managed-mfp-e731dn
+https://dks.pl/oferta/produkty/hp-design-jet-t950-printer
+https://dks.pl/oferta/produkty/hp-design-jet-t870-24-in-printer
+https://dks.pl/oferta/produkty/laser-jet-e87650dn
+https://dks.pl/oferta/produkty/laser-jet-e77825dn
+https://dks.pl/oferta/produkty/hp-design-jet-t950-mfp
+https://dks.pl/oferta/produkty/hp-color-laser-jet-enterprise-mfp-x58045dn
+https://dks.pl/oferta/produkty/250-g9-8-a5-u2-ea
+https://dks.pl/oferta/produkty/hp-255-g9-816-d3-ea
+https://dks.pl/oferta/produkty/ira-2530i
+https://dks.pl/oferta/produkty/ira-dx-c3725i
+https://dks.pl/oferta/produkty/ira-c3525i
+https://dks.pl/oferta/produkty/image-force-c611
+https://dks.pl/oferta/produkty/image-prograf-tx-3200
+https://dks.pl/oferta/produkty/imagepress-c850
+https://dks.pl/oferta/produkty/tm-300
+https://dks.pl/oferta/produkty/ir-adv-dx-6755i
+https://dks.pl/oferta/produkty/imagepress-c90010vp
+https://dks.pl/oferta/produkty/ir-adv-dx-717
+https://dks.pl/oferta/produkty/tx-3000
+https://dks.pl/oferta/produkty/vario-print-6000-titan-seria
+https://dks.pl/oferta/produkty/imageprograf-pro-2100
+https://dks.pl/oferta/produkty/ir-c1225if
+https://dks.pl/oferta/produkty/ir-adv-dx-c257
+https://dks.pl/oferta/produkty/canon-image-press-v1350
+https://dks.pl/oferta/produkty/image-prograf-tm-255
+https://dks.pl/oferta/produkty/canon-image-press-v900
+https://dks.pl/oferta/produkty/ira-6555i
+https://dks.pl/oferta/produkty/image-force-8100-seria
+https://dks.pl/oferta/produkty/ira-4545i
+https://dks.pl/oferta/produkty/ir-adv-dx-c4725i
+https://dks.pl/oferta/produkty/mirage
+https://dks.pl/oferta/produkty/image-force-520
+https://dks.pl/oferta/produkty/ir-adv-dx-c3720i
+https://dks.pl/oferta/produkty/image-prograf-tm-355-mfp-skaner-z36
+https://dks.pl/oferta/produkty/imagepress-c8000vp
+https://dks.pl/oferta/produkty/image-prograf-pro-2600
+https://dks.pl/oferta/produkty/image-runner-advance-dx-c3926i
+https://dks.pl/oferta/produkty/imagepress-c710
+https://dks.pl/oferta/produkty/ir-adv-dx-6765i
+https://dks.pl/oferta/produkty/direct-print-plus
+https://dks.pl/oferta/produkty/image-prograf-tm-240-mfp-skaner-lm24
+https://dks.pl/oferta/produkty/ira-c3530i
+https://dks.pl/oferta/produkty/ira-c256i
+https://dks.pl/oferta/produkty/image-prograf-gp-4000
+https://dks.pl/oferta/produkty/ira-c3025i
+https://dks.pl/oferta/produkty/ir-c3520i
+https://dks.pl/oferta/produkty/poster-artist
+https://dks.pl/oferta/produkty/ira-c5540i
+https://dks.pl/oferta/produkty/ir-adv-c255i
+https://dks.pl/oferta/produkty/imagepress-c10000vp
+https://dks.pl/oferta/produkty/imageprograf-pro-4100
+https://dks.pl/oferta/produkty/image-force-c3150
+https://dks.pl/oferta/produkty/ir-adv-dx-c4751i
+https://dks.pl/oferta/produkty/asdasd
+https://dks.pl/oferta/produkty/ira-4535i
+https://dks.pl/oferta/produkty/ir-adv-dx-c4735i
+https://dks.pl/oferta/produkty/ira-c356i
+https://dks.pl/oferta/produkty/image-prograf-tm-255-mfp-skaner-lm-24
+https://dks.pl/oferta/produkty/ira-4551i
+https://dks.pl/oferta/produkty/image-prograf-gp-6600-s
+https://dks.pl/oferta/produkty/ir-1435i
+https://dks.pl/oferta/produkty/image-prograf-tm-350
+https://dks.pl/oferta/produkty/ir-c1225
+https://dks.pl/oferta/produkty/ir-adv-dx-c3730i
+https://dks.pl/oferta/produkty/imagepress-c810
+https://dks.pl/oferta/produkty/canon-image-press-c270-seria
+https://dks.pl/oferta/produkty/image-prograf-tm-350-mfp-skaner-lm36
+https://dks.pl/oferta/produkty/image-force-c5140
+https://dks.pl/oferta/produkty/image-prograf-tx-3200-mfp-skaner-z36-aio
+https://dks.pl/oferta/produkty/imagepress-c650
+https://dks.pl/oferta/produkty/ir-2520
+https://dks.pl/oferta/produkty/ir-adv-dx-6780i
+https://dks.pl/oferta/produkty/ira-400i
+https://dks.pl/oferta/produkty/ira-c5535i
+https://dks.pl/oferta/produkty/tm-2000
+https://dks.pl/oferta/produkty/imageprograf-pro-6100
+https://dks.pl/oferta/produkty/ira-c5550i
+https://dks.pl/oferta/produkty/ira-2545i
+https://dks.pl/oferta/produkty/image-prograf-tx-4200
+https://dks.pl/oferta/produkty/ira-6575i
+https://dks.pl/oferta/produkty/vario-print-140-seria
+https://dks.pl/oferta/produkty/ir-adv-dx-c4745i
+https://dks.pl/oferta/produkty/ira-500i
+https://dks.pl/oferta/produkty/image-prograf-tz-32000-mfp-skaner-z36-aio
+https://dks.pl/oferta/produkty/ir-1435if
+https://dks.pl/oferta/produkty/ira-2520i
+https://dks.pl/oferta/produkty/ira-dx-c3226i
+https://dks.pl/oferta/produkty/tx-3000-t36-mfp
+https://dks.pl/oferta/produkty/imagepress-c910
+https://dks.pl/oferta/produkty/ir-adv-c355i
+https://dks.pl/oferta/produkty/imagepress-c10010vp
+https://dks.pl/oferta/produkty/i-sensys-x-c1533i-f-ii
+https://dks.pl/oferta/produkty/image-force-1440
+https://dks.pl/oferta/produkty/ira-4525i
+https://dks.pl/oferta/produkty/imagepress-c750
+https://dks.pl/oferta/produkty/tm-200
+https://dks.pl/oferta/produkty/image-prograf-tm-240
+https://dks.pl/oferta/produkty/image-prograf-tm-355
+https://dks.pl/oferta/produkty/image-prograf-tz-32000
+https://dks.pl/oferta/produkty/ira-c5560i
+https://dks.pl/oferta/produkty/ira-6565i

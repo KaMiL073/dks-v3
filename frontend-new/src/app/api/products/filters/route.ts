@@ -73,6 +73,12 @@ function isUsefulField(f: DirectusField) {
 const client = directus as unknown as { request: (op: unknown) => Promise<unknown> };
 const readFieldsUnsafe = readFields as unknown as (arg: unknown) => unknown;
 
+function addCollectionCandidate(target: string[], value: string | null | undefined) {
+  const normalized = value?.trim();
+  if (!normalized) return;
+  if (!target.includes(normalized)) target.push(normalized);
+}
+
 async function fetchFieldsForCollection(collection: string): Promise<DirectusField[]> {
   // 1) readFields(collection)
   try {
@@ -124,32 +130,39 @@ export async function GET(req: Request) {
 
     const targetSlug = subcategorySlug || categorySlug;
 
-    let collection =
+    const collection =
       (await resolveCategoryToCollection(targetSlug).catch(() => targetSlug)) || targetSlug;
 
-    // fallback po lokalnej mapie (bez any)
+    const collectionCandidates: string[] = [];
+    addCollectionCandidate(collectionCandidates, collection);
+    addCollectionCandidate(collectionCandidates, targetSlug);
+
     const catMap = categoriesMap as unknown as Record<string, string>;
-    if (collection === targetSlug && typeof catMap[targetSlug] === "string") {
-      collection = catMap[targetSlug];
+    if (typeof catMap[targetSlug] === "string") {
+      addCollectionCandidate(collectionCandidates, catMap[targetSlug]);
     }
 
-    if (!isAllowedCollection(collection)) {
+    const allowedCandidates = collectionCandidates.filter(isAllowedCollection);
+
+    if (allowedCandidates.length === 0) {
       return NextResponse.json(
-        { error: "Invalid collection resolved", collection, slug: targetSlug },
+        { error: "Invalid collection resolved", collectionCandidates, slug: targetSlug },
         { status: 400 }
       );
     }
 
-    const fields = await fetchFieldsForCollection(collection);
+    let selectedCollection = allowedCandidates[0];
+    let rawFilters: Array<{ field: string; label: string; options: { text: string; value: string }[] }> = [];
 
-    const onlyThisCollection = fields.filter((f) => {
-      const c = String(f?.collection ?? "").trim();
-      return !c || c === collection;
-    });
+    for (const candidate of allowedCandidates) {
+      const fields = await fetchFieldsForCollection(candidate);
 
-    const rawFilters = onlyThisCollection
-      .filter(isUsefulField)
-      .map((f) => {
+      const onlyThisCollection = fields.filter((f) => {
+        const c = String(f?.collection ?? "").trim();
+        return !c || c === candidate;
+      });
+
+      const candidateFilters = onlyThisCollection.filter(isUsefulField).map((f) => {
         const choices: Choice[] = f.meta?.options?.choices ?? [];
 
         const options = choices
@@ -165,14 +178,21 @@ export async function GET(req: Request) {
           String(f.field);
 
         return { field: String(f.field), label, options };
-      })
-      .filter((x) => x.options.length > 0);
+      }).filter((x) => x.options.length > 0);
+
+      if (candidateFilters.length > 0) {
+        selectedCollection = candidate;
+        rawFilters = candidateFilters;
+        break;
+      }
+    }
 
     const deduped = Array.from(new Map(rawFilters.map((x) => [x.field, x] as const)).values());
 
     return NextResponse.json({
       filters: deduped,
-      collection,
+      collection: selectedCollection,
+      collectionCandidates: allowedCandidates,
       slug: targetSlug,
     });
   } catch (err: unknown) {

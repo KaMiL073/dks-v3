@@ -1,80 +1,72 @@
-export default ({ action }, { logger, database, services, getSchema }) => {
-  const { CollectionsService } = services;
+const SITE_URL = "https://dks.pl";
 
-  action('items.create', async (meta) => {
-    if (meta.collection !== 'products') return;
-    const payload = meta.payload;
-    if (!payload || payload.canonical) return;
+type HookContext = {
+  collection: string;
+  key?: string | number;
+  payload?: {
+    slug?: string;
+    canonical?: string | null;
+  };
+};
+
+type DirectusServices = {
+  logger: {
+    error: (message: string) => void;
+    info: (message: string) => void;
+  };
+  database: (table: string) => {
+    select: (columns: string | string[]) => {
+      where: (conditions: Record<string, unknown>) => {
+        first: () => Promise<{ slug?: string | null; canonical?: string | null } | undefined>;
+      };
+    };
+    update: (values: Record<string, unknown>) => {
+      where: (conditions: Record<string, unknown>) => Promise<unknown>;
+    };
+  };
+};
+
+function buildCanonical(slug: string) {
+  return `${SITE_URL}/oferta/produkty/${slug}`;
+}
+
+async function getProductSlug(database: DirectusServices["database"], key?: string | number) {
+  if (!key) return null;
+
+  const product = await database("products")
+    .select(["slug", "canonical"])
+    .where({ id: key })
+    .first();
+
+  return product?.slug?.trim() || null;
+}
+
+export default (
+  { action }: { action: (name: string, handler: (meta: HookContext) => Promise<void>) => void },
+  { logger, database }: DirectusServices
+) => {
+  async function setCanonical(meta: HookContext) {
+    if (meta.collection !== "products") return;
 
     try {
-      const schema = await getSchema();
-      const collectionsService = new CollectionsService({
-        schema,
-        knex: database,
-      });
+      const payloadSlug = meta.payload?.slug?.trim();
+      const slug = payloadSlug || (await getProductSlug(database, meta.key));
 
-      // 📚 Pobierz wszystkie kolekcje z Directusa
-      const allCollections = await collectionsService.readByQuery({ limit: -1 });
+      if (!slug) return;
 
-      if (!Array.isArray(allCollections)) {
-        logger.error(`[set-canonical-url] ❌ Brak danych kolekcji`);
-        return;
-      }
+      const canonical = buildCanonical(slug);
 
-      let categorySlug = 'brak-kategorii';
-      let subcategorySlug = '';
-      let categoryCollection: string | null = null;
+      if (meta.payload?.canonical === canonical) return;
 
-      const createdRelations = payload.type?.create || [];
+      await database("products").update({ canonical }).where({ id: meta.key });
 
-      // 🔹 Krok 1: znajdź kategorię (group = 'products')
-      for (const rel of createdRelations) {
-        const collectionMeta = allCollections.find(
-          (c) => c.collection === rel.collection
-        );
-        if (!collectionMeta) continue;
-
-        const group = collectionMeta.meta?.group;
-        if (group === 'products') {
-          categorySlug =
-            collectionMeta.meta?.display_template ||
-            collectionMeta.meta?.note ||
-            rel.collection;
-          categoryCollection = collectionMeta.collection;
-        }
-      }
-
-      // 🔹 Krok 2: znajdź subkategorię (group = nazwa kolekcji kategorii)
-      if (categoryCollection) {
-        for (const rel of createdRelations) {
-          const collectionMeta = allCollections.find(
-            (c) => c.collection === rel.collection
-          );
-          if (!collectionMeta) continue;
-
-          const group = collectionMeta.meta?.group;
-          if (group === categoryCollection) {
-            subcategorySlug =
-              collectionMeta.meta?.display_template ||
-              collectionMeta.meta?.note ||
-              rel.collection;
-          }
-        }
-      }
-
-      // 📦 Składamy canonical
-      let canonical = `/oferta/${categorySlug}`;
-      if (subcategorySlug && subcategorySlug !== categorySlug)
-        canonical += `/${subcategorySlug}`;
-      canonical += `/${payload.slug}`;
-
-      // 🧩 Aktualizujemy produkt
-      await database('products').update({ canonical }).where({ id: meta.key });
-
+      logger.info(`[set-canonical-url] ustawiono canonical: ${canonical}`);
     } catch (error) {
-      logger.error(
-        `[set-canonical-url] ❌ błąd ustawiania canonical: ${error.message}`
-      );
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error(`[set-canonical-url] błąd ustawiania canonical: ${message}`);
     }
-  });
+  }
+
+  action("items.create", setCanonical);
+  action("items.update", setCanonical);
 };

@@ -73,6 +73,56 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+
+  async redirects() {
+    return [
+      {
+        source: "/wynajem-urzadzen-wielofunkcyjnych",
+        destination: "/oferta/rozwiazania-dla-biura",
+        permanent: true,
+      },
+      {
+        source: "/materialy-eksploatacyjne",
+        destination: "/oferta/materialy-eksploatacyjne",
+        permanent: true,
+      },
+      {
+        source: "/oferta/produkty/oprogramowanie-dla-poligrafii",
+        destination: "/oferta/rozwiazania-dla-poligrafii",
+        permanent: true,
+      },
+      {
+        source: "/oferta/oprogramowanie-dla-poligrafii-i-cad-gis",
+        destination: "/oferta/rozwiazania-dla-poligrafii",
+        permanent: true,
+      },
+      {
+        source: "/promocje/skanery-canon",
+        destination: "/oferta/produkty",
+        permanent: true,
+      },
+      {
+        source: "/laptop-dla-nauczyciela",
+        destination: "/promocje",
+        permanent: true,
+      },
+      {
+        source: "/eksport",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/export",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/oferta/marki",
+        destination: "/oferta/produkty",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
