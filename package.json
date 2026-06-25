@@ -4,9 +4,6 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "check:seo": "node frontend-new/tests/check-seo-guidelines.mjs",
-        "test:canonical": "cd frontend-new && node --test tests/canonical-links.test.mjs",
-        "test:canonical:prod": "cd frontend-new && CANONICAL_BASE_URL=https://dks.pl node --test tests/canonical-links.test.mjs",
         "lint": "eslint .",
         "lint-fix": "eslint . --fix",
         "test": "echo \"Error: no test specified\" && exit 1"

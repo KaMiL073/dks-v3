@@ -78,30 +78,26 @@ services:
     # ports:
     #   - '4444:4444'
 
-  frontend-new:
-    container_name: frontend-new
+  frontend:
+    container_name: frontend
     build:
-      context: ./frontend-new
-      dockerfile: Dockerfile
-      target: dev
+      context: ./frontend
       args:
-        NEXT_PUBLIC_BACKEND_URL: 'http://localhost/backend'
-        NEXT_PUBLIC_API_URL: 'http://localhost/backend'
-        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: '6Lcw4bkfAAAAAAt--gbQGn2TTS9twvXPh6wTt9NM'
-    command: [ 'npm', 'run', 'dev' ]
+        NODE_ENV: 'development'
+        # NODE_ENV: 'production'
+        #NODE_ENV: 'production-archive'
+        NEXT_PUBLIC_URL: 'http://localhost/'
+        BACKEND_URL: 'http://directus:8055/backend/'
+    command: [ 'dev' ]
     environment:
-      NODE_ENV: 'development'
-      NEXT_PUBLIC_BACKEND_URL: 'http://localhost/backend'
-      NEXT_PUBLIC_API_URL: 'http://localhost/backend'
-      API_INTERNAL_URL: 'http://directus:8055'
       SERVICE_USER_TOKEN: '89xxkKXkc9'
       RECAPTCHA_SECRET: '6Lcw4bkfAAAAAFvdS6PRm5d7UDobanmKuQyD5Q18'
-      NEXT_PUBLIC_RECAPTCHA_SITE_KEY: '6Lcw4bkfAAAAAAt--gbQGn2TTS9twvXPh6wTt9NM'
+      RECAPTCHA_SITE: '6Lcw4bkfAAAAAAt--gbQGn2TTS9twvXPh6wTt9NM'
     depends_on:
       - directus
     volumes:
-      - ./frontend-new:/app
-      - node_modules:/app/node_modules
+      - ./frontend:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
 
   proxy:
     container_name: proxy
@@ -113,7 +109,7 @@ services:
       - 80:80
     depends_on:
       - directus
-      - frontend-new
+      - frontend
 
 volumes:
   directus_uploads:

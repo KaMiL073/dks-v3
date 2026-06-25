@@ -3,22 +3,23 @@ services:
     container_name: cache
     image: redis:6.0-alpine
 
-  frontend-new:
-    container_name: frontend-new
+  frontend:
+    container_name: frontend
 #     depends_on:
 #       - proxy
     build:
-      context: ./frontend-new
-      dockerfile: Dockerfile
+      context: ./frontend
       args:
-        NEXT_PUBLIC_BACKEND_URL: 'http://10.10.10.21/backend'
-        NEXT_PUBLIC_API_URL: 'http://10.10.10.21/backend'
+        NODE_ENV: 'production'
+        NEXT_PUBLIC_URL: 'http://localhost/'
+        BACKEND_URL: 'http://10.10.10.21/backend/'
+        SERVICE_USER_TOKEN: '89xxkKXkc9'
+    command: [ 'start' ]
     environment:
-      NODE_ENV: 'production'
-      NEXT_PUBLIC_BACKEND_URL: 'http://10.10.10.21/backend'
-      NEXT_PUBLIC_API_URL: 'http://10.10.10.21/backend'
-      API_INTERNAL_URL: 'http://directus:8055'
       SERVICE_USER_TOKEN: '89xxkKXkc9'
+    volumes:
+      - ./frontend:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
 
   proxy:
     container_name: proxy
