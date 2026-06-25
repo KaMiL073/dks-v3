@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/ui/Typography/Heading1";
 import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
+import { absoluteTitle } from "@/lib/seo";
 
 const fallbackTitle = "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne";
 const fallbackDescription =
@@ -19,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = desc?.seoDescription || fallbackDescription;
 
   return {
-    title,
+    title: absoluteTitle(title),
     description,
   keywords: [
     "drukarki biurowe",

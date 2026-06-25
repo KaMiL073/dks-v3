@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import HeroSection from "@/app/(marketing)/HeroSection";
-import { getEventsCreate, type EventCreateItem } from "@/lib/eventsCreate";
+import {
+  getEventHeroTitle,
+  getEventsCreate,
+  type EventCreateItem,
+} from "@/lib/eventsCreate";
 import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
+import { absoluteTitle } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -21,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = desc?.seoDescription || "Sprawdź aktualne wydarzenia DKS.";
 
   return {
-    title,
+    title: absoluteTitle(title),
     description,
     openGraph: {
       title,
@@ -73,6 +78,7 @@ export default async function EventsPage() {
         <div className="grid w-full grid-cols-1 gap-12 md:grid-cols-2 xl:grid-cols-3">
           {events.map((event) => {
             const imageUrl = getEventImage(event.image);
+            const eventTitle = getEventHeroTitle(event) || event.name;
 
             return (
               <Link
@@ -85,7 +91,7 @@ export default async function EventsPage() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={imageUrl}
-                      alt={event.name}
+                      alt={eventTitle}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   )}
@@ -93,7 +99,7 @@ export default async function EventsPage() {
 
                 <div className="flex flex-1 flex-col justify-between gap-6 pt-8">
                   <h2 className="line-clamp-2 text-3xl font-semibold leading-10 text-neutral-900">
-                    {event.name}
+                    {eventTitle}
                   </h2>
 
                   {event.lead && (

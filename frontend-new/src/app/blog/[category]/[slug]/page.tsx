@@ -5,6 +5,7 @@ import { getCategories } from "@/lib/getCategories";
 import { getSinglePost, getNewsPaged } from "@/lib/getNews";
 import TopSectionHeader from "@/components/TopSectionHeader";
 import BlogCategoriesSidebar from "@/components/BlogCategoriesSidebar";
+import { absoluteTitle } from "@/lib/seo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -46,15 +47,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   const baseUrl = siteBaseUrl();
-  const title = post.seo_title?.trim() || post.title || "";
   const description = post.lead?.slice(0, 155) ?? "";
 
   const canonicalPath = `/blog/${category}/${post.slug ?? slug}`;
+  const seoTitle = post.seo_title?.trim();
+  const title = seoTitle || post.title || "";
   const canonical = new URL(canonicalPath, baseUrl).toString();
 
   return {
     metadataBase: baseUrl,
-    title,
+    title: seoTitle ? absoluteTitle(title) : title,
     description,
     alternates: { canonical: canonicalPath },
     openGraph: {

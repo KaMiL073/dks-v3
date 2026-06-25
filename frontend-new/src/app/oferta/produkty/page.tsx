@@ -4,6 +4,7 @@ import TopSectionHeader from "@/components/TopSectionHeader";
 import OfferSection from "@/app/(marketing)/OfferSection";
 import PartnersSection from "@/app/(marketing)/PartnersSection";
 import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
+import { absoluteTitle } from "@/lib/seo";
 
 const fallbackTitle = "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny poligraficzne";
 const fallbackDescription =
@@ -22,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = desc?.seoDescription || fallbackDescription;
 
   return {
-    title,
+    title: absoluteTitle(title),
     description,
   keywords:
     "drukarki biurowe, drukarki laserowe, kserokopiarki, urządzenia wielofunkcyjne, MFP, plotery, maszyny poligraficzne, drukarki wielkoformatowe, druk cyfrowy, urządzenia do biura, Canon, HP, Konica Minolta, Kyocera, Lexmark",
@@ -48,13 +49,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ProductsPage() {
-  const desc = await getOfferPageDescription(["oferta/produkty", "/oferta/produkty"]);
-  const heading = desc?.title || "Produkty";
-
+export default function ProductsPage() {
   return (
     <>
-      <TopSectionHeader title={heading} img="/static/homepage/Header.webp" />
+      <TopSectionHeader title="Produkty" img="/static/homepage/Header.webp" />
 
       <OfferSection />
 

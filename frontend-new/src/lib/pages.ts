@@ -133,11 +133,11 @@ export async function getOfferPageDescription(
 
     const titleField = pickFirstField(fields, ["name", "heading", "page_title"]);
     const seoTitleField = pickFirstField(fields, [
+      "title",
       "seo_title",
       "seoTitle",
       "meta_title",
       "metaTitle",
-      "title",
     ]);
     const seoDescriptionField = pickFirstField(fields, [
       "seo_description",
@@ -224,8 +224,7 @@ export async function getOfferPageDescription(
         pickTextField(page, ["rightColumn", "right_column", "right", "prawa_kolumna"]) ||
         pickValue(page, rightColumnField),
     };
-  } catch (error) {
-    console.error("getOfferPageDescription error:", error);
+  } catch {
     return undefined;
   }
 }

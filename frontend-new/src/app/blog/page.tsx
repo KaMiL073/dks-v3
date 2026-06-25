@@ -4,6 +4,7 @@ import { getNewsPaged } from "@/lib/getNews";
 import { getCategories } from "@/lib/getCategories";
 import Pagination from "@/components/Pagination";
 import BlogCategoriesSidebar from "@/components/BlogCategoriesSidebar";
+import { absoluteTitle } from "@/lib/seo";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +14,7 @@ const baseUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl");
 
 export const metadata: Metadata = {
   metadataBase: baseUrl,
-  title: "Blog – DKS",
+  title: absoluteTitle("Blog DKS"),
   description:
     "Blog DKS o nowoczesnych technologiach druku, urządzeniach biurowych i poligraficznych, serwisie oraz rozwiązaniach dla firm.",
   keywords: [
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Blog – DKS",
+    title: "Blog DKS",
     description:
       "Blog DKS o nowoczesnych technologiach druku, urządzeniach biurowych i poligraficznych, serwisie oraz rozwiązaniach dla firm.",
     url: "/blog",
@@ -46,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog – DKS",
+    title: "Blog DKS",
     description:
       "Blog DKS o nowoczesnych technologiach druku, urządzeniach biurowych i poligraficznych oraz serwisie.",
     images: ["/og/blog.jpg"],
@@ -67,7 +68,7 @@ export default async function BlogPage() {
   return (
     <>
       <TopSectionHeader
-        title="Blog"
+        title="Blog DKS"
         subtitle=""
         description="Oferujemy kompleksowy serwis urządzeń wielofunkcyjnych, obejmujący wszystkie wiodące marki dostępne na polskim rynku."
         img="/static/homepage/Header.webp"

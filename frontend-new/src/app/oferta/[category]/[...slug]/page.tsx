@@ -10,6 +10,7 @@ import ClientCategoryPage from "@/app/oferta/[category]/ClientCategoryPage";
 import { Heading1 } from "@/components/ui/Typography/Heading1";
 import getDescription from "@/content/oferta";
 import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
+import { absoluteTitle, productTitle } from "@/lib/seo";
 
 export interface FilterField {
   field: string;
@@ -31,11 +32,13 @@ type ProductLike = {
   id: string | number;
   slug?: string;
   model?: string;
+  canonical?: unknown;
   seo_title?: unknown;
   seo_description?: unknown;
   short_description?: unknown;
   description?: unknown;
   primarycategory?: string | null;
+  brand?: { name?: string; id?: string };
 };
 
 type PageParams = {
@@ -89,6 +92,13 @@ function asOptionalString(v: unknown): string | undefined {
   return typeof v === "string" ? v : undefined;
 }
 
+function getProductCanonical(product: ProductLike, fallbackSlug: string) {
+  const canonical = asOptionalString(product.canonical)?.trim();
+  if (canonical) return canonical;
+
+  return `/oferta/produkty/${product.slug || fallbackSlug}`;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { category, slug } = await params;
 
@@ -113,7 +123,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const ogImage = absUrl("/og/oferta.jpg");
 
     return {
-      title,
+      title: absoluteTitle(title),
       description,
       openGraph: {
         title,
@@ -149,7 +159,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const title = asOptionalString(product.seo_title)?.trim() || product.model || "Produkt DKS";
+  const canonicalSlug = product.slug || productSlug;
+  const canonicalPath = getProductCanonical(product, productSlug);
+  const title = productTitle({
+    model: product.model,
+    slug: canonicalSlug,
+    seo_title: asOptionalString(product.seo_title),
+    brand: product.brand,
+  });
   const description =
     toPlainText(product.seo_description, 155) ||
     toPlainText(product.short_description, 155) ||
@@ -157,11 +174,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     "Poznaj szczegóły produktu w ofercie DKS.";
 
   return {
-    title,
+    title: absoluteTitle(title),
     description,
+    alternates: {
+      canonical: canonicalPath,
+    },
     openGraph: {
       title,
       description,
+      url: canonicalPath,
     },
     twitter: {
       card: "summary",

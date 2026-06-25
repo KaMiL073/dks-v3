@@ -328,3 +328,11 @@ export async function getEventCreateBySlug(slug: string) {
     throw getReadableError(error);
   }
 }
+
+export function getEventHeroTitle(event: EventCreateItem) {
+  const hero = event.components_event?.find(
+    (component) => component.collection === "hero_section"
+  );
+
+  return hero?.item?.title?.trim() || null;
+}

@@ -12,6 +12,7 @@ export interface Product {
   description?: string;
   seo_title?: string;
   seo_description?: string;
+  canonical?: string;
   short_description?: string;
 
   main_image?: { id: string } | string;
@@ -209,6 +210,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
           "description",
           "seo_title",
           "seo_description",
+          "canonical",
           "short_description",
           "primarycategory",
           "main_image.*",

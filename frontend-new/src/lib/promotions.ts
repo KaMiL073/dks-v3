@@ -32,6 +32,11 @@ const listFields = [
   "components_promotions.item",
   "components_promotions.item.*",
 
+  // hero_section
+  "components_promotions.item:hero_section.title",
+  "components_promotions.item:hero_section.image",
+  "components_promotions.item:hero_section.background_image",
+
   // rich_content
   "components_promotions.item:rich_content.header_type",
   "components_promotions.item:rich_content.heading_styles",
@@ -110,6 +115,20 @@ function logDirectusError(label: string, error: unknown) {
   if (error instanceof Error) {
     console.error(`${label} message:`, error.message);
   }
+}
+
+export function getPromotionHeroTitle(promo: PromotionItem) {
+  const components = Array.isArray(promo.components_promotions)
+    ? promo.components_promotions
+    : [];
+
+  const hero = components.find(
+    (component) => component.collection === "hero_section"
+  );
+
+  const title = hero?.item?.title;
+
+  return typeof title === "string" && title.trim() ? title.trim() : null;
 }
 
 export async function getPromotions() {

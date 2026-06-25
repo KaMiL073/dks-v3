@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getPromotions, type PromotionItem } from "@/lib/promotions";
+import {
+  getPromotionHeroTitle,
+  getPromotions,
+  type PromotionItem,
+} from "@/lib/promotions";
 import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
+import { absoluteTitle } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -19,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = desc?.seoDescription || "Sprawdź aktualne promocje DKS.";
 
   return {
-    title,
+    title: absoluteTitle(title),
     description,
     openGraph: {
       title,
@@ -73,9 +78,8 @@ function getImageUrl(image?: string | null) {
 }
 
 export default async function PromotionsPage() {
-  const desc = await getOfferPageDescription(["promocje", "/promocje"]);
   const promotions = await getPromotions();
-  const heading = desc?.title || "Promocje";
+  const heading = "Promocje";
 
   return (
     <main className="px-6 py-20 lg:px-28">
@@ -84,6 +88,7 @@ export default async function PromotionsPage() {
       <div className="grid grid-cols-1 gap-10 md:grid-cols-2 xl:grid-cols-3">
         {promotions.map((promo) => {
           const imageUrl = getImageUrl(getHeroImage(promo));
+          const title = getPromotionHeroTitle(promo) || "Promocja";
 
           return (
             <Link
@@ -96,7 +101,7 @@ export default async function PromotionsPage() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={imageUrl}
-                    alt={promo.name ?? "Promocja"}
+                    alt={title}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
@@ -107,7 +112,7 @@ export default async function PromotionsPage() {
               </div>
 
               <div className="flex flex-1 flex-col gap-4 p-6">
-                <h2 className="text-2xl font-semibold">{promo.name}</h2>
+                <h2 className="text-2xl font-semibold">{title}</h2>
               </div>
             </Link>
           );
