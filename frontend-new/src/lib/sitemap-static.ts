@@ -1,14 +1,39 @@
 import fs from "node:fs";
 import path from "node:path";
 
-function getAppDir(): string {
+const fallbackStaticRoutes = [
+  "/",
+  "/blog",
+  "/certyfikaty",
+  "/kariera",
+  "/klauzula-ochrony-danych-data-protection",
+  "/kontakt",
+  "/kontrakt-obslugi-serwisowej",
+  "/o-firmie",
+  "/ochrona-sygnalistow",
+  "/oddzialy",
+  "/oferta",
+  "/oferta/produkty",
+  "/oferta/rozwiazania-video",
+  "/oferta/xsm-medyk",
+  "/promocje",
+  "/regulamin-platnosci-online",
+  "/serwis-urzadzen-produkcyjnych",
+  "/serwis-urzadzen-wielkoformatowych",
+  "/serwis-urzadzen-wielofunkcyjnych",
+  "/strefa-klienta",
+  "/wydarzenia",
+  "/zgloszenie-serwisowe",
+] as const;
+
+function getAppDir(): string | null {
   const srcAppDir = path.join(process.cwd(), "src", "app");
   const appDir = path.join(process.cwd(), "app");
 
   if (fs.existsSync(srcAppDir)) return srcAppDir;
   if (fs.existsSync(appDir)) return appDir;
 
-  throw new Error("Nie znaleziono katalogu app ani src/app");
+  return null;
 }
 
 function shouldSkipSegment(segment: string): boolean {
@@ -47,6 +72,10 @@ function walk(dir: string, baseRoute = ""): string[] {
 
 export function getStaticAppRoutes(): string[] {
   const appDir = getAppDir();
+
+  if (!appDir) {
+    return [...fallbackStaticRoutes];
+  }
 
   const routes = walk(appDir).filter((route) => {
     if (route === "/sitemap" || route === "/robots") return false;
