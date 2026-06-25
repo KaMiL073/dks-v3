@@ -7,6 +7,9 @@ const fallbackTitle = "Drukarki biurowe, wielkoformatowe i cyfrowe maszyny polig
 const fallbackDescription =
   "Dostarczamy urządzenia drukujące do biur, cyfrowe maszyny poligraficzne i drukarki wielkoformatowe. Sprzedajemy i wynajmujemy urządzenia nowe i poleasingowe.";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata(): Promise<Metadata> {
   const desc = mergeOfferPageDescription(
     await getOfferPageDescription(["oferta", "/oferta"]),
