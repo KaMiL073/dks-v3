@@ -93,10 +93,45 @@ function asOptionalString(v: unknown): string | undefined {
 }
 
 function getProductCanonical(product: ProductLike, fallbackSlug: string) {
+  const canonicalSlug = product.slug || fallbackSlug;
   const canonical = asOptionalString(product.canonical)?.trim();
-  if (canonical) return canonical;
+  if (canonical && canonical.includes("/oferta/produkty/")) return canonical;
 
-  return `/oferta/produkty/${product.slug || fallbackSlug}`;
+  return `/oferta/produkty/${canonicalSlug}`;
+}
+
+function getProductMetadata(product: ProductLike, productSlug: string): Metadata {
+  const canonicalSlug = product.slug || productSlug;
+  const canonicalPath = getProductCanonical(product, productSlug);
+  const title = productTitle({
+    model: product.model,
+    slug: canonicalSlug,
+    seo_title: asOptionalString(product.seo_title),
+    brand: product.brand,
+  });
+  const description =
+    toPlainText(product.seo_description, 155) ||
+    toPlainText(product.short_description, 155) ||
+    toPlainText(product.description, 155) ||
+    "Poznaj szczegóły produktu w ofercie DKS.";
+
+  return {
+    title: absoluteTitle(title),
+    description,
+    alternates: {
+      canonical: canonicalPath,
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonicalPath,
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -108,6 +143,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (slug.length === 1) {
     const subcategory = slug[0];
+    const product = (await getProductBySlug(subcategory)) as ProductLike | null;
+
+    if (product) {
+      return getProductMetadata(product, subcategory);
+    }
+
     const desc = mergeOfferPageDescription(
       await getOfferPageDescription([
         subcategory,
@@ -159,37 +200,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const canonicalSlug = product.slug || productSlug;
-  const canonicalPath = getProductCanonical(product, productSlug);
-  const title = productTitle({
-    model: product.model,
-    slug: canonicalSlug,
-    seo_title: asOptionalString(product.seo_title),
-    brand: product.brand,
-  });
-  const description =
-    toPlainText(product.seo_description, 155) ||
-    toPlainText(product.short_description, 155) ||
-    toPlainText(product.description, 155) ||
-    "Poznaj szczegóły produktu w ofercie DKS.";
-
-  return {
-    title: absoluteTitle(title),
-    description,
-    alternates: {
-      canonical: canonicalPath,
-    },
-    openGraph: {
-      title,
-      description,
-      url: canonicalPath,
-    },
-    twitter: {
-      card: "summary",
-      title,
-      description,
-    },
-  };
+  return getProductMetadata(product, productSlug);
 }
 
 export default async function ProductCatchAllPage({ params }: PageProps) {
