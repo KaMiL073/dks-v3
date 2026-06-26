@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 
 import { getCategories } from "@/lib/getCategories";
 import { getSinglePost, getNewsPaged } from "@/lib/getNews";
@@ -49,7 +49,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const baseUrl = siteBaseUrl();
   const description = post.lead?.slice(0, 155) ?? "";
 
-  const canonicalPath = `/blog/${category}/${post.slug ?? slug}`;
+  const canonicalCategory = post.categorySlug || category;
+  const canonicalPath = `/blog/${canonicalCategory}/${post.slug ?? slug}`;
   const seoTitle = post.seo_title?.trim();
   const title = seoTitle || post.title || "";
   const canonical = new URL(canonicalPath, baseUrl).toString();
@@ -91,6 +92,10 @@ export default async function BlogArticlePage({ params }: PageProps) {
 
   if (!post) {
     notFound();
+  }
+
+  if (post.categorySlug && post.categorySlug !== category) {
+    permanentRedirect(`/blog/${post.categorySlug}/${post.slug ?? slug}`);
   }
 
   const categories = (await getCategories()).map((item) => ({
