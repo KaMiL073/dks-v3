@@ -18,23 +18,23 @@ const baseUrl = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://dks.pl");
 export const metadata: Metadata = {
   metadataBase: baseUrl,
 
-  title: "Strefa klienta – DKS",
+  title: "Strefa klienta DKS - zgłoszenia serwisowe, liczniki i kontakt",
   description:
-    "Strefa klienta DKS – odpowiedzi na najczęściej zadawane pytania oraz dane kontaktowe do działów obsługi.",
+    "Strefa klienta DKS - zgłoszenia serwisowe, zamawianie materiałów eksploatacyjnych, liczniki, FAQ oraz dane kontaktowe do działów obsługi.",
 
   alternates: {
     canonical: "/strefa-klienta",
   },
 
   robots: {
-    index: false,
+    index: true,
     follow: true,
   },
 
   openGraph: {
-    title: "Strefa klienta – DKS",
+    title: "Strefa klienta DKS - zgłoszenia serwisowe, liczniki i kontakt",
     description:
-      "Strefa klienta DKS – FAQ oraz dane kontaktowe do działów obsługi.",
+      "Strefa klienta DKS - formularze obsługowe, FAQ oraz dane kontaktowe do działów obsługi.",
     url: "/strefa-klienta",
     siteName: "DKS",
     locale: "pl_PL",
