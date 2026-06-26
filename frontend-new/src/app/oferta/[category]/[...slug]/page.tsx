@@ -1,24 +1,12 @@
-import { notFound } from "next/navigation";
-import { headers } from "next/headers";
+import { notFound, permanentRedirect } from "next/navigation";
 import type { Metadata } from "next";
-import type { ComponentProps } from "react";
 
 import { getProductBySlug } from "@/lib/products";
-import ProductPage from "./ProductPage";
-import JsonLd from "@/components/seo/JsonLd";
 import ClientCategoryPage from "@/app/oferta/[category]/ClientCategoryPage";
 import { Heading1 } from "@/components/ui/Typography/Heading1";
 import getDescription from "@/content/oferta";
 import { getOfferPageDescription, mergeOfferPageDescription } from "@/lib/pages";
 import { absoluteTitle, productTitle } from "@/lib/seo";
-
-export interface FilterField {
-  field: string;
-  label: string;
-  options?: { text: string; value: string }[];
-}
-
-type ProductPageProduct = ComponentProps<typeof ProductPage>["product"];
 
 type OfferDesc = {
   title?: string;
@@ -49,16 +37,6 @@ type PageParams = {
 type PageProps = {
   params: Promise<PageParams>;
 };
-
-async function getRequestBaseUrl() {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host");
-  const proto = h.get("x-forwarded-proto") ?? "http";
-
-  if (!host) return "http://localhost:3000";
-
-  return `${proto}://${host}`;
-}
 
 function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl").replace(/\/$/, "");
@@ -217,6 +195,12 @@ export default async function ProductCatchAllPage({ params }: PageProps) {
       notFound();
     }
 
+    const product = (await getProductBySlug(subcategory)) as ProductLike | null;
+
+    if (product) {
+      permanentRedirect(`/oferta/produkty/${product.slug || subcategory}`);
+    }
+
     const desc = mergeOfferPageDescription(
       await getOfferPageDescription([
         subcategory,
@@ -254,77 +238,7 @@ export default async function ProductCatchAllPage({ params }: PageProps) {
     notFound();
   }
 
-  const safeProductLike: ProductLike = {
-    ...raw,
-    slug: asOptionalString(raw.slug),
-    model: asOptionalString(raw.model),
-    seo_title: asOptionalString(raw.seo_title),
-    seo_description: asOptionalString(raw.seo_description),
-    short_description: asOptionalString(raw.short_description),
-    description: asOptionalString(raw.description),
-    primarycategory:
-      typeof raw.primarycategory === "string" ? raw.primarycategory : raw.primarycategory ?? null,
-  };
-
-  const productForPage = safeProductLike as unknown as ProductPageProduct;
-
-  const canonicalSlug = safeProductLike.slug || productSlug;
-  const pageUrl = absUrl(`/oferta/produkty/${canonicalSlug}`);
-  const productName = safeProductLike.model || canonicalSlug.replaceAll("-", " ");
-
-  const schemaDescription =
-    (typeof safeProductLike.seo_description === "string" ? safeProductLike.seo_description : "") ||
-    toPlainText(safeProductLike.short_description, 300) ||
-    toPlainText(safeProductLike.description, 300) ||
-    "Poznaj szczegóły produktu w ofercie DKS.";
-
-  const productJsonLd: Record<string, unknown> = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: productName,
-    url: pageUrl,
-    mainEntity: {
-      "@type": "Product",
-      name: productName,
-      description: toPlainText(schemaDescription, 300),
-    },
-  };
-
-  let filters: FilterField[] = [];
-
-  try {
-    const origin = await getRequestBaseUrl();
-
-    const primary =
-      typeof safeProductLike.primarycategory === "string"
-        ? safeProductLike.primarycategory.trim()
-        : "";
-
-    const categoryKey = primary || category || "produkty";
-    const url = `${origin}/api/products/filters?category=${encodeURIComponent(categoryKey)}`;
-    const res = await fetch(url, { cache: "no-store" });
-
-    if (res.ok) {
-      const data: unknown = await res.json();
-
-      if (
-        data &&
-        typeof data === "object" &&
-        Array.isArray((data as { filters?: unknown }).filters)
-      ) {
-        filters = (data as { filters: FilterField[] }).filters;
-      }
-    }
-  } catch {
-    // celowo pomijamy błąd pobierania filtrów
-  }
-
-  return (
-    <>
-      <JsonLd data={productJsonLd} />
-      <ProductPage product={productForPage} filtersMeta={filters} />
-    </>
-  );
+  permanentRedirect(`/oferta/produkty/${raw.slug || productSlug}`);
 }
 // import { notFound } from "next/navigation";
 // import { headers } from "next/headers";
