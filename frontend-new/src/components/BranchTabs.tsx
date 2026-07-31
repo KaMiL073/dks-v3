@@ -48,19 +48,17 @@ const BranchTabs: React.FC<Props> = ({
 
   return (
     <div className="py-6 flex flex-col lg:flex-row gap-6 lg:gap-12">
-      {/* Lewa kolumna (desktop) lub całość (mobile) */}
-      <div className="w-full lg:w-1/3">
+      {/* Akordeon mobilny */}
+      <div className="w-full lg:hidden">
         {tabs.map((tab) => {
-          const isActive = activeTab === tab.key;
           const isOpen = open[tab.key as keyof typeof open];
           return (
             <div key={tab.key}>
               <button
                 type="button"
+                aria-expanded={isOpen}
+                aria-controls={`mobile-panel-${tab.key}`}
                 onClick={() => {
-                  // Na desktopie zmieniamy aktywny tab
-                  setActiveTab(tab.key);
-                  // Na mobile przełączamy rozwinięcie sekcji
                   setOpen((prev) => ({
                     ...prev,
                     [tab.key]: !prev[tab.key as keyof typeof prev],
@@ -80,7 +78,8 @@ const BranchTabs: React.FC<Props> = ({
               </button>
               {/* Treść na mobile: widoczna tylko po rozwinięciu */}
               <div
-                className={`lg:hidden overflow-hidden transition-all ${
+                id={`mobile-panel-${tab.key}`}
+                className={`overflow-hidden transition-all ${
                   isOpen ? "max-h-[1000px] py-4" : "max-h-0"
                 }`}
               >
@@ -94,12 +93,44 @@ const BranchTabs: React.FC<Props> = ({
         })}
       </div>
 
-      {/* Prawa kolumna - widoczna tylko na desktopie */}
+      {/* Zakładki desktopowe */}
+      <div
+        role="tablist"
+        aria-label="Informacje o oddziale"
+        className="hidden lg:block w-full lg:w-1/3"
+      >
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            role="tab"
+            id={`tab-${tab.key}`}
+            aria-selected={activeTab === tab.key}
+            aria-controls={`panel-${tab.key}`}
+            tabIndex={activeTab === tab.key ? 0 : -1}
+            onClick={() => setActiveTab(tab.key)}
+            className="w-full px-6 py-4 border-b-2 border-border-primary flex justify-between bg-gray-300"
+          >
+            <span className="text-xl lg:text-2xl font-semibold text-Text-headings">
+              {tab.label}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Panel aktywnej zakładki desktopowej */}
       <div className="hidden lg:block w-full lg:w-2/3  2xl:pl-8 bg-surface-page">
-        <div
-          className="text-xl text-Text-body leading-6"
-          dangerouslySetInnerHTML={{ __html: tabContent[activeTab] }}
-        />
+        {tabs.map((tab) => (
+          <div
+            key={tab.key}
+            role="tabpanel"
+            id={`panel-${tab.key}`}
+            aria-labelledby={`tab-${tab.key}`}
+            hidden={activeTab !== tab.key}
+            className="text-xl text-Text-body leading-6"
+            dangerouslySetInnerHTML={{ __html: tabContent[tab.key] }}
+          />
+        ))}
       </div>
     </div>
   );
