@@ -11,6 +11,7 @@ export type BranchContact = {
 export type BranchMapBranch = {
   fullName: string;
   address: string;
+  address2?: string;
   phone: string;
   email: string;
   salesContact: BranchContact;
@@ -26,6 +27,7 @@ const BranchMap: React.FC<BranchMapProps> = ({ branch }) => {
   const {
     fullName,
     address,
+    address2,
     phone,
     email,
     salesContact,
@@ -65,15 +67,20 @@ const BranchMap: React.FC<BranchMapProps> = ({ branch }) => {
         <div className="flex-1 min-w-[220px]">
           <p className="text-Text-body text-xl font-semibold">{fullName}</p>
           <p className="text-Text-body text-xl">{address}</p>
+          {address2 && <p className="text-Text-body text-xl">{address2}</p>}
 
           <p className="mt-2">
             <span className="font-semibold">Tel:</span>{" "}
-            <span className="underline">{phone || "-"}</span>
+            <a className="underline" href={`tel:${phone.replace(/\s+/g, "")}`}>
+              {phone || "-"}
+            </a>
           </p>
 
           <p>
             <span className="font-semibold">E-mail:</span>{" "}
-            <span className="underline">{email || "-"}</span>
+            <a className="underline" href={`mailto:${email}`}>
+              {email || "-"}
+            </a>
           </p>
         </div>
 
@@ -85,12 +92,16 @@ const BranchMap: React.FC<BranchMapProps> = ({ branch }) => {
 
           <p className="mt-2">
             <span className="font-semibold">Tel:</span>{" "}
-            <span className="underline">{salesPhone || "-"}</span>
+            <a className="underline" href={`tel:${salesPhone.replace(/\s+/g, "")}`}>
+              {salesPhone || "-"}
+            </a>
           </p>
 
           <p>
             <span className="font-semibold">E-mail:</span>{" "}
-            <span className="underline">{salesEmail || "-"}</span>
+            <a className="underline" href={`mailto:${salesEmail}`}>
+              {salesEmail || "-"}
+            </a>
           </p>
         </div>
 
@@ -102,12 +113,16 @@ const BranchMap: React.FC<BranchMapProps> = ({ branch }) => {
 
           <p className="mt-2">
             <span className="font-semibold">Tel:</span>{" "}
-            <span className="underline">{servicePhone || "-"}</span>
+            <a className="underline" href={`tel:${servicePhone.replace(/\s+/g, "")}`}>
+              {servicePhone || "-"}
+            </a>
           </p>
 
           <p>
             <span className="font-semibold">E-mail:</span>{" "}
-            <span className="underline">{serviceEmail || "-"}</span>
+            <a className="underline" href={`mailto:${serviceEmail}`}>
+              {serviceEmail || "-"}
+            </a>
           </p>
         </div>
       </div>

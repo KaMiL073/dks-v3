@@ -22,49 +22,6 @@ type PageProps = {
   params: Promise<PageParams>;
 };
 
-type BranchSeo = {
-  href: string;
-  title: string;
-  fullName?: string;
-  image: string;
-  description: string;
-  metaTitle?: string;
-  metaDescription?: string;
-
-  offerTab?: unknown;
-  leaseTab?: unknown;
-  photocopiersTab?: unknown;
-  serviceTab?: unknown;
-
-  telephone?: string;
-  phone?: string;
-  tel?: string;
-  email?: string;
-  mail?: string;
-
-  streetAddress?: string;
-  addressLocality?: string;
-  postalCode?: string;
-
-  address?: {
-    streetAddress?: string;
-    street?: string;
-    addressLocality?: string;
-    locality?: string;
-    postalCode?: string;
-    postal?: string;
-  };
-
-  geo?: { latitude?: number; longitude?: number };
-  coordinates?: { latitude?: number; longitude?: number };
-  latitude?: number;
-  longitude?: number;
-
-  srcMap?: string;
-  salesContact?: { phones?: string[]; emails?: string[] };
-  serviceContact?: { phones?: string[]; emails?: string[] };
-};
-
 function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || "https://dks.pl").replace(/\/$/, "");
 }
@@ -107,9 +64,7 @@ function toStringSafe(v: unknown, fallback = ""): string {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { location } = await params;
 
-  const branch = branches.find((b) => b.href === `/oddzialy/${location}`) as
-    | BranchSeo
-    | undefined;
+  const branch = branches.find((b) => b.href === `/oddzialy/${location}`);
 
   if (!branch) return {};
 
@@ -147,9 +102,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function OddzialPage({ params }: PageProps) {
   const { location } = await params;
 
-  const branch = branches.find((b) => b.href === `/oddzialy/${location}`) as
-    | BranchSeo
-    | undefined;
+  const branch = branches.find((b) => b.href === `/oddzialy/${location}`);
 
   if (!branch) {
     notFound();
@@ -159,25 +112,14 @@ export default async function OddzialPage({ params }: PageProps) {
   const branchUrl = absUrl(branch.href);
   const localBusinessId = `${branchUrl}#localbusiness`;
 
-  const telephone = branch.telephone || branch.phone || branch.tel || "";
-  const email = branch.email || branch.mail || "";
-
-  const addressObj = branch.address;
-  const streetAddress =
-    addressObj?.streetAddress || addressObj?.street || branch.streetAddress || "";
-  const addressLocality =
-    addressObj?.addressLocality || addressObj?.locality || branch.addressLocality || "";
-  const postalCode = addressObj?.postalCode || addressObj?.postal || branch.postalCode || "";
-
-  const geo = branch.geo || branch.coordinates;
-  const latitude = geo?.latitude ?? branch.latitude;
-  const longitude = geo?.longitude ?? branch.longitude;
+  const telephone = branch.phone;
+  const email = branch.email;
 
   const localBusinessSchema: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "@id": localBusinessId,
-    name: branch.fullName || branch.title,
+    name: branch.fullName,
     url: branchUrl,
     image: absUrl(branch.image) || "https://dks.pl/static/logo-dks.svg",
     parentOrganization: { "@id": `${baseUrl}/#organization` },
@@ -186,25 +128,14 @@ export default async function OddzialPage({ params }: PageProps) {
   if (telephone) localBusinessSchema.telephone = telephone;
   if (email) localBusinessSchema.email = email;
 
-  if (streetAddress || addressLocality || postalCode) {
-    localBusinessSchema.address = {
-      "@type": "PostalAddress",
-      ...(streetAddress ? { streetAddress } : {}),
-      ...(addressLocality ? { addressLocality } : {}),
-      ...(postalCode ? { postalCode } : {}),
-      addressCountry: "PL",
-    };
-  }
-
-  if (typeof latitude === "number" && typeof longitude === "number") {
-    localBusinessSchema.geo = {
-      "@type": "GeoCoordinates",
-      latitude,
-      longitude,
-    };
-  }
-
-  const addressLine = [streetAddress, postalCode, addressLocality].filter(Boolean).join(", ");
+  localBusinessSchema.address = {
+    "@type": "PostalAddress",
+    streetAddress: branch.streetAddress,
+    postalCode: branch.postalCode,
+    addressLocality: branch.addressLocality,
+    addressRegion: branch.addressRegion,
+    addressCountry: branch.addressCountry,
+  };
 
   const normalizeContact = (c?: { phones?: string[]; emails?: string[] }): BranchContact => ({
     phones: c?.phones?.length ? c.phones : [telephone || "-"],
@@ -212,11 +143,12 @@ export default async function OddzialPage({ params }: PageProps) {
   });
 
   const branchForMap: BranchMapBranch = {
-    fullName: branch.fullName || branch.title,
-    address: addressLine || branch.title,
-    phone: telephone || "-",
-    email: email || "-",
-    srcMap: branch.srcMap || "",
+    fullName: branch.fullName,
+    address: branch.address,
+    address2: branch.address2,
+    phone: telephone,
+    email,
+    srcMap: branch.srcMap,
     salesContact: normalizeContact(branch.salesContact),
     serviceContact: normalizeContact(branch.serviceContact),
   };

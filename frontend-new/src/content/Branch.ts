@@ -14,6 +14,11 @@ export type Branch = {
   metaDescription: string;
   address: string;
   address2?: string;
+  streetAddress: string;
+  postalCode: string;
+  addressLocality: string;
+  addressRegion: string;
+  addressCountry: "PL";
   phone: string;
   email: string;
   offerTab: string;
@@ -60,6 +65,11 @@ export const branches: Branch[] = [
     metaTitle: 'Kserokopiarki do biura: sprzedaż i dzierżawa – DKS Gdańsk',
     metaDescription: 'Oferujemy sprzedaż i dzierżawę drukarek i kserokopiarek wielofunkcyjnych do biura. Dostarczamy drukarki wielkoformatowe i poligraficzne. Oferta na stronie.',
     address: 'ul. Energetyczna 15, 80-180 Kowale',
+    streetAddress: 'ul. Energetyczna 15',
+    postalCode: '80-180',
+    addressLocality: 'Kowale',
+    addressRegion: 'pomorskie',
+    addressCountry: 'PL',
     phone: '58 309 03 07',
     email: 'info.gdansk@dks.pl',
     offerTab: 'Urządzenia do druku są nieodzowną częścią biura, przyśpieszają one standardową pracę, pozwalają na szybkie powielanie i przesyłanie dokumentów. Dostęp do dokumentów w chmurze jest możliwy z każdego miejsca, dla każdej uprawnionej osoby. Digitalizacja dokumentów staje się jeszcze bardziej wydajniejsza dzięki zautomatyzowanym przepływom pracy skanowania, wyszukiwania i przechowywania. Dodatkowo oferowane przez nas produkty mają niskie zużycie energii, cechuje je cicha praca, a jakość wydruków jest na wysokim poziomie. W naszej ofercie znajdziesz rozwiązania drukujące od biurowych drukarek, po produkcyjne urządzenia mało i wielkoformatowe. Zapewniamy również materiały eksploatacyjne i oprogramowanie do zarządzania wydrukami.',
@@ -87,8 +97,8 @@ export const branches: Branch[] = [
                   <p>Dostarczamy urządzenia takich marek, jak HP, Canon, Konica Minolta, Lexmark, KIP, Es-Te, OKI, Ricoh, Kyocera. W skład naszego portfolio wchodzą kserokopiarki, drukarki laserowe i skanery, a także różnorodny <a title="sprzęt poligraficzny" href="https://www.dks.pl/oferta/rozwiazania-dla-poligrafii" target="_self"> sprzęt poligraficzny</a>. Dzięki temu możemy tworzyć spersonalizowane oferty i zaspokajać bardzo specyficzne oczekiwania naszych Klientów. Jeżeli zamierzasz kupić lub wynająć kserokopiarkę, to wizyta w naszym oddziale pozwoli Ci szybko przeprowadzić niezbędne formalności.</p>
                   <h2>Kserokopiarki renomowanych marek na sprzedaż i na wynajem</h2>
                   <p>Dostarczamy <strong>maszyny biurowe i poligraficzne nowe i używane</strong> (poleasingowe). Możesz je kupić lub wynająć: <a title="dzierżawa kserokopiarek" href="https://www.dks.pl/wynajem-urzadzen-wielofunkcyjnych" target="_self">dzierżawa kserokopiarek</a> i drukarek jest ważną częścią naszej działalności. Zamiana dużej inwestycji w zakup sprzętu na relatywnie niski miesięczny czynsz jest szczególnie atrakcyjna dla młodych firm. Wynajem jest też optymalny w sytuacji, w której potrzebujesz większej liczby maszyn drukujących do realizacji projektu o ściśle określonych ramach czasowych. </p>
-                  <p>Zachęcamy do kontaktu, sprawdź, jak bardzo korzystne są nasze warunki dzierżawy. Chętnie pomożemy dobrać urządzenia spełniające Twoje wymagania. W czasie trwania kontraktu będziemy dbali o to, aby każdego dnia działały wydajnie i bezawaryjne.</p>
-                  <p>Zatrudniani przez nas handlowcy obsługują Klientów z Warszawy i całego województwa mazowieckiego. Realizujemy umowy z podmiotami z Pruszkowa, Piaseczna, Łomianek, Legionowa, Marek. Zachęcamy do kontaktu telefonicznego lub do odwiedzenia naszego biura przy ul. Muszkieterów 15,.</p>
+                  <p>Zachęcamy do kontaktu, sprawdź, jak bardzo korzystne są nasze warunki dzierżawy. Chętnie pomożemy dobrać urządzenia spełniające Twoje wymagania. W czasie trwania kontraktu będziemy dbali o to, aby każdego dnia działały wydajnie i bezawaryjnie.</p>
+                  <p>Zatrudniani przez nas handlowcy obsługują Klientów z Warszawy i całego województwa mazowieckiego. Realizujemy umowy z podmiotami z Pruszkowa, Piaseczna, Łomianek, Legionowa, Marek. Zachęcamy do kontaktu telefonicznego lub do odwiedzenia naszego biura przy ul. Muszkieterów 15.</p>
                       <h2>Oferta sprzedaży i dzierżawy kserokopiarek w Warszawie</h2>
                   <p>
                       Specjalizujemy się w sprzedaży, dzierżawie oraz serwisie urządzeń drukujących do biur, a także do poligrafii. 
@@ -128,14 +138,19 @@ export const branches: Branch[] = [
                   `,
     metaTitle: 'Kserokopiarki i urządzenia biurowe klasy premium – DKS Warszawa',
     metaDescription: 'Dostarczamy wydajne urządzenia biurowe, drukarki i kserokopiarki klasy premium. Oferujemy drukarki poligraficzne i wielkoformatowe. Sprawdź szczegóły oferty.',
-    address: ' Oddział w Warszawie: ul. Muszkieterów 15, 02-273 Warszawa',
+    address: 'Oddział w Warszawie: ul. Muszkieterów 15, 02-273 Warszawa',
     address2: 'Magazyn: Park Magazynowy BOXZONE Puchały, ul. Żwirowa 68, 05-090 Puchały',
+    streetAddress: 'ul. Muszkieterów 15',
+    postalCode: '02-273',
+    addressLocality: 'Warszawa',
+    addressRegion: 'mazowieckie',
+    addressCountry: 'PL',
     phone: '22 632 12 09',
     email: 'info.warszawa@dks.pl',
     offerTab: 'Specjalizujemy się w sprzedaży, dzierżawie oraz serwisie urządzeń drukujących do biur, a także do poligrafii. W skład naszego portfolio wchodzą kserokopiarki, drukarki cyfrowe czy skanery wielkoformatowe. Dzięki szerokiemu wachlarzowi asortymentu, oferowane przez nas produkty, rozwiązania jak i usługi mają na celu efektywne zaspokojenie indywidualnych potrzeb naszych Klientów. Dzierżawa kserokopiarek, którą oferujemy łączy się z wieloma zaletami, dzięki tej usłudze zapewniamy wysokiej jakości druk monochromatyczny oraz kolorowy, cykliczne przeglądy urządzeń, fachowy serwis oraz niskie ceny wykonanych kopii. Fundamentem naszej firmy jest długoletnie doświadczenie, profesjonalizm, szybkość działania i elastyczne podejście do każdego klienta indywidualnie. Zachęcamy do kontaktu z naszym warszawskim oddziałem – zaoferujemy korzystne warunki wynajmu i pomożemy dobrać urządzenie spełniające Twoje wymagania, a w czasie trwania kontraktu będziemy dbali, aby urządzenia każdego dnia sprawnie działały.',
     leaseTab: 'Działamy na rynku już prawie trzy dekady, dlatego pozwalamy sobie oferować naszym Klientom naszym zdaniem najwygodniejszą opcję użytkowania sprzętu drukującego jaką jest dzierżawa. Klient płaci jedynie za pojedyncze kopie, a my dbamy o całą resztę. Zapewniamy wymianę urządzeń po upływie okresu umowy lub w czasie jej trwania, jeżeli zajdzie potrzeba wymiany urządzenia na bardziej wydajnego, jak najbardziej jesteśmy w stanie zrobić taką wymianę. Dzięki takiemu rozwiązaniu jesteśmy w stanie idealnie dopasować urządzenia drukujące do aktualnych potrzeb Klienta. Nasz zespół Doradców Handlowych obsługuje klientów z całego województwa mazowieckiego. Mamy podpisane umowy z podmiotami z takich miast jak Pruszków, Piaseczno, Łomianki, Legionowo, Marki. Zachęcamy do podjęcia współpracy z naszym oddziałem w Warszawie. Możesz skontaktować się z nami w łatwy sposób poprzez wypełnienie formularza zgłoszeniowego na stronie „szybki kontakt”. Zapraszamy do kontaktu.',
     photocopiersTab: 'Jesteśmy Autoryzowanym Dystrybutorem i Serwisem Canon, Konica Minolta, Lexmark, HP. Prezentujemy bardzo szeroką ofertę produktów związanych z drukiem cyfrowym i przetwarzaniem obrazu, które można kupić lub wynająć. W naszej ofercie znajdują się nowe i poleasingowe urządzenia do drukowania, skanowania, kopiowania i przesyłania dokumentów. Proponujemy również materiały eksploatacyjne oraz części zamienne takich marek jak: Canon, Konica Minolta, Ricoh, OKI, Toshiba, HP i wielu innych. Naszą bogatą ofertę dopełnia oprogramowanie. Wdrażamy i szkolimy z systemów druku, które świetnie się sprawdzają w organizacjach biznesowych, które realnie wpływają na zmniejszenie kosztów druku, monitorują wydruki, a także przyczyniają się do zwiększenia wydajności pracy na urządzeniach.',
-    serviceTab: 'Proponujemy podpisanie umowy dzierżawy lub samej umowy serwisowej, dlaczego? Ponieważ to na nas spada cała opieka nad urządzeniem. Zapewniamy pełen serwis w zamian za rozliczenie za każdą kopię. Dzięki takiemu rozwiązaniu masz pełną kontrolę nad wydatkami. Długoletnia współpraca ze światowymi liderami takimi jak Canon, Konica Minolta, Lexmark, HP procentuje bardzo dobrze wykwalifikowaną kadrą Serwisantów, którzy na bieżąco odbywają szkolenia i kursy. Wychodząc na przeciw oczekiwaniom Klienta, aby możliwie usprawnić i przyśpieszyć szybkość przyjmowania zleceń, rozbudowaliśmy nasz dział Obsługi Klienta, w którym od poniedziałku do piątku, w godzinach 8:00 - 16:00 rozwiązywane są wszelkie tematy.',
+    serviceTab: 'Proponujemy podpisanie umowy dzierżawy lub samej umowy serwisowej, dlaczego? Ponieważ to na nas spada cała opieka nad urządzeniem. Zapewniamy pełen serwis w zamian za rozliczenie za każdą kopię. Dzięki takiemu rozwiązaniu masz pełną kontrolę nad wydatkami. Długoletnia współpraca ze światowymi liderami takimi jak Canon, Konica Minolta, Lexmark, HP procentuje bardzo dobrze wykwalifikowaną kadrą Serwisantów, którzy na bieżąco odbywają szkolenia i kursy. Wychodząc naprzeciw oczekiwaniom Klienta, aby możliwie usprawnić i przyspieszyć przyjmowanie zleceń, rozbudowaliśmy nasz dział Obsługi Klienta, w którym od poniedziałku do piątku, w godzinach 8:00 - 16:00 rozwiązywane są wszelkie tematy.',
     salesContact: {
       phones: ['22 632 12 09'],
       emails: ['info.warszawa@dks.pl'],
@@ -196,6 +211,11 @@ export const branches: Branch[] = [
     metaTitle: 'Urządzenia biurowe: nowe i używane kserokopiarki – DKS Katowice',
     metaDescription: 'Nowe i używane urządzenia biurowe oraz biznesowe kserokopiarki wielofunkcyjne najłatwiej kupisz lub wynajmiesz w DKS w Katowicach. Sprawdź szczegóły oferty.',
     address: 'ul. Ks. Bp. Bednorza 2a-6, 40-384 Katowice',
+    streetAddress: 'ul. Ks. Bp. Bednorza 2a-6',
+    postalCode: '40-384',
+    addressLocality: 'Katowice',
+    addressRegion: 'śląskie',
+    addressCountry: 'PL',
     phone: '32 730 01 11',
     email: 'info.katowice@dks.pl',
     offerTab: 'Jeżeli szukasz urządzeń, które drukują i skanują w bardzo dobrej jakości, a przy tym są tanie w eksploatacji to dobrze trafiłeś. W naszej ofercie znajdziesz zarówno drukarki i kserokopiarki do biura jak i urządzenia produkcyjne mało i wielkoformatowe. Urządzenia mamy nowe jak i poleasingowe, kolorowe i czarnobiałe, jest w czym wybierać. A gdy nie jesteś pewien, który sprzęt będzie dla Ciebie najlepszy, zachęcamy do kontaktu. Nasi specjaliści przedstawią najlepsze oferty właśnie dla Ciebie. Możesz kupić lub wynająć urządzenia na jakiś czas, a gdy stwierdzisz, że potrzebujesz, szybszej wydajniejszej kserokopiarki, wymienimy ją na nowszą. Oddziały (i magazyny) mamy w największych miastach Polski, co jest dodatkowym autem, gdy tak jak my masz filie w różnych zakątkach Polski.',
@@ -265,12 +285,17 @@ export const branches: Branch[] = [
     metaTitle: 'Kserokopiarki, urządzenia biurowe i poligraficzne – DKS Poznań',
     metaDescription: 'Proponujemy nowe i poleasingowe urządzenia biurowe: kserokopiarki, drukarki, skanery. Dostarczamy drukarki poligraficzne i wielkoformatowe. Sprawdź ofertę!',
     address: 'ul. Magazynowa 1B, 62-070 Zakrzewo k/Poznania',
+    streetAddress: 'ul. Magazynowa 1B',
+    postalCode: '62-070',
+    addressLocality: 'Zakrzewo',
+    addressRegion: 'wielkopolskie',
+    addressCountry: 'PL',
     phone: '61 842 58 84',
     email: 'info.poznan@dks.pl',
     offerTab: 'Jesteśmy doświadczonymi specjalistami w dziedzinie urządzeń przeznaczonych do kopiowania, skanowania i drukowania. Poznański oddział DKS Sp. z o.o. to autoryzowany dystrybutor urządzeń Konica Minolta, Lexmark, HP, Canon, KIP, Triupmh-Adler i CONTEX. Oprócz sprzedaży oferujemy także wynajem i dzierżawę kserokopiarek. Do Państwa usług dostępny jest również serwis z gwarancją szybkiego czasu reakcji, gdzie dokonujemy napraw, a także dostarczamy materiałów eksploatacyjnych, przeprowadzamy przeglądy techniczne sprzętów i świadczymy usługi montażu oraz instalacji. Nasz zespół handlowców obsługuje klientów z całego województwa wielkopolskiego. Mamy podpisane umowy z podmiotami z takich miast jak Środa Wielkopolska, Września, Gniezno, Oborniki, Wronki.',
     leaseTab: 'Dzierżawa kserokopiarek staje się coraz bardziej popularna. Tak się dzieje, ponieważ wynajem urządzenia do druku daje bardzo wiele korzyści, najważniejsza z nich to fakt, że odchodzi nam koszt zakupu. Po 36 miesiącach, taki jest najczęstszy okres trwania umowy, możemy wymienić urządzenie na nowe, szybsze, odpowiadające aktualnemu zapotrzebowaniu. Nie musisz się przejmować, że zostaniesz ze starą, wyeksploatowaną kopiarką. W standardzie jest utrzymanie wysokiej jakości wydruków, reakcja serwisu w ciągu kilku godzin, brak długich przestojów urządzenia, a także przewidywalne koszty, płacisz za jedynie za wykonane wydruki, a cokolwiek będzie się działo odbiegającego od normy z maszyną będzie przez nas naprawiane. Chcesz dowiedzieć się więcej? Zapraszamy do kontaktu z naszym oddziałem w Poznaniu.',
     photocopiersTab: 'W DKS znajdziesz szeroką ofertę nowych jak i poleasingowych urządzeń do druku. Dzięki temu, że jesteśmy Autoryzowanym Dystrybutorem i Serwisem światowych marek takich jak Canon, Konica Minolta, HP, Lexmark, dobieramy urządzenia, które najlepiej sprawdzą się w Twoim środowisku pracy. Kupić czy wynająć, a może zamówić sam serwis? Ty decydujesz, a my przedstawimy najlepsze dla Ciebie propozycje. Dodatkowo znajdziesz u nas również materiały eksploatacyjne oraz części zamienne takich marek jak: Canon, Konica Minolta, Ricoh, OKI, Toshiba, HP i wielu innych. Chcesz mieć pełną kontrolę nad środowiskiem druku, aby minimalizować koszty? Jeżeli Twoja odpowiedź jest twierdząca, to zachęcamy do zastanowienia się również nad oprogramowaniem, które oprócz zmniejszenia kosztów, będzie m.in.: koordynować przepływ dokumentów, zliczać aktywność użytkowników, zapewni bezpieczeństwo przesyłanych danych.',
-    serviceTab: 'Jak często zdarza się, że trzeba wydrukować pilnie jakiś dokument, a drukarka odmawia posłuszeństwa? My to znamy, dlatego zapewniamy reakcję serwisu jeszcze tego samego dnia. Większość usterek można naprawić od ręki. Zachęcamy do podpisania umowy najmu lub kontraktu serwisowego- dlaczego? Zastanówmy się ile nas kosztuje czas, który byłby przeznaczony na szukanie w różnych źródłach serwisu, do tego koszt poniesiony z dojazdem serwisanta czy strach, że jednorazowa usługa może nie przynieść rozwiązania? A teraz pomyślmy, że można to wszystko załatwić poprzez jeden telefon, mail, czy zgłoszenie usterki przez formularz na naszej stronie. Staramy wychodzić na przeciw oczekiwaniom Klienta i możliwie jak to jest w naszej mocy upraszczać do minimum wszelkie kwestie związane ze zgłoszeniem awarii urządzenia, czy zamówieniem materiałów eksploatacyjnych lub części zamiennych.',
+    serviceTab: 'Jak często zdarza się, że trzeba wydrukować pilnie jakiś dokument, a drukarka odmawia posłuszeństwa? My to znamy, dlatego zapewniamy reakcję serwisu jeszcze tego samego dnia. Większość usterek można naprawić od ręki. Zachęcamy do podpisania umowy najmu lub kontraktu serwisowego- dlaczego? Zastanówmy się ile nas kosztuje czas, który byłby przeznaczony na szukanie w różnych źródłach serwisu, do tego koszt poniesiony z dojazdem serwisanta czy strach, że jednorazowa usługa może nie przynieść rozwiązania? A teraz pomyślmy, że można to wszystko załatwić poprzez jeden telefon, mail, czy zgłoszenie usterki przez formularz na naszej stronie. Staramy się wychodzić naprzeciw oczekiwaniom Klienta i możliwie jak to jest w naszej mocy upraszczać do minimum wszelkie kwestie związane ze zgłoszeniem awarii urządzenia, czy zamówieniem materiałów eksploatacyjnych lub części zamiennych.',
     salesContact: {
       phones: ['882 340 466', '61 842 58 84'],
       emails: ['info.poznan@dks.pl'],
@@ -317,6 +342,11 @@ export const branches: Branch[] = [
     metaTitle: 'Kserokopiarki, drukarki, markowe urządzenia biurowe – DKS Łódź',
     metaDescription: 'Poszukujesz markowych urządzeń biurowych? Zapraszamy do oddziału DKS! Dostarczamy nowe i używane kserokopiarki na sprzedaż i wynajem. Sprawdź warunki.',
     address: 'ul. Ogrodowa 76, 91-071 Łódź',
+    streetAddress: 'ul. Ogrodowa 76',
+    postalCode: '91-071',
+    addressLocality: 'Łódź',
+    addressRegion: 'łódzkie',
+    addressCountry: 'PL',
     phone: '42 637 04 71',
     email: 'info.lodz@dks.pl',
     offerTab: 'Firma DKS jest oficjalnym partnerem w zakresie sprzedaży, wynajmu i serwisu, światowych liderów w branży druku jakimi są: Canon, Konica Minolta, HP, Lexmark, Oki, Contex, es-te. Działamy od na terenie całej Polski, swoje oddziały, których jest dwanaście, mamy w największych miastach Polski. Nasza działalność rozpoczęła się w 1993 roku, od tego czasu nieustannie się rozwijamy i wzbogacamy naszą ofertę. Wychodząc naprzeciw oczekiwaniom klientów stworzyliśmy centrale Biuro Obsługi Klienta, a także dział koordynacji serwisu, aby wszelkie zgłoszenia serwisowe były jak najszybciej i jak najowocniej wykonywane, gwarantując specjalistyczną obsługę.',
@@ -392,12 +422,17 @@ export const branches: Branch[] = [
     metaTitle: 'Kserokopiarki Kraków - Serwis i dzierżawa - DKS',
     metaDescription: '',
     address: 'ul. Josepha Conrada 37, 31-357 Kraków',
+    streetAddress: 'ul. Josepha Conrada 37',
+    postalCode: '31-357',
+    addressLocality: 'Kraków',
+    addressRegion: 'małopolskie',
+    addressCountry: 'PL',
     phone: '12 357 25 25',
     email: 'info.krakow@dks.pl',
     offerTab: 'W naszej ofercie znajdziesz urzuądzenia do druku w biurze A4 i A3, urządzenia do druku produkcyjnego, urządzenia introligatorskie, a także niszczarki. W skład naszego portfolio wchodzą kserokopiarki, drukarki cyfrowe czy skanery wielkoformatowe. Dzięki szerokiemu wachlarzowi asortymentu, oferowane przez nas produkty, rozwiązania jak i usługi mają na celu efektywne zaspokojenie indywidualnych potrzeb naszych Klientów. Dzierżawa kserokopiarek, którą oferujemy łączy się z wieloma zaletami, dzięki tej usłudze zapewniamy wysokiej jakości druk monochromatyczny oraz kolorowy, cykliczne przeglądy urządzeń, fachowy serwis oraz niskie ceny wykonanych kopii. Fundamentem naszej firmy jest długoletnie doświadczenie, profesjonalizm, szybkość działania i elastyczne podejście do każdego klienta indywidualnie. Zachęcamy do kontaktu z naszym warszawskim oddziałem – zaoferujemy korzystne warunki wynajmu i pomożemy dobrać urządzenie spełniające Twoje wymagania, a w czasie trwania kontraktu będziemy dbali, aby urządzenia każdego dnia sprawnie działały.',
     leaseTab: 'Działamy na rynku już prawie trzy dekady, dlatego pozwalamy sobie oferować naszym Klientom naszym zdaniem najwygodniejszą opcję użytkowania sprzętu drukującego jaką jest dzierżawa. Klient płaci jedynie za pojedyncze kopie, a my dbamy o całą resztę. Zapewniamy wymianę urządzeń po upływie okresu umowy lub w czasie jej trwania, jeżeli zajdzie potrzeba wymiany urządzenia na bardziej wydajnego, jak najbardziej jesteśmy w stanie zrobić taką wymianę. Dzięki takiemu rozwiązaniu jesteśmy w stanie idealnie dopasować urządzenia drukujące do aktualnych potrzeb Klienta. Nasz zespół Doradców Handlowych obsługuje klientów z całego województwa mazowieckiego. Mamy podpisane umowy z podmiotami z takich miast jak Pruszków, Piaseczno, Łomianki, Legionowo, Marki. Zachęcamy do podjęcia współpracy z naszym oddziałem w Warszawie. Możesz skontaktować się z nami w łatwy sposób poprzez wypełnienie formularza zgłoszeniowego na stronie „szybki kontakt”. Zapraszamy do kontaktu.',
     photocopiersTab: 'Jesteśmy Autoryzowanym Dystrybutorem i Serwisem Canon, Konica Minolta, Lexmark, HP. Prezentujemy bardzo szeroką ofertę produktów związanych z drukiem cyfrowym i przetwarzaniem obrazu, które można kupić lub wynająć. W naszej ofercie znajdują się nowe i poleasingowe urządzenia do drukowania, skanowania, kopiowania i przesyłania dokumentów. Proponujemy również materiały eksploatacyjne oraz części zamienne takich marek jak: Canon, Konica Minolta, Ricoh, OKI, Toshiba, HP i wielu innych. Naszą bogatą ofertę dopełnia oprogramowanie. Wdrażamy i szkolimy z systemów druku, które świetnie się sprawdzają w organizacjach biznesowych, które realnie wpływają na zmniejszenie kosztów druku, monitorują wydruki, a także przyczyniają się do zwiększenia wydajności pracy na urządzeniach.',
-    serviceTab: 'Proponujemy podpisanie umowy dzierżawy lub samej umowy serwisowej, dlaczego? Ponieważ to na nas spada cała opieka nad urządzeniem. Zapewniamy pełen serwis w zamian za rozliczenie za każdą kopię. Dzięki takiemu rozwiązaniu masz pełną kontrolę nad wydatkami. Długoletnia współpraca ze światowymi liderami takimi jak Canon, Konica Minolta, Lexmark, HP procentuje bardzo dobrze wykwalifikowaną kadrą Serwisantów, którzy na bieżąco odbywają szkolenia i kursy. Wychodząc na przeciw oczekiwaniom Klienta, aby możliwie usprawnić i przyśpieszyć szybkość przyjmowania zleceń, rozbudowaliśmy nasz dział Obsługi Klienta, w którym od poniedziałku do piątku, w godzinach 8:00 - 16:00 rozwiązywane są wszelkie tematy.',
+    serviceTab: 'Proponujemy podpisanie umowy dzierżawy lub samej umowy serwisowej, dlaczego? Ponieważ to na nas spada cała opieka nad urządzeniem. Zapewniamy pełen serwis w zamian za rozliczenie za każdą kopię. Dzięki takiemu rozwiązaniu masz pełną kontrolę nad wydatkami. Długoletnia współpraca ze światowymi liderami takimi jak Canon, Konica Minolta, Lexmark, HP procentuje bardzo dobrze wykwalifikowaną kadrą Serwisantów, którzy na bieżąco odbywają szkolenia i kursy. Wychodząc naprzeciw oczekiwaniom Klienta, aby możliwie usprawnić i przyspieszyć przyjmowanie zleceń, rozbudowaliśmy nasz dział Obsługi Klienta, w którym od poniedziałku do piątku, w godzinach 8:00 - 16:00 rozwiązywane są wszelkie tematy.',
     salesContact: {
       phones: ['12 357 25 25'],
       emails: ['info.krakow@dks.pl'],
@@ -438,6 +473,11 @@ export const branches: Branch[] = [
     metaTitle: 'Urządzenia biurowe, kserokopiarki premium, plotery – DKS Szczecin',
     metaDescription: 'W DKS w zaopatrzysz się w urządzenia biurowe, kserokopiarki premium i skanery. Dostarczamy plotery wielkoformatowe i maszyny poligraficzne. Oferta na stronie.',
     address: 'ul. Lelewela 8a, 71-154 Szczecin',
+    streetAddress: 'ul. Lelewela 8a',
+    postalCode: '71-154',
+    addressLocality: 'Szczecin',
+    addressRegion: 'zachodniopomorskie',
+    addressCountry: 'PL',
     phone: '91 887 60 33',
     email: 'info.szczecin@dks.pl',
     offerTab: 'Zajmujemy się sprzedażą, serwisem i wynajmem nowych, używanych, poleasingowych: kserokopiarek, drukarek, urządzeń wielofunkcyjnych, ploterów, skanerów, systemów wielofunkcyjnych. Sprzedajemy materiały eksploatacyjne. Oferujemy również oprogramowanie do zarządzania środowiskiem wydruku. Dzięki współpracy ze światowymi liderami w branży druku: Canon, Konica Minolta, Hp, Lexmark, Contex, Oki dajemy możliwość wyboru urządzenia, które będzie dopasowane optymalnie do wszystkich potrzeb. Cenimy sobie dobrą współpracę, najważniejsza jest satysfakcja klienta. Potrzebujesz urządzenia drukującego, ale nie wiesz od czego zacząć? Skontaktuj się z nami, chętnie pokażemy Ci czego można się spodziewać, jak wyglądają nasze usługi i ile możesz zaoszczędzić dzięki naszym sprawdzonym wdrożeniom.',
@@ -458,6 +498,11 @@ export const branches: Branch[] = [
     name: 'bydgoszcz',
     fullName: 'DKS Sp. z o.o. Oddział Bydgoszcz',
     address: 'ul. Jagiellońska 94c, 85-027 Bydgoszcz',
+    streetAddress: 'ul. Jagiellońska 94c',
+    postalCode: '85-027',
+    addressLocality: 'Bydgoszcz',
+    addressRegion: 'kujawsko-pomorskie',
+    addressCountry: 'PL',
     img: '/static/oddzialy/bydgoszcz.webp',
     image: "/static/oddzialy/bydgoszcz.webp",
     href: '/oddzialy/bydgoszcz',
@@ -561,6 +606,11 @@ export const branches: Branch[] = [
     metaTitle: 'Urządzenia biurowe premium: nowe i poleasingowe – DKS Olsztyn',
     metaDescription: 'Oferujemy nowe i poleasingowe urządzenia biurowe klasy premium, kserokopiarki i laserowe drukarki wielofunkcyjne cenionych marek. Szczegóły oferty na stronie.',
     address: 'ul. Herberta 18/16, 10-686 Olsztyn',
+    streetAddress: 'ul. Herberta 18/16',
+    postalCode: '10-686',
+    addressLocality: 'Olsztyn',
+    addressRegion: 'warmińsko-mazurskie',
+    addressCountry: 'PL',
     phone: '89 652 16 00',
     email: 'info.olsztyn@dks.pl',
     offerTab: 'Nasza oferta obejmuje sprzedaż, najem oraz serwis urządzeń do druku takich jak: drukarki, kserokopiarki, plotery, skanery, urządzenia produkcyjne i wielkoformatowe. Uzupełnieniem są materiały eksploatacyjne, a także oprogramowanie do zarządzania drukiem. Szeroki asortyment produktów pozwala na dobór najlepszego sprzętu dla Twojej firmy. Współpracujemy ze światowymi liderami w tej dziedzinie, dzięki czemu nasi serwisanci jaki i handlowcy odbywają regularne szkolenia, co czyni ich specjalistami w dziedzinie druku. Znajdziesz u nas maszyny nowe oraz używane. Powiedź nam czego potrzebujesz, a my chętnie podpowiemy, który model będzie najlepszy dla Twojego biura.',
@@ -619,6 +669,11 @@ export const branches: Branch[] = [
     metaTitle: 'Kserokopiarki, urządzenia biurowe formatu A4 i A3 – DKS Rzeszów',
     metaDescription: 'Skorzystaj z oferty oddziału DKS Rzeszów i wyposaż swoją firmę w urządzenia biurowe, drukarki, kserokopiarki i skanery formatu A4 i A3. Szczegóły na stronie.',
     address: 'ul. Staromiejska 69, 35-231 Rzeszów',
+    streetAddress: 'ul. Staromiejska 69',
+    postalCode: '35-231',
+    addressLocality: 'Rzeszów',
+    addressRegion: 'podkarpackie',
+    addressCountry: 'PL',
     phone: '17 741 24 00',
     email: 'info.rzeszow@dks.pl',
     offerTab: 'Od drukarek, przez kserokopiarki A4 i A3, po maszyny produkcyjne, aż do wielkiego formatu- tak szeroka jest nasza oferta. Do wyboru mamy urządzenia światowej klasy producentów m.in.: Canon, Konica Minolta, Hp, Lexmark, Kip, es-te, Oki. Powiedź nam czego oczekujesz, a my przedstawimy najbardziej optymalne rozwiązania, tak, aby zminimalizować koszty i przyspieszyć wykonywanie czynności biurowych. W ofercie posiadamy maszyny nowe jak i poleasingowe. Nasi Handlowcy i serwisanci odbywają regularne szkolenia u naszych Partnerów, aby na bieżąco pogłębiać swoją wiedzę, by dobierać jak najlepsze urządzenia, które przyczynia się do rozwoju Twojego biznesu.',
@@ -694,7 +749,12 @@ export const branches: Branch[] = [
                   `,
     metaTitle: 'Urządzenia biurowe i kserokopiarki biznesowe – DKS Białystok',
     metaDescription: 'Oferujemy biznesowe urządzenia biurowe i kserokopiarki. Trwałe, wydajne i ekonomiczne maszyny możesz kupić lub wydzierżawić w jednym z naszych oddziałów. ',
-    address: ' ul. Wysockiego 68a, 15-167 Białystok',
+    address: 'ul. Wysockiego 68a, 15-167 Białystok',
+    streetAddress: 'ul. Wysockiego 68a',
+    postalCode: '15-167',
+    addressLocality: 'Białystok',
+    addressRegion: 'podlaskie',
+    addressCountry: 'PL',
     phone: '85 671 20 28',
     email: 'info.bialystok@dks.pl',
     offerTab: 'W naszej ofercie znajdziesz kserokopiarki znanych i cenionych na całym świecie producentów, między innymi Canon, Konica Minolta, HP czy Lexmark. Jesteśmy w stanie dobrać kserokopiarkę do pracy w domu, do małego biura, ale także do średniej firmy, czy dużego przedsiębiorstwa. Zawsze chętnie pomożemy w doborze, podpowiemy, jaki sprzęt będzie się sprawował u Ciebie najlepiej. Posiadamy urządzenia nowe, a także używane, poleasingowe, drukujące w kolorze lub czarno białe, w formacie A4, A3, po wielkoformatowe. Posiadając wiele brandów w swojej ofercie możemy stworzyć dla Ciebie bardzo wydajną flotę urządzeń drukujących. Nasi klienci są bardzo zróżnicowani, obsługujemy pojedyncze punkty, urzędy, szkoły, drukarnie, agencje reklamowe. Urządzenie można kupić, ale można również wynająć na określony czas. Posiadamy 12 oddziałów w Polsce i w każdym z oddziałów znajduje się serwis, a także magazyn z materiałami eksploatacyjnymi, aby serwis urządzenia został przeprowadzona w jak najkrótszym czasie. Jeżeli masz pytania, szukasz drukarki, kserokopiarki, może maszyny produkcyjnej czy wielkoformatowej- zapraszamy do naszego oddziału w Białymstoku, gdzie odpowiemy na Twoje wszystkie pytania.',
@@ -747,6 +807,11 @@ export const branches: Branch[] = [
     metaTitle: 'Wielofunkcyjne kserokopiarki i urządzenia biurowe – DKS Wrocław',
     metaDescription: 'Zaopatrujemy naszych Klientów w wielofunkcyjne kserokopiarki i urządzenia biurowe. Proponujemy zakup i dzierżawę sprzętu drukującego. Zapoznaj się z ofertą.',
     address: 'ul. Północna 15-19, 54-105 Wrocław budynek 2.2, wejście B, piętro 2, pok. nr 213-214',
+    streetAddress: 'ul. Północna 15-19, budynek 2.2, wejście B, piętro 2, pok. nr 213-214',
+    postalCode: '54-105',
+    addressLocality: 'Wrocław',
+    addressRegion: 'dolnośląskie',
+    addressCountry: 'PL',
     phone: '71 725 42 54',
     email: 'info.wroclaw@dks.pl',
     offerTab: 'Specjalizujemy się w sprzedaży, dzierżawie oraz serwisie urządzeń drukujących do biur, a także do poligrafii. W skład naszego portfolio wchodzą kserokopiarki, drukarki cyfrowe czy skanery wielkoformatowe. Dzięki szerokiemu wachlarzowi asortymentu, oferowane przez nas produkty, rozwiązania jak i usługi mają na celu efektywne zaspokojenie indywidualnych potrzeb naszych Klientów. Dzierżawa kserokopiarek, którą oferujemy łączy się z wieloma zaletami, dzięki tej usłudze zapewniamy wysokiej jakości druk monochromatyczny oraz kolorowy, cykliczne przeglądy urządzeń, fachowy serwis oraz niskie ceny wykonanych kopii. Fundamentem naszej firmy jest długoletnie doświadczenie, profesjonalizm, szybkość działania i elastyczne podejście do każdego klienta indywidualnie. Zachęcamy do kontaktu z naszym warszawskim oddziałem – zaoferujemy korzystne warunki wynajmu i pomożemy dobrać urządzenie spełniające Twoje wymagania, a w czasie trwania kontraktu będziemy dbali, aby urządzenia każdego dnia sprawnie działały.',
