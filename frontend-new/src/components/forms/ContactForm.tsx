@@ -22,6 +22,20 @@ type ContactFormProps = {
 
 const FORM_NAME = "ContactForm";
 
+function canBypassRecaptchaLocally(): boolean {
+  if (
+    process.env.NODE_ENV === "production" ||
+    process.env.NEXT_PUBLIC_RECAPTCHA_BYPASS_LOCAL !== "true" ||
+    typeof window === "undefined"
+  ) {
+    return false;
+  }
+
+  return ["localhost", "127.0.0.1", "::1"].includes(
+    window.location.hostname
+  );
+}
+
 const PROVINCES = [
   { value: "pomorskie", label: "Pomorskie" },
   { value: "mazowieckie", label: "Mazowieckie" },
@@ -109,11 +123,15 @@ export default function ContactForm({
     try {
       setIsSending(true);
 
-      if (!executeRecaptcha) {
+      const bypassRecaptcha = canBypassRecaptchaLocally();
+
+      if (!bypassRecaptcha && !executeRecaptcha) {
         throw new Error("reCAPTCHA nie jest gotowa.");
       }
 
-      const recaptchaToken = await executeRecaptcha("contact_form");
+      const recaptchaToken = bypassRecaptcha
+        ? undefined
+        : await executeRecaptcha!("contact_form");
 
       const payload = {
         form_name: FORM_NAME,
