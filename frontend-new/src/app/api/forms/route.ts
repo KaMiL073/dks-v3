@@ -35,6 +35,18 @@ function getField(obj: Record<string, unknown>, key: string): unknown {
   return obj[key];
 }
 
+function canBypassRecaptcha(request: Request): boolean {
+  if (
+    process.env.NODE_ENV === "production" ||
+    process.env.RECAPTCHA_BYPASS_LOCAL !== "true"
+  ) {
+    return false;
+  }
+
+  const hostname = new URL(request.url).hostname;
+  return ["localhost", "127.0.0.1", "::1"].includes(hostname);
+}
+
 function stableStringify(obj: unknown): string | undefined {
   if (obj === null) return "null";
 
@@ -109,38 +121,41 @@ export async function POST(request: Request) {
     /**
      * ✅ RECAPTCHA VALIDATION
      */
+    const bypassRecaptcha = canBypassRecaptcha(request);
     const recaptchaToken = pickString(getField(body, "recaptchaToken"));
 
-    if (!recaptchaToken) {
+    if (!bypassRecaptcha && !recaptchaToken) {
       return NextResponse.json(
         { ok: false, error: "Brak tokena reCAPTCHA." },
         { status: 400 }
       );
     }
 
-    if (!process.env.RECAPTCHA_SECRET_KEY) {
+    if (!bypassRecaptcha && !process.env.RECAPTCHA_SECRET_KEY) {
       throw new Error("Missing RECAPTCHA_SECRET_KEY");
     }
 
-    const verifyResp = await fetch(
-      "https://www.google.com/recaptcha/api/siteverify",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          secret: process.env.RECAPTCHA_SECRET_KEY,
-          response: recaptchaToken,
-        }),
-      }
-    );
-
-    const verify = await verifyResp.json();
-
-    if (!verify.success) {
-      return NextResponse.json(
-        { ok: false, error: "Niepoprawna reCAPTCHA.", verify },
-        { status: 400 }
+    if (!bypassRecaptcha) {
+      const verifyResp = await fetch(
+        "https://www.google.com/recaptcha/api/siteverify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            secret: process.env.RECAPTCHA_SECRET_KEY!,
+            response: recaptchaToken!,
+          }),
+        }
       );
+
+      const verify = await verifyResp.json();
+
+      if (!verify.success) {
+        return NextResponse.json(
+          { ok: false, error: "Niepoprawna reCAPTCHA.", verify },
+          { status: 400 }
+        );
+      }
     }
 
     /**
@@ -169,7 +184,8 @@ export async function POST(request: Request) {
     /**
      * ❗ USUWAMY recaptchaToken z danych
      */
-    const { recaptchaToken: _recaptchaToken, ...form_data } = rawFormData;
+    const form_data = { ...rawFormData };
+    delete form_data.recaptchaToken;
 
     const clause = pickBoolString(
       getField(form_data, "clause") ?? getField(form_data, "consentMarketing")
