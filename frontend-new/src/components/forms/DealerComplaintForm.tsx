@@ -7,6 +7,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import Button from "@/components/ui/Button";
 import FormInfoModalField from "@/components/forms/FormInfoModalField";
+import { getRecaptchaToken } from "@/lib/recaptcha";
 
 import type {
   MappedDirectusField,
@@ -148,6 +149,10 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     "w-full text-Text-body text-sm md:text-base font-normal font-['Montserrat'] leading-5";
 
   const handleChange = (name: string, value: string) => {
+    if (name.toLowerCase() === "nip") {
+      if (!/^\d*$/.test(value) || value.length > 10) return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -274,6 +279,7 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
             : normalizedFieldName.includes("date")
               ? "date"
               : "text";
+    const isNipField = normalizedFieldName === "nip";
 
     return (
       <label key={fieldName} className="w-full flex flex-col gap-2">
@@ -313,6 +319,9 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
             name={fieldName}
             value={value}
             required={field.required}
+            inputMode={isNipField ? "numeric" : undefined}
+            pattern={isNipField ? "[0-9]{10}" : undefined}
+            maxLength={isNipField ? 10 : undefined}
             onChange={(e) => handleChange(fieldName, e.target.value)}
             className={inputClass}
           />
@@ -340,11 +349,8 @@ export default function DealerComplaintForm({ groups = [] }: Props) {
     try {
       setIsSending(true);
 
-      let recaptcha = "";
-
-      if (executeRecaptcha) {
-        recaptcha = await executeRecaptcha(FORM_NAME);
-      }
+      const recaptcha =
+        (await getRecaptchaToken(executeRecaptcha, FORM_NAME)) ?? "";
 
       const payload = new FormData();
 

@@ -5,6 +5,7 @@ import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 
 import Button from "@/components/ui/Button";
 import FormInfoModalField from "@/components/forms/FormInfoModalField";
+import { getRecaptchaToken } from "@/lib/recaptcha";
 
 import type {
   MappedDirectusField,
@@ -176,11 +177,10 @@ export default function DebtCollectionFormClientZone({ groups = [] }: Props) {
     try {
       setIsSending(true);
 
-      let recaptchaToken = "";
-
-      if (executeRecaptcha) {
-        recaptchaToken = await executeRecaptcha(FORM_NAME);
-      }
+      const recaptchaToken = await getRecaptchaToken(
+        executeRecaptcha,
+        FORM_NAME
+      );
 
       const response = await fetch("/api/forms", {
         method: "POST",

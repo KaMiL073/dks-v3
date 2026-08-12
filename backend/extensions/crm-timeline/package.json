@@ -1,0 +1,33 @@
+{
+  "name": "crm-timeline",
+  "description": "Visual CRM activity timeline for Directus contact cards",
+  "icon": "timeline",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-extension-interface",
+    "crm",
+    "timeline"
+  ],
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "directus:extension": {
+    "type": "interface",
+    "path": "dist/index.js",
+    "source": "src/index.js",
+    "host": "^10.10.0 || ^11.0.0"
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "test": "node --test",
+    "validate": "directus-extension validate"
+  },
+  "devDependencies": {
+    "@directus/extensions-sdk": "^16.0.0"
+  }
+}
+

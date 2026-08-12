@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
+import { getRecaptchaToken } from "@/lib/recaptcha";
 
 export type ContactFormState = {
   name: string;
@@ -21,20 +22,6 @@ type ContactFormProps = {
 };
 
 const FORM_NAME = "ContactForm";
-
-function canBypassRecaptchaLocally(): boolean {
-  if (
-    process.env.NODE_ENV === "production" ||
-    process.env.NEXT_PUBLIC_RECAPTCHA_BYPASS_LOCAL !== "true" ||
-    typeof window === "undefined"
-  ) {
-    return false;
-  }
-
-  return ["localhost", "127.0.0.1", "::1"].includes(
-    window.location.hostname
-  );
-}
 
 const PROVINCES = [
   { value: "pomorskie", label: "Pomorskie" },
@@ -123,15 +110,10 @@ export default function ContactForm({
     try {
       setIsSending(true);
 
-      const bypassRecaptcha = canBypassRecaptchaLocally();
-
-      if (!bypassRecaptcha && !executeRecaptcha) {
-        throw new Error("reCAPTCHA nie jest gotowa.");
-      }
-
-      const recaptchaToken = bypassRecaptcha
-        ? undefined
-        : await executeRecaptcha!("contact_form");
+      const recaptchaToken = await getRecaptchaToken(
+        executeRecaptcha,
+        "contact_form"
+      );
 
       const payload = {
         form_name: FORM_NAME,

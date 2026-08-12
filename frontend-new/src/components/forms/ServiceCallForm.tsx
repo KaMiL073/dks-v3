@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
+import { getRecaptchaToken } from "@/lib/recaptcha";
 
 type ServiceCallFormState = {
   name: string;
@@ -115,11 +116,10 @@ export default function ServiceCallForm() {
     try {
       setIsSending(true);
 
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA nie jest gotowa.");
-      }
-
-      const recaptchaToken = await executeRecaptcha("ServiceCallForm");
+      const recaptchaToken = await getRecaptchaToken(
+        executeRecaptcha,
+        "ServiceCallForm"
+      );
 
       const payload = {
         form_name: FORM_NAME,

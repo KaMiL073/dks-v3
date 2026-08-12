@@ -154,6 +154,7 @@ export const complaintFallbackFields: MappedDirectusFieldGroup[] = [
       fallbackField("email", "E-mail"),
       fallbackField("phone", "Telefon"),
       fallbackField("company_name", "Firma"),
+      fallbackField("nip", "NIP"),
       fallbackField("topics", "Temat"),
     ],
   },
@@ -471,7 +472,18 @@ export async function getFirstGroupedFields(
   collections: string[],
   searchTerms: string[] = []
 ): Promise<MappedDirectusFieldGroup[]> {
-  for (const collection of collections) {
+  const directusCollections = await getDirectusCollections();
+  const availableCollections = new Set(
+    directusCollections
+      .map((collection) => collection.collection)
+      .filter((collection): collection is string => Boolean(collection))
+  );
+
+  const existingCandidates = collections.filter((collection) =>
+    availableCollections.has(collection)
+  );
+
+  for (const collection of existingCandidates) {
     const groups = await getGroupedFields(collection);
 
     if (groups.length > 0) {
@@ -480,15 +492,13 @@ export async function getFirstGroupedFields(
   }
 
   if (searchTerms.length > 0) {
-    const directusCollections = await getDirectusCollections();
-
     const matchedCollections = directusCollections
       .filter((collection) => collectionMatchesTerms(collection, searchTerms))
       .map((collection) => collection.collection)
       .filter((collection): collection is string => Boolean(collection));
 
     for (const collection of matchedCollections) {
-      if (collections.includes(collection)) continue;
+      if (existingCandidates.includes(collection)) continue;
 
       const groups = await getGroupedFields(collection);
 

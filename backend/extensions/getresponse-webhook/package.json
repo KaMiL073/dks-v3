@@ -1,0 +1,33 @@
+{
+  "name": "getresponse-webhook",
+  "description": "Records GetResponse contact events in the Directus CRM timeline",
+  "icon": "webhook",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "keywords": [
+    "directus",
+    "directus-extension",
+    "directus-extension-endpoint",
+    "getresponse",
+    "crm"
+  ],
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "directus:extension": {
+    "type": "endpoint",
+    "path": "dist/index.js",
+    "source": "src/index.js",
+    "host": "^10.10.0 || ^11.0.0"
+  },
+  "scripts": {
+    "build": "directus-extension build",
+    "test": "node --test",
+    "validate": "directus-extension validate"
+  },
+  "devDependencies": {
+    "@directus/extensions-sdk": "^16.0.0"
+  }
+}
+

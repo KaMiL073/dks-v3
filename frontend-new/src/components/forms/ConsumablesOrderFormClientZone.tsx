@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
+import { getRecaptchaToken } from "@/lib/recaptcha";
 
 type OrderType = "" | "W ramach umowy" | "Bez umowy";
 
@@ -178,11 +179,10 @@ export default function ConsumablesOrderFormClientZone() {
     try {
       setIsSending(true);
 
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA nie jest gotowa.");
-      }
-
-      const recaptchaToken = await executeRecaptcha("ConsumablesOrderForm");
+      const recaptchaToken = await getRecaptchaToken(
+        executeRecaptcha,
+        "ConsumablesOrderForm"
+      );
 
       const payload = {
         form_name: FORM_NAME,

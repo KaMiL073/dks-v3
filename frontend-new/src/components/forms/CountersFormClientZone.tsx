@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import Button from "@/components/ui/Button";
+import { getRecaptchaToken } from "@/lib/recaptcha";
 
 type FormState = {
   name: string;
@@ -111,11 +112,10 @@ export default function CountersFormClientZone() {
     try {
       setIsSending(true);
 
-      if (!executeRecaptcha) {
-        throw new Error("reCAPTCHA nie jest gotowa.");
-      }
-
-      const recaptchaToken = await executeRecaptcha("CountersForm");
+      const recaptchaToken = await getRecaptchaToken(
+        executeRecaptcha,
+        "CountersForm"
+      );
 
       const payload = {
         form_name: FORM_NAME,
