@@ -1,3 +1,4 @@
+-- Ten plik musi być wykonywany przed skryptami 002 i 003.
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 CREATE TYPE user_role AS ENUM ('PUBLIC', 'ORGANIZER', 'REFEREE');
