@@ -1,0 +1,41 @@
+services:
+  dks-cup-db:
+    image: postgres:16-alpine
+    container_name: dks-cup-db
+    environment:
+      POSTGRES_USER: dks_cup
+      POSTGRES_PASSWORD: ${DKS_CUP_DB_PASSWORD:?Ustaw DKS_CUP_DB_PASSWORD w pliku .env}
+      POSTGRES_DB: dks_cup
+    volumes:
+      - dks_cup_database:/var/lib/postgresql/data
+      - ./dks-cup/db:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dks_cup -d dks_cup"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  dks-cup:
+    build:
+      context: ./dks-cup
+      target: production
+    container_name: dks-cup
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgres://dks_cup:${DKS_CUP_DB_PASSWORD}@dks-cup-db:5432/dks_cup
+      AUTH_SECRET: ${DKS_CUP_AUTH_SECRET:?Ustaw DKS_CUP_AUTH_SECRET w pliku .env}
+      AUTH_TRUST_HOST: "true"
+    depends_on:
+      dks-cup-db:
+        condition: service_healthy
+    restart: unless-stopped
+    expose:
+      - "3000"
+
+  proxy:
+    depends_on:
+      - dks-cup
+
+volumes:
+  dks_cup_database:
