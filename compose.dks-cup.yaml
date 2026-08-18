@@ -32,10 +32,14 @@ services:
     restart: unless-stopped
     expose:
       - "3000"
+    networks:
+      - default
 
   proxy:
     depends_on:
       - dks-cup
+    networks:
+      - default
 
 volumes:
   dks_cup_database:
