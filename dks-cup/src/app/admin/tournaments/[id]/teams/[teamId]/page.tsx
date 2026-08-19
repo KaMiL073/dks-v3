@@ -10,6 +10,7 @@ import { pool } from "@/lib/db";
 import { TeamNameEditModal } from "@/components/TeamNameEditModal";
 import { TeamLogoEditModal } from "@/components/TeamLogoEditModal";
 import { TeamPlayersCard } from "@/components/TeamPlayersCard";
+import { TeamDeleteModal } from "@/components/TeamDeleteModal";
 import { UserAccount } from "@/components/UserAccount";
 
 type TeamRow = { id: string; name: string; logo_url: string | null; tournament_name: string };
@@ -145,7 +146,7 @@ export default async function EditTeamPage({ params }: { params: Promise<{ id: s
 
         <TeamPlayersCard tournamentId={id} teamId={teamId} players={playersResult.rows} addAction={addPlayer} updateAction={updatePlayer}/>
 
-        <form action={deleteTeam}><input type="hidden" name="tournamentId" value={id}/><input type="hidden" name="teamId" value={teamId}/><button className="org-team-create" type="submit">Usuń drużynę <Image src="/dks-cup/figma/org/forward.svg" alt="" width={20} height={20}/></button></form>
+        <TeamDeleteModal tournamentId={id} teamId={teamId} teamName={team.name} action={deleteTeam}/>
       </div>
     </main>
   );

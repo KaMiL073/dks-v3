@@ -7,7 +7,7 @@ import { pool } from "@/lib/db";
 import { MatchEditModal } from "@/components/MatchEditModal";
 
 type NamedRow = { id: string; name: string };
-type MatchRow = { id: string; home_team_id: string; away_team_id: string; home_name: string; away_name: string; start_time: Date; end_time: Date; pitch_id: string; pitch_name: string; group_id: string; group_name: string };
+type MatchRow = { id: string; home_team_id: string; away_team_id: string; home_name: string; away_name: string; start_time: Date; end_time: Date; pitch_id: string; pitch_name: string; group_id: string; group_name: string; home_score: number; away_score: number };
 
 async function requireOrganizer() {
   const session = await auth();
@@ -47,8 +47,26 @@ async function updateMatch(formData: FormData) {
     const current=await pool.query<{start_time:Date}>(`SELECT start_time FROM matches WHERE id=$1 AND tournament_id=$2`,[matchId,tournamentId]); if (!current.rows[0]) return;
     const date=current.rows[0].start_time.toLocaleDateString("sv-SE",{timeZone:"Europe/Warsaw"}); const start=new Date(`${date}T${String(formData.get("startClock")??"")}:00`); const end=new Date(`${date}T${String(formData.get("endClock")??"")}:00`); if (Number.isNaN(start.getTime())||Number.isNaN(end.getTime())||end<=start) return;
     await pool.query(`UPDATE matches SET start_time=$1,end_time=$2,updated_at=now() WHERE id=$3 AND tournament_id=$4`,[start,end,matchId,tournamentId]);
+  } else if (field === "score") {
+    const homeScore=Number(formData.get("homeScore")); const awayScore=Number(formData.get("awayScore"));
+    if (!Number.isInteger(homeScore)||!Number.isInteger(awayScore)||homeScore<0||awayScore<0||homeScore>999||awayScore>999) return;
+    await pool.query(`UPDATE matches SET home_score=$1,away_score=$2,status='finished',updated_at=now() WHERE id=$3 AND tournament_id=$4`,[homeScore,awayScore,matchId,tournamentId]);
   }
   revalidatePath(`/admin/tournaments/${tournamentId}/schedule`);
+  revalidatePath("/");
+  revalidatePath("/referee");
+}
+
+async function deleteMatch(formData: FormData) {
+  "use server";
+  await requireOrganizer();
+  const tournamentId = String(formData.get("tournamentId") ?? "");
+  const matchId = String(formData.get("matchId") ?? "");
+  if (!tournamentId || !matchId) return;
+  await pool.query(`DELETE FROM matches WHERE id=$1 AND tournament_id=$2`, [matchId, tournamentId]);
+  revalidatePath(`/admin/tournaments/${tournamentId}/schedule`);
+  revalidatePath("/");
+  revalidatePath("/referee");
 }
 
 export default async function SchedulePage({ params }: { params: Promise<{ id: string }> }) {
@@ -59,7 +77,7 @@ export default async function SchedulePage({ params }: { params: Promise<{ id: s
     pool.query<NamedRow>(`SELECT id,name FROM teams WHERE tournament_id=$1 ORDER BY name`, [id]),
     pool.query<NamedRow>(`SELECT id,name FROM groups WHERE tournament_id=$1 ORDER BY name`, [id]),
     pool.query<NamedRow>(`SELECT id,name FROM pitches WHERE tournament_id=$1 ORDER BY position`, [id]),
-    pool.query<MatchRow>(`SELECT m.id,m.home_team_id,m.away_team_id,ht.name home_name,at.name away_name,m.start_time,m.end_time,m.pitch_id,p.name pitch_name,m.group_id,g.name group_name FROM matches m JOIN teams ht ON ht.id=m.home_team_id JOIN teams at ON at.id=m.away_team_id JOIN pitches p ON p.id=m.pitch_id JOIN groups g ON g.id=m.group_id WHERE m.tournament_id=$1 ORDER BY p.position,g.name,m.start_time`, [id]),
+    pool.query<MatchRow>(`SELECT m.id,m.home_team_id,m.away_team_id,ht.name home_name,at.name away_name,m.start_time,m.end_time,m.pitch_id,p.name pitch_name,m.group_id,g.name group_name,m.home_score,m.away_score FROM matches m JOIN teams ht ON ht.id=m.home_team_id JOIN teams at ON at.id=m.away_team_id JOIN pitches p ON p.id=m.pitch_id JOIN groups g ON g.id=m.group_id WHERE m.tournament_id=$1 ORDER BY p.position,g.name,m.start_time`, [id]),
   ]);
   const tournament = tournamentResult.rows[0];
   if (!tournament) notFound();
@@ -68,7 +86,7 @@ export default async function SchedulePage({ params }: { params: Promise<{ id: s
   return <main className="org-main org-schedule-page">
     <header className="org-detail-menu"><Link className="org-menu-icon" href={`/admin/tournaments/${id}`} aria-label="Wróć"><Image src="/dks-cup/figma/org/back-detail.svg" alt="" width={48} height={48} priority/></Link><h1>{tournament.name}</h1><Link className="org-menu-icon" href="/" aria-label="Strona główna"><Image src="/dks-cup/figma/org/home.svg" alt="" width={48} height={48}/></Link></header>
     <div className="org-schedule-cards org-schedule-page-cards">
-      {[...scheduleGroups.entries()].map(([key,matches]) => { const [pitchName,groupName]=key.split("\u0000"); return <section className="org-schedule-card" key={key}><h3>{pitchName} – {groupName}</h3><div className="org-schedule-match-list">{matches.map(match=><div className="org-schedule-match" key={match.id}><strong>{match.home_name} <b>×</b> {match.away_name}</strong><time>{match.start_time.toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Warsaw"})}</time><MatchEditModal tournamentId={id} match={{id:match.id,homeTeamId:match.home_team_id,awayTeamId:match.away_team_id,homeName:match.home_name,awayName:match.away_name,pitchId:match.pitch_id,groupId:match.group_id,startTime:match.start_time.toISOString(),endTime:match.end_time.toISOString()}} teams={teamsResult.rows} pitches={pitchesResult.rows} groups={groupsResult.rows} action={updateMatch}/></div>)}</div></section>; })}
+      {[...scheduleGroups.entries()].map(([key,matches]) => { const [pitchName,groupName]=key.split("\u0000"); return <section className="org-schedule-card" key={key}><h3>{pitchName} – {groupName}</h3><div className="org-schedule-match-list">{matches.map(match=><div className="org-schedule-match" key={match.id}><strong>{match.home_name} <b>×</b> {match.away_name}</strong><time>{match.start_time.toLocaleTimeString("pl-PL",{hour:"2-digit",minute:"2-digit",timeZone:"Europe/Warsaw"})}</time><b className="org-schedule-score">{match.home_score}:{match.away_score}</b><MatchEditModal tournamentId={id} match={{id:match.id,homeTeamId:match.home_team_id,awayTeamId:match.away_team_id,homeName:match.home_name,awayName:match.away_name,pitchId:match.pitch_id,groupId:match.group_id,startTime:match.start_time.toISOString(),endTime:match.end_time.toISOString(),homeScore:match.home_score,awayScore:match.away_score}} teams={teamsResult.rows} pitches={pitchesResult.rows} groups={groupsResult.rows} action={updateMatch} deleteAction={deleteMatch}/></div>)}</div></section>; })}
       {!matchesResult.rows.length && <span>Brak zaplanowanych meczów</span>}
     </div>
     <form action={addMatch} className="org-inline-form org-match-form org-schedule-add-form"><input type="hidden" name="tournamentId" value={id}/><select name="groupId" required defaultValue=""><option value="" disabled>Grupa</option>{groupsResult.rows.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select><select name="pitchId" required defaultValue=""><option value="" disabled>Boisko</option>{pitchesResult.rows.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select><select name="homeTeamId" required defaultValue=""><option value="" disabled>Drużyna 1</option>{teamsResult.rows.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select><select name="awayTeamId" required defaultValue=""><option value="" disabled>Drużyna 2</option>{teamsResult.rows.map(row=><option value={row.id} key={row.id}>{row.name}</option>)}</select><label className="org-match-time-field"><span>Data meczu</span><input name="matchDate" type="date" required/></label><label className="org-match-time-field"><span>Godzina rozpoczęcia meczu</span><input name="startClock" type="time" required/></label><label className="org-match-time-field"><span>Godzina zakończenia meczu</span><input name="endClock" type="time" required/></label><button type="submit" disabled={teamsResult.rows.length<2}>Dodaj mecz</button></form>
