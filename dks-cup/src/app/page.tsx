@@ -16,6 +16,9 @@ export default async function Home() {
     <TournamentCard initial={data} />
     <TvRotation data={data} />
     <ActionButton href="/table">Tabela grupowa</ActionButton>
-    {!session?.user && <LoginModalTrigger />}
+    <div className="public-primary-actions">
+      <ActionButton href="/schedule" tone="burgundy">Harmonogram wydarzenia</ActionButton>
+      {!session?.user && <LoginModalTrigger />}
+    </div>
   </main>;
 }
