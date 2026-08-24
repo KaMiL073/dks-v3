@@ -35,6 +35,7 @@ type IconItem = {
   id?: number | string | null;
   icon?: string | null;
   image?: string | null;
+  svg?: string | null;
   label?: string | null;
   title?: string | null;
   description?: string | null;
@@ -163,6 +164,7 @@ function normalizeIconItem(value: unknown): IconItem {
         : undefined,
     icon: asString(value.icon),
     image: asString(value.image),
+    svg: asString(value.svg),
     label: asString(value.label),
     title: asString(value.title),
     description: asString(value.description),
@@ -429,6 +431,7 @@ export default function DirectusRenderer({
                   items: iconItems.map((iconItem) => ({
                     id: iconItem.id,
                     icon: asString(iconItem.icon) ?? asString(iconItem.image),
+                    svg: asString(iconItem.svg),
                     label: asString(iconItem.label) ?? asString(iconItem.title),
                     description: asString(iconItem.description),
                   })),
