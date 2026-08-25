@@ -4,6 +4,7 @@ type IconItem = {
   id?: number | string | null;
   icon?: string | null;
   ikona?: string | null;
+  svg?: string | null;
   label?: string | null;
   title?: string | null;
   description?: string | null;
@@ -35,6 +36,20 @@ function getIconName(item?: IconItem | null) {
   );
 }
 
+function getSvgUrl(value?: string | null) {
+  const fileId = value?.trim();
+  if (!fileId) return null;
+
+  if (/^(https?:\/\/|\/)/.test(fileId)) return fileId;
+
+  const backendUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL ||
+    process.env.NEXT_PUBLIC_API_URL ||
+    "/backend";
+
+  return `${backendUrl.replace(/\/$/, "")}/assets/${encodeURIComponent(fileId)}`;
+}
+
 export default function IconsSection({ item }: { item: IconsSectionItem }) {
   const items = Array.isArray(item.items)
     ? item.items
@@ -55,6 +70,7 @@ export default function IconsSection({ item }: { item: IconsSectionItem }) {
       <div className="self-stretch inline-flex flex-wrap content-start items-start justify-center gap-12">
         {items.map((iconItem, index) => {
           const iconName = getIconName(iconItem);
+          const svgUrl = getSvgUrl(iconItem.svg);
           const label = iconItem.label || iconItem.title;
 
           return (
@@ -63,7 +79,17 @@ export default function IconsSection({ item }: { item: IconsSectionItem }) {
               className="inline-flex w-80 flex-col items-center justify-start gap-6"
             >
               <div className="flex h-32 w-32 items-center justify-center">
-                {iconName ? (
+                {svgUrl ? (
+                  // SVG is rendered as an image, so uploaded markup is not injected
+                  // into the page DOM.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={svgUrl}
+                    alt=""
+                    className="h-full w-full object-contain"
+                    aria-hidden="true"
+                  />
+                ) : iconName ? (
                   <span
                     className="material-symbols-outlined text-icon-primary"
                     style={{
