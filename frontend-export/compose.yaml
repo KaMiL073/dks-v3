@@ -1,0 +1,35 @@
+services:
+  frontend-export:
+    container_name: frontend-export
+    build:
+      context: ..
+      dockerfile: frontend-export/Dockerfile.production
+      target: runner
+      args:
+        NEXT_PUBLIC_SITE_URL: "https://dks.com.pl"
+        NEXT_PUBLIC_DIRECTUS_URL: "https://dks.pl/backend"
+        NEXT_PUBLIC_RECAPTCHA_SITE_KEY: "${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}"
+        NEXT_PUBLIC_RECAPTCHA_BYPASS_LOCAL: "false"
+    environment:
+      NODE_ENV: "production"
+      PORT: "3001"
+      NEXT_PUBLIC_SITE_URL: "https://dks.com.pl"
+      NEXT_PUBLIC_DIRECTUS_URL: "https://dks.pl/backend"
+      DIRECTUS_URL: "https://dks.pl/backend"
+      DIRECTUS_INTERNAL_URL: "https://dks.pl/backend"
+      SERVICE_USER_TOKEN: "${DIRECTUS_ADMIN_TOKEN}"
+      DIRECTUS_TOKEN: "${DIRECTUS_ADMIN_TOKEN}"
+      NEXT_PUBLIC_RECAPTCHA_SITE_KEY: "${NEXT_PUBLIC_RECAPTCHA_SITE_KEY}"
+      RECAPTCHA_SECRET_KEY: "${RECAPTCHA_SECRET_KEY}"
+      NEXT_PUBLIC_RECAPTCHA_BYPASS_LOCAL: "false"
+      RECAPTCHA_BYPASS_LOCAL: "false"
+      FORMS_HMAC_SECRET: "${FORMS_HMAC_SECRET}"
+    networks:
+      - dks
+    expose:
+      - "3001"
+    restart: unless-stopped
+
+networks:
+  dks:
+    external: true

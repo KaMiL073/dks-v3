@@ -1,0 +1,38 @@
+# Add these servers to the production Nginx configuration after installing
+# the TLS certificate for dks.com.pl and www.dks.com.pl.
+
+server {
+  listen 80;
+  server_name dks.com.pl www.dks.com.pl;
+  return 301 https://dks.com.pl$request_uri;
+}
+
+server {
+  listen 443 ssl;
+  server_name www.dks.com.pl;
+
+  ssl_certificate /etc/nginx/certs/dks.com.pl.crt;
+  ssl_certificate_key /etc/nginx/certs/dks.com.pl.key;
+  return 301 https://dks.com.pl$request_uri;
+}
+
+server {
+  listen 443 ssl;
+  server_name dks.com.pl;
+
+  ssl_certificate /etc/nginx/certs/dks.com.pl.crt;
+  ssl_certificate_key /etc/nginx/certs/dks.com.pl.key;
+  ssl_protocols TLSv1.2 TLSv1.3;
+
+  location / {
+    proxy_pass http://frontend-export:3001;
+    proxy_http_version 1.1;
+    proxy_redirect off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection $connection_upgrade;
+  }
+}

@@ -49,8 +49,13 @@ function verifySig(payload) {
 
   const body = stableStringify(copy);
   const expected = crypto.createHmac('sha256', secret).update(body).digest('hex');
+  const receivedBuffer = Buffer.from(sig, 'hex');
+  const expectedBuffer = Buffer.from(expected, 'hex');
 
-  if (sig !== expected) {
+  if (
+    receivedBuffer.length !== expectedBuffer.length ||
+    !crypto.timingSafeEqual(receivedBuffer, expectedBuffer)
+  ) {
     console.error('❌ Invalid __sig', {
       received: sig.slice(0, 12),
       expected: expected.slice(0, 12),
@@ -75,6 +80,7 @@ const ALLOWED_FORM_NAMES = new Set([
   'ConsumablesOrderForm',
   'CountersForm',
   'DebtCollectionForm',
+  'export',
 ]);
 
 const canonicalFormTypeMap = {
@@ -133,6 +139,10 @@ const mailerMap = {
   DebtCollectionForm: {
     pomorskie: 'windykacja@dks.pl',
   },
+
+  export: {
+    export: 'export.copiers@dks.pl',
+  },
 };
 
 const subjectMap = {
@@ -140,6 +150,7 @@ const subjectMap = {
   ContactForm: 'Wiadomość DKS',
   CountersForm: 'Liczniki ze strony dks.pl',
   DebtCollectionForm: 'Zgłoszenie z kontaktu',
+  export: 'New export enquiry from dks.com.pl',
 };
 
 const subjectClientMap = {
@@ -147,6 +158,7 @@ const subjectClientMap = {
   ContactForm: 'Wiadomość DKS',
   CountersForm: 'Liczniki DKS',
   DebtCollectionForm: 'DKS - Twoje zgłoszenie jest w trakcie realizacji',
+  export: 'DKS Export - we received your enquiry',
 };
 
 function getOfficeEmail(formType, province) {
@@ -187,6 +199,10 @@ export default ({ action }, { services }) => {
       province = 'pomorskie';
     }
 
+    if (formType === 'export') {
+      province = 'export';
+    }
+
     if (!province) throw new Error('Missing province');
     if (!clientEmail) throw new Error('Missing email');
 
@@ -219,6 +235,7 @@ export default ({ action }, { services }) => {
     await mailService.send({
       from: 'www@dks.pl',
       to: officeEmail,
+      replyTo: clientEmail,
       subject: subjectMap[formType] ?? 'Wiadomość ze strony dks.pl',
       template: {
         name: formType,
@@ -229,6 +246,7 @@ export default ({ action }, { services }) => {
     await mailService.send({
       from: 'www@dks.pl',
       to: clientEmail,
+      replyTo: officeEmail,
       subject: subjectClientMap[formType] ?? 'DKS - potwierdzenie zgłoszenia',
       template: {
         name: `${formType}Client`,

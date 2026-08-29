@@ -1,0 +1,9 @@
+@import "../../../frontend-new/src/app/globals.css";
+
+@source "../../../frontend-new/src/components/navigation/Header.tsx";
+@source "../../../frontend-new/src/app/(marketing)/HeroSection.tsx";
+@source "../../../frontend-new/src/components/ui/Button.tsx";
+@source "../../../frontend-new/src/components/ui/Typography/Heading.tsx";
+@source "../../../frontend-new/src/components/ui/Typography/Heading2.tsx";
+@source "../components/**/*.tsx";
+@source "./**/*.tsx";
