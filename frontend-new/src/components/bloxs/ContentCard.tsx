@@ -7,11 +7,13 @@ export type ContentCardItem = {
   title?: string | null;
   description?: string | null;
   image?: string | null;
+  backgroundColor?: string | null;
 };
 
 export type ContentCardsSection = {
   id?: number | string | null;
   title?: string | null;
+  columns?: 2 | 3 | null;
   items?: ContentCardItem[];
 };
 
@@ -26,12 +28,25 @@ function getImageUrl(image?: string | null) {
   return `/backend/assets/${cleanImage}`;
 }
 
+function getBackgroundColor(color?: string | null) {
+  const cleanColor = color?.trim();
+
+  return cleanColor &&
+    /^#(?:[0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(
+      cleanColor
+    )
+    ? cleanColor
+    : undefined;
+}
+
 export default function ContentCards({
   item,
 }: {
   item: ContentCardsSection;
 }) {
   const items = Array.isArray(item.items) ? item.items : [];
+  const columnsClass =
+    item.columns === 2 ? "md:grid-cols-2" : "md:grid-cols-2 xl:grid-cols-3";
 
   if (items.length === 0) return null;
 
@@ -44,14 +59,16 @@ export default function ContentCards({
           </h2>
         ) : null}
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+        <div className={`grid grid-cols-1 gap-8 ${columnsClass}`}>
           {items.map((card, index) => {
             const imageUrl = getImageUrl(card.image);
+            const backgroundColor = getBackgroundColor(card.backgroundColor);
 
             return (
               <div
                 key={`${card.id ?? card.title ?? "card"}-${index}`}
                 className="flex min-h-[520px] flex-col gap-8 bg-gray-300 p-12"
+                style={backgroundColor ? { backgroundColor } : undefined}
               >
                 {imageUrl ? (
                   <div className="relative h-52 w-full overflow-hidden">
