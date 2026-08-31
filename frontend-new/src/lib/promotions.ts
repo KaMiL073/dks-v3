@@ -31,6 +31,7 @@ const listFields = [
   "components_promotions.collection",
   "components_promotions.item",
   "components_promotions.item.*",
+  "components_promotions.item:content_card.*",
 
   // hero_section
   "components_promotions.item:hero_section.title",

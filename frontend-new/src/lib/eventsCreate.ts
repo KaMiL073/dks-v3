@@ -187,6 +187,7 @@ const eventFields = [
   // COMPONENTS
   "components_event.*",
   "components_event.item.*",
+  "components_event.item:content_card.*",
 
   // rich_content only
   "components_event.item:rich_content.header_type",
