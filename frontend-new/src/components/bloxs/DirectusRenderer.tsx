@@ -46,6 +46,7 @@ type CardItem = {
   title?: string | null;
   description?: string | null;
   image?: string | null;
+  background_color?: string | null;
 };
 
 type LogoRelationItem = {
@@ -182,6 +183,7 @@ function normalizeCardItem(value: unknown): CardItem {
     title: asString(value.title),
     description: asString(value.description),
     image: asString(value.image),
+    background_color: asString(value.background_color),
   };
 }
 
@@ -453,11 +455,13 @@ export default function DirectusRenderer({
                 item={{
                   id: Number(item.id),
                   title: asString(item.title) ?? asString(item.name),
+                  columns: Number(item.columns) === 2 ? 2 : 3,
                   items: cardItems.map((card, cardIndex) => ({
                     id: card.id ?? cardIndex,
                     title: asString(card.title),
                     description: asString(card.description),
                     image: asString(card.image),
+                    backgroundColor: asString(card.background_color),
                   })),
                 }}
               />
