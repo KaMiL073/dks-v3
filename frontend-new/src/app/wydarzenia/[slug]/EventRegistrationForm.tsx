@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import Button from "@/components/ui/Button";
 
@@ -275,6 +276,20 @@ export default function EventRegistrationForm({
           </div>
 
           <div className="mt-6 space-y-4">
+            {eventSlug === "warsaw-innovation-days" && (
+              <p className="text-sm leading-relaxed text-gray-800">
+                Zapoznaj się z{" "}
+                <Link
+                  href="/wydarzenia/warsaw-innovation-days/regulamin"
+                  className="font-semibold text-red-600 underline underline-offset-4"
+                  target="_blank"
+                >
+                  regulaminem konkursu Lenovo
+                </Link>
+                .
+              </p>
+            )}
+
             <div className="text-xs leading-snug text-gray-800">
               <p>
                 Formularz korzysta z zabezpieczenia reCAPTCHA.{" "}
