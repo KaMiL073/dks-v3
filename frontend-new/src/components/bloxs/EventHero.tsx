@@ -87,7 +87,7 @@ export default function EventHero({
             <Heading headingValue="h1_semibold" as="h1">
               {title}
             </Heading>
-          )}-
+          )}
 
           {subtitle && (
             <Heading headingValue="h5_normal" as="h5">
