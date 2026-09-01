@@ -1,7 +1,8 @@
 import path from "path";
 
-var index = ({ action }, { services }) => {
+const index = ({ action }, { services }) => {
   const { MailService, ItemsService } = services;
+  const sender = process.env.COMPLAINT_EMAIL_FROM || "www@dks.com.pl";
 
   action("items.create", async ({ collection, key, payload }, context) => {
     if (collection !== "complaint") return;
@@ -57,7 +58,7 @@ var index = ({ action }, { services }) => {
       if (payload.email) {
         await mailService.send({
           to: payload.email,
-          from: "www@dks.pl",
+          from: sender,
           subject:
             "Potwierdzenie przyjęcia zgłoszenia reklamacyjnego",
           template: {
@@ -80,7 +81,7 @@ var index = ({ action }, { services }) => {
 
       await mailService.send({
         to: "reklamacje@dks.pl",
-        from: "www@dks.pl",
+        from: sender,
         subject: complaintTitle,
         template: {
           name: "Complaint",
