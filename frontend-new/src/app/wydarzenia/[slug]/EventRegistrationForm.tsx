@@ -30,6 +30,11 @@ type Props = {
   className?: string;
 };
 
+const CONTEST_REGULATION_EVENT_SLUGS = [
+  "warsaw-innovation-days",
+  "dks-gdansk-innovation-days",
+];
+
 export default function EventRegistrationForm({
   fields,
   eventSlug,
@@ -276,11 +281,11 @@ export default function EventRegistrationForm({
           </div>
 
           <div className="mt-6 space-y-4">
-            {eventSlug === "warsaw-innovation-days" && (
+            {CONTEST_REGULATION_EVENT_SLUGS.includes(eventSlug) && (
               <p className="text-sm leading-relaxed text-gray-800">
                 Zapoznaj się z{" "}
                 <Link
-                  href="/wydarzenia/warsaw-innovation-days/regulamin"
+                  href={`/wydarzenia/${eventSlug}/regulamin`}
                   className="font-semibold text-red-600 underline underline-offset-4"
                   target="_blank"
                 >

@@ -132,10 +132,10 @@ export default function WarsawInnovationDaysRegulationPage() {
       <article className="bg-white px-4 py-12 sm:px-6 lg:px-8 lg:py-20 xl:px-28">
         <div className="mx-auto max-w-5xl space-y-12">
           <Link
-            href="/wydarzenia/warsaw-innovation-days"
+            href="/wydarzenia"
             className="inline-flex text-sm font-semibold text-red-600 underline underline-offset-4"
           >
-            Wróć do strony wydarzenia
+            Wróć do wydarzeń
           </Link>
 
           {sections.map((section) => (
