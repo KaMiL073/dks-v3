@@ -17,7 +17,6 @@ services:
 
   directus:
     container_name: directus
-    entrypoint: ['./dev/start_dev.sh']
     build:
       context: ./backend
       args:

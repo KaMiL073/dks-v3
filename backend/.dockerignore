@@ -1,4 +1,11 @@
 node_modules
+**/node_modules
+.cache
+data
+uploads
+*.zip
+.DS_Store
+**/.DS_Store
 Dockerfile
 npm-debug.log
 .env*

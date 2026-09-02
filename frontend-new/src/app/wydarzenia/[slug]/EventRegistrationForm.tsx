@@ -26,6 +26,7 @@ type EventFormValues = Record<string, string | string[] | boolean | undefined>;
 type Props = {
   fields: FormField[];
   eventSlug: string;
+  salespersonCode?: string;
   compact?: boolean;
   className?: string;
 };
@@ -38,6 +39,7 @@ const CONTEST_REGULATION_EVENT_SLUGS = [
 export default function EventRegistrationForm({
   fields,
   eventSlug,
+  salespersonCode = "",
   compact = false,
   className = "",
 }: Props) {
@@ -66,6 +68,7 @@ export default function EventRegistrationForm({
           ...data,
           formName: "event",
           event: eventSlug,
+          salespersonCode,
         }),
       });
 
