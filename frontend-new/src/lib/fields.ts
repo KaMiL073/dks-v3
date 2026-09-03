@@ -17,6 +17,10 @@ const BLOCKED_FIELDS = [
   "date_created",
   "user_updated",
   "date_updated",
+  // Assigned server-side from the salesperson invitation link. It must never be
+  // rendered as a public form field where a visitor could choose another user.
+  "salesperson",
+  "salesperson_label",
 ];
 
 const LANG = "pl-PL";

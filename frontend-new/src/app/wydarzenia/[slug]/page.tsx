@@ -17,6 +17,9 @@ type PageProps = {
   params: Promise<{
     slug: string;
   }>;
+  searchParams: Promise<{
+    handlowiec?: string | string[];
+  }>;
 };
 
 export const dynamic = "force-dynamic";
@@ -81,8 +84,15 @@ export async function generateMetadata({
   }
 }
 
-export default async function EventSinglePage({ params }: PageProps) {
+export default async function EventSinglePage({
+  params,
+  searchParams,
+}: PageProps) {
   const { slug } = await params;
+  const { handlowiec } = await searchParams;
+  const salespersonCode = Array.isArray(handlowiec)
+    ? handlowiec[0] ?? ""
+    : handlowiec ?? "";
 
   let event: Awaited<ReturnType<typeof getEventCreateBySlug>> | null = null;
 
@@ -136,7 +146,11 @@ export default async function EventSinglePage({ params }: PageProps) {
         </section>
       )}
 
-      <EventRegistrationForm fields={fields} eventSlug={slug} />
+      <EventRegistrationForm
+        fields={fields}
+        eventSlug={slug}
+        salespersonCode={salespersonCode}
+      />
     </main>
   );
 }
