@@ -73,7 +73,7 @@ services:
       EMAIL_SMTP_PORT: '587'
       EMAIL_SMTP_USER: 'b7865fb6935a14'
       EMAIL_SMTP_PASSWORD: 'd1ff7307fd87cb'
-      EMAIL_FROM: 'email@dks.pl'
+      EMAIL_FROM: 'www@dks.com.pl'
 
       # NODE_OPTIONS: '--inspect=0.0.0.0:4444'
       # NODE_OPTIONS: '--inspect-brk=0.0.0.0:4444'

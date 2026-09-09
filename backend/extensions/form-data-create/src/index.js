@@ -217,7 +217,7 @@ export default ({ action }, { services }) => {
     const templateData = { data: payload?.form_data ?? payload };
 
     await mailService.send({
-      from: 'www@dks.pl',
+      from: 'www@dks.com.pl',
       to: officeEmail,
       subject: subjectMap[formType] ?? 'Wiadomość ze strony dks.pl',
       template: {
@@ -227,7 +227,7 @@ export default ({ action }, { services }) => {
     });
 
     await mailService.send({
-      from: 'www@dks.pl',
+      from: 'www@dks.com.pl',
       to: clientEmail,
       subject: subjectClientMap[formType] ?? 'DKS - potwierdzenie zgłoszenia',
       template: {
