@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createDirectus, createItem, rest, staticToken } from "@directus/sdk";
 import crypto from "crypto";
+import { validateFormRecaptcha } from "@/lib/formRecaptcha.mjs";
 
 type NewPayload = {
   form_name: string;
@@ -145,14 +146,33 @@ export async function POST(request: Request) {
             secret: process.env.RECAPTCHA_SECRET_KEY!,
             response: recaptchaToken!,
           }),
+          signal: AbortSignal.timeout(10000),
         }
       );
 
-      const verify = await verifyResp.json();
+      if (!verifyResp.ok) {
+        throw new Error("reCAPTCHA verification service unavailable");
+      }
+      const verify: unknown = await verifyResp.json();
+      const formName =
+        typeof body.form_name === "string" &&
+        typeof body.email === "string" &&
+        isRecord(body.form_data)
+          ? body.form_name
+          : "ContactForm";
+      const allowedHosts = (process.env.RECAPTCHA_ALLOWED_HOSTNAMES || "dks.pl,www.dks.pl")
+        .split(",")
+        .map((host) => host.trim())
+        .filter(Boolean);
+      if (process.env.NODE_ENV !== "production") {
+        allowedHosts.push("localhost", "127.0.0.1", "::1");
+      }
+      const rejection = validateFormRecaptcha(verify, formName, allowedHosts);
 
-      if (!verify.success) {
+      if (rejection) {
+        console.warn("[forms] reCAPTCHA rejected", { formName, reason: rejection });
         return NextResponse.json(
-          { ok: false, error: "Niepoprawna reCAPTCHA.", verify },
+          { ok: false, error: "Weryfikacja antyspamowa nie powiodła się. Odśwież stronę i spróbuj ponownie." },
           { status: 400 }
         );
       }
