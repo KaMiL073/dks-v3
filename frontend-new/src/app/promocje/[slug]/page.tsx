@@ -90,7 +90,7 @@ export default async function PromotionPage({ params }: PageProps) {
           </p>
         </section>
       )}
-      <ContactSection />
+      {promo.show_contact_form !== false && <ContactSection />}
     </main>
   );
 }

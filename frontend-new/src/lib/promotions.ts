@@ -15,6 +15,7 @@ export type PromotionItem = {
   seo_description?: string | null;
   slug?: string | null;
   status?: string | null;
+  show_contact_form?: boolean | null;
   date_created?: string | null;
   components_promotions?: PromotionComponent[];
 };
@@ -49,6 +50,7 @@ const detailFields = [
   ...listFields,
 
   "status",
+  "show_contact_form",
   "date_created",
 
   // hero_section
