@@ -10,6 +10,7 @@ import EventConsultantsSection from "./EventConsultantsSection";
 import KeyInfo from "./KeyInfo";
 import IconsSection from "./IconsSection";
 import ContentCards from "./ContentCard";
+import PromotionLinkSection from "./PromotionLinkSection";
 
 import type { ComponentEventItem } from "@/lib/eventsCreate";
 
@@ -467,6 +468,16 @@ export default function DirectusRenderer({
               />
             );
           }
+
+          case "promotion_link_section":
+            return (
+              <PromotionLinkSection
+                key={`promotion-link-${item.id}-${index}`}
+                title={asString(item.title)}
+                description={asString(item.description)}
+                url={asString(item.url)}
+              />
+            );
 
           default:
             return (
