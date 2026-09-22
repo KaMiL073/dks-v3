@@ -11,6 +11,7 @@ import KeyInfo from "./KeyInfo";
 import IconsSection from "./IconsSection";
 import ContentCards from "./ContentCard";
 import PromotionLinkSection from "./PromotionLinkSection";
+import EventLocationSection, { type CalendarEvent } from "./EventLocationSection";
 
 import type { ComponentEventItem } from "@/lib/eventsCreate";
 
@@ -207,9 +208,11 @@ function normalizeLogoItem(value: unknown): LogoRelationItem {
 export default function DirectusRenderer({
   components,
   product,
+  event,
 }: {
   components: RendererComponent[];
   product?: Product;
+  event?: CalendarEvent;
 }) {
   if (!components || components.length === 0) {
     return (
@@ -238,6 +241,12 @@ export default function DirectusRenderer({
         const collectionName = collection.trim();
 
         switch (collectionName) {
+          case "event_location":
+            return <EventLocationSection key={`location-${item.id}-${index}`} event={event} item={{
+              id: Number(item.id), location: asString(item.location), description: asString(item.description),
+              start_date: asString(item.start_date), end_date: asString(item.end_date),
+              start_time: asString(item.start_time), end_time: asString(item.end_time),
+            }} />;
           case "hero_section":
             return (
               <EventHero

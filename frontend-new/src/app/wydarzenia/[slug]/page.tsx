@@ -125,7 +125,7 @@ export default async function EventSinglePage({
       <Breadcrumb />
 
       {components.length > 0 ? (
-        <DirectusRenderer components={components} />
+        <DirectusRenderer components={components} event={{ id: event.id, name: event.name, slug: event.slug, location: event.location, start_date: event.start_date, end_date: event.end_date }} />
       ) : event.lead ? (
         <section className="bg-white px-4 py-20 md:px-6 lg:px-28">
           <div className="mx-auto flex max-w-7xl flex-col gap-6">
