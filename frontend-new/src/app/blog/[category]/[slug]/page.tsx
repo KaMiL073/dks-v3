@@ -1,3 +1,4 @@
+import BlogImage from "@/components/BlogImage";
 import type { Metadata } from "next";
 import { notFound, permanentRedirect } from "next/navigation";
 
@@ -117,8 +118,9 @@ export default async function BlogArticlePage({ params }: PageProps) {
         <BlogCategoriesSidebar categories={categories} activeSlug={category} />
 
         <div className="w-full flex-1 min-w-0 flex flex-col justify-center items-start gap-8 md:gap-12">
-          <img
-            className="w-full h-56 md:h-80 object-cover"
+          <BlogImage
+            variant="main"
+            className="block w-full h-auto"
             src={post.image || "https://placehold.co/752x350"}
             alt={post.title ?? ""}
           />
@@ -140,7 +142,7 @@ export default async function BlogArticlePage({ params }: PageProps) {
           </div>
 
           <div
-            className="rich-content self-stretch"
+            className="rich-content blog-article-content self-stretch"
             dangerouslySetInnerHTML={{ __html: post.content || "" }}
           />
 
@@ -161,9 +163,10 @@ export default async function BlogArticlePage({ params }: PageProps) {
                       className="w-full min-w-0 flex flex-col gap-4"
                     >
                       <div className="flex flex-col gap-6">
-                        <img
-                          src={item.image || "https://placehold.co/364x273"}
-                          className="self-stretch h-72 object-cover"
+                        <BlogImage
+                          variant="thumbnail"
+                          src={item.thumbnail || item.image || "https://placehold.co/364x273"}
+                          className="w-full h-auto aspect-[4/3] object-cover"
                           alt={item.title ?? ""}
                         />
                         <div className="text-Text-headings text-xl font-semibold leading-6">

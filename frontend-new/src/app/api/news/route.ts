@@ -9,6 +9,7 @@ type NewsItemResponse = {
   lead?: string;
   slug?: string;
   image?: unknown;
+  thumbnail?: unknown;
   date_created?: string;
   tags?: unknown;
   category?: {
@@ -29,6 +30,7 @@ export async function GET() {
         "lead",
         "slug",
         "image",
+        "thumbnail",
         "date_created",
         "tags",
         "category.id",
