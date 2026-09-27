@@ -1,3 +1,4 @@
+import BlogImage from "@/components/BlogImage";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TopSectionHeader from "@/components/TopSectionHeader";
@@ -112,7 +113,7 @@ export default async function BlogCategoryPagePaged({ params }: PageProps) {
         />
 
         <div className="w-full flex-1 min-w-0">
-          <div className="grid w-full grid-cols-1 sm:grid-cols-2 2xl:grid-cols-2 gap-6 xl:gap-12">
+          <div className="grid w-full grid-cols-[minmax(0,352px)] sm:grid-cols-[repeat(2,minmax(0,352px))] xl:grid-cols-[repeat(3,minmax(0,352px))] gap-6 xl:gap-12">
             {paged.items.map((post) => (
               <a
                 key={post.id}
@@ -120,8 +121,9 @@ export default async function BlogCategoryPagePaged({ params }: PageProps) {
                 className="w-full max-w-[352px] min-w-0 flex flex-col gap-3 cursor-pointer"
               >
                 <div className="w-full min-w-0 flex flex-col gap-4 md:gap-6">
-                  <img
-                    src={post.image || "https://placehold.co/352x264"}
+                  <BlogImage
+                    variant="thumbnail"
+                    src={post.thumbnail || post.image || "https://placehold.co/352x264"}
                     className="w-full aspect-[4/3] h-auto object-cover"
                     alt={post.title}
                   />

@@ -11,6 +11,7 @@ export interface News {
   lead: string;
   slug: string;
   image: string | null;
+  thumbnail?: string | null;
   date_created: string;
   tags?: string[];
   categorySlug: string | null;
@@ -49,6 +50,7 @@ type NewsRow = {
   slug?: unknown;
   content?: unknown;
   image?: unknown;
+  thumbnail?: unknown;
   date_created?: unknown;
   tags?: unknown;
   category?: unknown;
@@ -83,7 +85,8 @@ function pickStringArray(v: unknown): string[] {
    URL do obrazu
    ============================================================ */
 function imageUrl(id: string | null) {
-  return id ? `https://www3.dks.pl/backend/assets/${id}?imwidth=1920` : null;
+  const baseUrl = (process.env.NEXT_PUBLIC_BACKEND_URL?.trim() || "/backend").replace(/\/+$/, "");
+  return id ? `${baseUrl}/assets/${id}` : null;
 }
 
 /* ============================================================
@@ -103,6 +106,7 @@ function mapNewsItem(row: NewsRow): News {
     date_created: pickString(row.date_created) ?? "",
     tags: pickStringArray(row.tags),
     image: imageUrl(pickString(row.image) ?? null),
+    thumbnail: imageUrl(pickString(row.thumbnail) ?? pickString(row.image) ?? null),
     categorySlug: category ? pickString(category.slug) ?? null : null,
     categoryName: category ? pickString(category.name) ?? null : null,
   };
@@ -202,6 +206,7 @@ export async function getNewsPaged(
           "lead",
           "slug",
           "image",
+          "thumbnail",
           "date_created",
           "tags",
           "category.id",
@@ -268,6 +273,7 @@ export default async function getNews(
           "lead",
           "slug",
           "image",
+          "thumbnail",
           "date_created",
           "tags",
           "category.id",
@@ -309,6 +315,7 @@ export async function getSinglePost(slug: string): Promise<SinglePost | null> {
           "slug",
           "content",
           "image",
+          "thumbnail",
           "date_created",
           "tags",
           "category.id",
@@ -359,6 +366,7 @@ export async function getRecommended(
           "lead",
           "slug",
           "image",
+          "thumbnail",
           "date_created",
           "tags",
           "category.slug",
@@ -390,6 +398,7 @@ export async function getLatestCaseStudies(limit = 3): Promise<News[]> {
           "lead",
           "slug",
           "image",
+          "thumbnail",
           "date_created",
           "tags",
           "category.id",
