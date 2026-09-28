@@ -1,5 +1,3 @@
-"use client";
-
 type IconItem = {
   id?: number | string | null;
   icon?: string | null;

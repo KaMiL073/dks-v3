@@ -1,6 +1,4 @@
-"use client";
-
-import Image from "next/image";
+import Image from "@/components/DirectusImage";
 
 export type ContentCardItem = {
   id?: number | string | null;
@@ -76,7 +74,7 @@ export default function ContentCards({
                       src={imageUrl}
                       alt={card.title || "Card image"}
                       fill
-                      unoptimized
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
                       className="object-contain"
                     />
                   </div>

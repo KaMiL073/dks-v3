@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/DirectusImage";
 import { setAttr } from "@/lib/visual-editor";
 import Heading, { type HeadingTag } from "@/components/ui/Typography/Heading";
 import Button from "../ui/Button";
@@ -130,8 +130,6 @@ export default function RichContentBlock({
 
   const isTextRight = item.layout === "text_right";
 
-  const isDirectus = imageUrl.startsWith("/backend/assets/");
-
   const headerHeadingValue = normalizeHeadingStyle(
     item.heading_styles,
     "h2_normal"
@@ -176,7 +174,7 @@ export default function RichContentBlock({
             width={576}
             height={629}
             className="w-full h-auto object-cover rounded-lg"
-            unoptimized={isDirectus}
+            sizes="(max-width: 768px) 100vw, 50vw"
             data-directus={setAttr({
               collection: "rich_content",
               item: String(item.id),

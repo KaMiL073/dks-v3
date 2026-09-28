@@ -1,6 +1,4 @@
-"use client";
-
-import Image from "next/image";
+import Image from "@/components/DirectusImage";
 import Link from "next/link";
 
 import Button from "@/components/ui/Button";
@@ -33,8 +31,6 @@ function getDirectusImage(image?: string | null) {
 
   return `/backend/assets/${image}`;
 }
-
-const directusLoader = ({ src }: { src: string }) => src;
 
 export default function EventHero({
   variant = "full-height",
@@ -76,11 +72,16 @@ export default function EventHero({
 
   return (
     <section
-      className="w-full bg-cover bg-center"
-      style={{
-        backgroundImage: `url("${bgImage || "/static/homepage/Header.webp"}")`,
-      }}
+      className="relative isolate w-full"
     >
+      <Image
+        src={bgImage || "/static/homepage/Header.webp"}
+        alt=""
+        fill
+        sizes="100vw"
+        className="-z-10 object-cover object-center"
+        priority
+      />
       <div className={containerClasses}>
         <div className="flex w-full flex-col gap-4 lg:flex-1 lg:justify-center lg:gap-8">
           {title && (
@@ -112,13 +113,11 @@ export default function EventHero({
           <div className={imageOuterClasses}>
             <div className="relative h-[240px] w-full sm:h-[320px] sm:max-w-sm md:h-[360px] md:max-w-md lg:h-full lg:max-w-2xl xl:max-w-5xl">
               <Image
-                loader={directusLoader}
                 src={heroImage}
                 alt={title || "Hero image"}
                 fill
-                unoptimized
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 384px, (max-width: 1024px) 448px, 50vw"
                 className={imageClass}
                 style={{ objectPosition }}
               />

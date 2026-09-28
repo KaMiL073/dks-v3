@@ -8,6 +8,7 @@ import "@/styles/rich-content.scss";
 import Header from "@/components/navigation/Header";
 import Footer from "@/components/navigation/Footer";
 import JsonLd from "@/components/seo/JsonLd";
+import MaterialSymbolsStyles from "@/components/MaterialSymbolsStyles";
 import ReCaptchaProvider from "@/components/providers/ReCaptchaProvider";
 
 const montserrat = Montserrat({
@@ -48,10 +49,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
 
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=block"
-        />
+        <MaterialSymbolsStyles />
 
         <JsonLd
           data={{
