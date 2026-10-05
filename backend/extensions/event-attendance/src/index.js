@@ -1,100 +1,157 @@
-import { defineLayout, useApi } from '@directus/extensions-sdk';
-import { defineComponent, h, ref, watch, onBeforeUnmount } from 'vue';
+import { defineLayout, useApi, useExtensions } from '@directus/extensions-sdk';
+import { cloneVNode, computed, defineComponent, h, isVNode, ref, watch, withCtx } from 'vue';
 
-const cellStyle = { padding: '14px 16px', textAlign: 'left', borderBottom: '1px solid var(--theme--border-color)', whiteSpace: 'nowrap' };
-const buttonStyle = { padding: '8px 14px', border: '1px solid var(--theme--border-color)', borderRadius: '6px', cursor: 'pointer', background: 'var(--theme--background)', color: 'var(--theme--foreground)' };
+// Keep the native Directus layout and replace only its attendance cell slot.
+// The adapter supports both inline-template and separate-render Vue components.
+export function decorateTableTree(tree, attendanceSlot) {
+  const copies = new Map();
+  function visit(node) {
+    if (Array.isArray(node)) return node.map(visit);
+    if (!isVNode(node)) return node;
+    if (copies.has(node)) return copies.get(node);
+    const copy = cloneVNode(node);
+    copies.set(node, copy);
+    if (Array.isArray(node.children)) copy.children = node.children.map(visit);
+    if (Array.isArray(node.dynamicChildren)) copy.dynamicChildren = node.dynamicChildren.map(visit);
+    if (node.props?.headers && node.props?.items && node.children?.['item.attended']) {
+      copy.children = { ...node.children, 'item.attended': attendanceSlot, _: 2 };
+      copy.patchFlag |= 1024; // DYNAMIC_SLOTS: update the cell when rows change.
+    }
+    return copy;
+  }
+  return visit(tree);
+}
 
+function attendanceCell(props, item) {
+  if (props.collection !== 'events') return h('span', String(item.attended ?? ''));
+  // Native layouts may alias fields for display; events.attended is scalar.
+  const attended = item.attended === true;
+  const pending = props.attendancePending?.has(item.id);
+  const disabled = props.readonly || !props.attendanceCanUpdate || pending || props.loading;
+  return h('button', {
+    type: 'button', role: 'switch', 'aria-checked': attended,
+    'aria-label': `Obecność: ${item.name || ''} ${item.surname || ''}`,
+    disabled,
+    title: disabled && !pending ? 'Brak możliwości edycji w tym widoku' : 'Kliknij, aby zmienić obecność',
+    style: {
+      padding: '6px 10px', borderRadius: '6px',
+      border: '1px solid var(--theme--border-color)',
+      background: 'var(--theme--background)',
+      color: attended ? 'var(--theme--success)' : 'var(--theme--foreground)',
+      cursor: disabled ? 'default' : 'pointer', opacity: pending ? 0.5 : 1,
+      whiteSpace: 'nowrap',
+    },
+    onClick(event) { event.stopPropagation(); props.toggleAttendance(item); },
+    onDblclick(event) { event.stopPropagation(); },
+  }, pending ? 'Zapisywanie…' : attended ? '✓ Obecny' : '○ Nieobecny');
+}
+
+export function decorateNativeComponent(native) {
+  return {
+    ...native,
+    props: {
+      ...native.props,
+      attendancePending: Object,
+      attendanceCanUpdate: Boolean,
+      toggleAttendance: Function,
+    },
+    setup(props, context) {
+      const slot = withCtx(({ item }) => [attendanceCell(props, item)]);
+      const result = native.setup?.(props, context);
+      if (typeof result === 'function') {
+        return (...args) => decorateTableTree(result(...args), slot);
+      }
+      return result;
+    },
+    ...(native.render ? {
+      render(...args) {
+        const slot = withCtx(({ item }) => [attendanceCell(this.$props, item)]);
+        return decorateTableTree(native.render.apply(this, args), slot);
+      },
+    } : {}),
+  };
+}
+
+function useNativeTable() {
+  const { layouts } = useExtensions();
+  return computed(() => layouts.value.find(layout => layout.id === 'tabular'));
+}
+
+const decoratedComponents = new WeakMap();
 const AttendanceTable = defineComponent({
   inheritAttrs: false,
-  props: ['rows', 'loading', 'error', 'pending', 'page', 'count', 'canUpdate', 'toggle', 'toPage', 'refresh'],
-  setup(props) {
-    return () => h('section', { style: { padding: '24px var(--content-padding)' } }, [
-      h('p', { style: { marginBottom: '16px', color: 'var(--theme--foreground-subdued)' } }, 'Kliknij status, aby zaznaczyć lub cofnąć obecność. Zmiana zapisuje się automatycznie.'),
-      props.error ? h('p', { role: 'alert', style: { color: 'var(--theme--danger)', marginBottom: '16px' } }, props.error) : null,
-      h('div', { style: { overflowX: 'auto' }, 'aria-busy': props.loading }, [
-        h('table', { style: { width: '100%', borderCollapse: 'collapse' } }, [
-          h('thead', [h('tr', ['Obecność', 'Imię', 'Nazwisko', 'Firma', 'Wydarzenie', 'E-mail'].map(label => h('th', { scope: 'col', style: cellStyle }, label)))]),
-          h('tbody', props.rows.map(row => h('tr', { key: row.id }, [
-            h('td', { style: cellStyle }, [h('button', {
-              type: 'button', role: 'switch', 'aria-checked': row.attended === true,
-              'aria-label': `Obecność: ${row.name || ''} ${row.surname || ''}`,
-              disabled: !props.canUpdate || props.loading || props.pending.has(row.id),
-              style: { ...buttonStyle, minWidth: '150px', color: row.attended ? 'var(--theme--success)' : 'var(--theme--foreground)', opacity: props.pending.has(row.id) ? 0.5 : 1 },
-              onClick: event => { event.stopPropagation(); props.toggle(row); },
-            }, props.pending.has(row.id) ? 'Zapisywanie…' : row.attended ? '✓ Obecny' : '○ Nieobecny')]),
-            ...['name', 'surname', 'company', 'event', 'email'].map(field => h('td', { style: cellStyle }, row[field] || '—')),
-          ]))),
-        ]),
-      ]),
-      !props.rows.length ? h('p', { style: { padding: '24px 0' } }, props.loading ? 'Wczytywanie…' : 'Brak uczestników dla wybranych filtrów.') : null,
-      h('div', { style: { display: 'flex', alignItems: 'center', gap: '16px', marginTop: '24px' } }, [
-        h('button', { type: 'button', style: buttonStyle, disabled: props.loading || props.page <= 1, onClick: () => props.toPage(props.page - 1) }, 'Poprzednia'),
-        h('span', `Strona ${props.page} · ${props.count} zgłoszeń`),
-        h('button', { type: 'button', style: buttonStyle, disabled: props.loading || props.page * 100 >= props.count, onClick: () => props.toPage(props.page + 1) }, 'Następna'),
-        h('button', { type: 'button', style: buttonStyle, disabled: props.loading, onClick: props.refresh }, 'Odśwież'),
-      ]),
-    ]);
+  setup(_props, { attrs, slots }) {
+    const native = useNativeTable();
+    return () => {
+      const component = native.value?.component;
+      if (!component) return h('p', 'Nie udało się wczytać klasycznej tabeli Directusa.');
+      if (!decoratedComponents.has(component)) {
+        decoratedComponents.set(component, decorateNativeComponent(component));
+      }
+      return h('div', { style: { display: 'contents' } }, [
+        attrs.attendanceError ? h('p', {
+          role: 'alert', style: { color: 'var(--theme--danger)', margin: '16px var(--content-padding)' },
+        }, attrs.attendanceError) : null,
+        h(decoratedComponents.get(component), attrs, slots),
+      ]);
+    };
   },
 });
+
+function nativeSlot(name) {
+  return defineComponent({
+    inheritAttrs: false,
+    setup(_props, { attrs, slots }) {
+      const native = useNativeTable();
+      return () => {
+        const component = native.value?.slots?.[name];
+        return component ? h(component, attrs, slots) : null;
+      };
+    },
+  });
+}
 
 export default defineLayout({
   id: 'event-attendance', name: 'Lista obecności', icon: 'how_to_reg',
   component: AttendanceTable,
-  slots: { options: () => null, sidebar: () => null, actions: () => null },
-  setup(props) {
-    const api = useApi();
-    const rows = ref([]), loading = ref(false), error = ref(''), pending = ref(new Set());
-    const page = ref(1), count = ref(0), canUpdate = ref(false);
-    let request = 0, alive = true;
-    onBeforeUnmount(() => { alive = false; request++; });
-
-    async function refresh() {
-      const current = ++request;
-      loading.value = true;
-      error.value = '';
-      try {
-        if (props.collection !== 'events') throw new Error('Ten układ jest przeznaczony dla zgłoszeń wydarzeń.');
-        const filters = [props.filter, props.filterSystem].filter(Boolean);
-        const response = await api.get('/items/events', { params: {
-          fields: 'id,attended,name,surname,company,event,email',
-          sort: 'event,surname,name,id', limit: 100, page: page.value,
-          meta: 'filter_count', search: props.search || undefined,
-          filter: filters.length ? JSON.stringify({ _and: filters }) : undefined,
-        } });
-        if (current !== request) return;
-        rows.value = response.data.data;
-        count.value = Number(response.data.meta.filter_count);
-      } catch (cause) {
-        if (current === request) { rows.value = []; count.value = 0; error.value = cause.message === 'Ten układ jest przeznaczony dla zgłoszeń wydarzeń.' ? cause.message : 'Nie udało się wczytać listy. Kliknij Odśwież, aby spróbować ponownie.'; }
-      } finally { if (current === request) loading.value = false; }
+  slots: { options: nativeSlot('options'), sidebar: nativeSlot('sidebar'), actions: nativeSlot('actions') },
+  headerShadow: false,
+  setup(props, context) {
+    const native = useNativeTable();
+    if (!native.value) throw new Error('Nie znaleziono klasycznej tabeli Directusa.');
+    const state = native.value.setup(props, context);
+    if (props.collection === 'events' && !Array.isArray(props.layoutQuery?.fields)) {
+      state.fields.value = ['attended', 'name', 'surname', 'company', 'event', 'email'];
     }
-
-    async function toggle(row) {
-      if (!canUpdate.value || props.readonly || pending.value.has(row.id)) return;
-      pending.value = new Set([...pending.value, row.id]);
-      error.value = '';
+    const api = useApi();
+    const attendancePending = ref(new Set()), attendanceError = ref('');
+    const attendanceCanUpdate = ref(false);
+    let permissionRequest = 0;
+    watch(() => [props.collection, props.readonly], async ([collection, readonly]) => {
+      const current = ++permissionRequest;
+      attendanceCanUpdate.value = false;
+      if (collection !== 'events' || readonly) return;
       try {
-        const result = await api.patch(`/items/events/${encodeURIComponent(row.id)}`, { attended: !row.attended }, { params: { fields: 'id,attended' } });
-        if (!alive) return;
-        const visible = rows.value.find(item => item.id === row.id);
-        if (visible) visible.attended = result.data.data.attended;
+        const response = await api.get('/permissions/me/events');
+        if (current === permissionRequest) attendanceCanUpdate.value = response.data.data.update?.access === true;
+      } catch { /* Native table remains available for read-only users. */ }
+    }, { immediate: true });
+
+    async function toggleAttendance(item) {
+      if (props.collection !== 'events' || props.readonly || !attendanceCanUpdate.value || attendancePending.value.has(item.id)) return;
+      attendancePending.value = new Set([...attendancePending.value, item.id]);
+      attendanceError.value = '';
+      try {
+        const response = await api.patch(`/items/events/${encodeURIComponent(item.id)}`, { attended: !item.attended }, { params: { fields: 'id,attended' } });
+        item.attended = response.data.data.attended;
+        state.refresh(); // Apply native sorting, filters and counts after the edit.
       } catch {
-        if (alive) error.value = `Nie zapisano obecności: ${row.name || ''} ${row.surname || ''}. Sprawdź połączenie i uprawnienia, a następnie spróbuj ponownie.`;
+        attendanceError.value = `Nie zapisano obecności: ${item.name || ''} ${item.surname || ''}. Sprawdź połączenie i uprawnienia, a następnie spróbuj ponownie.`;
       } finally {
-        const next = new Set(pending.value); next.delete(row.id); pending.value = next;
+        const next = new Set(attendancePending.value); next.delete(item.id); attendancePending.value = next;
       }
     }
 
-    watch(() => [props.collection, props.filter, props.filterSystem, props.search], () => { page.value = 1; refresh(); }, { deep: true, immediate: true });
-    watch(() => props.readonly, async readonly => {
-      canUpdate.value = false;
-      if (readonly) return;
-      try {
-        const response = await api.get('/permissions/me/events');
-        canUpdate.value = !props.readonly && response.data.data.update?.access === true;
-      } catch { canUpdate.value = false; }
-    }, { immediate: true });
-
-    return { rows, loading, error, pending, page, count, canUpdate, toggle, refresh, toPage: value => { page.value = value; refresh(); } };
+    return { ...state, attendancePending, attendanceError, attendanceCanUpdate, toggleAttendance };
   },
 });
