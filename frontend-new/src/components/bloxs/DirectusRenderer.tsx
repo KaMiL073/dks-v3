@@ -1,5 +1,3 @@
-"use client";
-
 import EventHero from "./EventHero";
 import HeroSection from "./HeroSection";
 import RichContentBlock from "./RichContent";
