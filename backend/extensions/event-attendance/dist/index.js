@@ -1,4 +1,4 @@
-import { defineLayout, useApi, useExtensions } from '@directus/extensions-sdk';
+import { defineLayout, useApi, useExtensions, useStores } from '@directus/extensions-sdk';
 import { cloneVNode, computed, defineComponent, h, isVNode, ref, watch, withCtx } from 'vue';
 
 // Keep the native Directus layout and replace only its attendance cell slot.
@@ -86,6 +86,19 @@ export function withAttendanceField(query = {}) {
   return { ...query, fields: fields.includes('attended') ? fields : ['attended', ...fields] };
 }
 
+export function rememberBookmarkFilters(props, store, getBookmarkId) {
+  const bookmarkId = getBookmarkId();
+  if (props.collection !== 'events' || !bookmarkId) return;
+  // saveLocal only updates this user's hydrated store, never the shared DB preset.
+  // Persist synchronously so immediately leaving the collection cannot lose edits.
+  watch(() => [props.filterUser, props.search], ([filter, search]) => {
+    if (props.collection !== 'events' || getBookmarkId() !== bookmarkId) return;
+    const bookmark = store.getBookmark(bookmarkId);
+    if (!bookmark || bookmark.collection !== 'events' || bookmark.layout !== 'event-attendance') return;
+    store.saveLocal({ ...bookmark, filter: filter == null ? null : JSON.parse(JSON.stringify(filter)), search: search ?? null });
+  }, { deep: true, flush: 'sync' });
+}
+
 const decoratedComponents = new WeakMap();
 const AttendanceTable = defineComponent({
   inheritAttrs: false,
@@ -128,6 +141,11 @@ export default defineLayout({
   setup(props, context) {
     const native = useNativeTable();
     if (!native.value) throw new Error('Nie znaleziono klasycznej tabeli Directusa.');
+    const { usePresetsStore } = useStores();
+    rememberBookmarkFilters(props, usePresetsStore(), () => {
+      if (typeof window === 'undefined') return null;
+      return Number(new URL(window.location.href).searchParams.get('bookmark')) || null;
+    });
     // Directus can restore a user's older column list when revisiting a bookmark.
     // Attendance is essential in this layout; keep it in both restored and saved
     // queries without changing the native tabular layout or any other options.

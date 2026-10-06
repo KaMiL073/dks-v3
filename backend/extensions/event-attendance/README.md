@@ -62,3 +62,12 @@ tryb tylko do odczytu i blokadę powtórnego kliknięcia podczas zapisu.
 W panelu Directusa 11.12.0 sprawdzono wyszukiwanie, zaznaczanie rekordów
 i pojawienie się akcji zbiorczych, menu kolumn oraz zapis i cofnięcie
 obecności na osobnym, później usuniętym rekordzie testowym.
+
+## Filtry zakładki
+
+Zmiany filtra i wyszukiwania w zakładce „Lista obecności” są zapamiętywane
+w lokalnym magazynie Directusa podczas bieżącej sesji. Przejście do innej
+kolekcji lub zakładki i powrót przywraca ostatnie ustawienia. Usunięcie filtra
+również zostaje zapamiętane. Wspólna zakładka w bazie nie jest modyfikowana,
+więc ustawienia innych użytkowników pozostają niezależne. Odświeżenie całego
+panelu lub ponowne logowanie przywraca zakładkę zapisaną w bazie.
