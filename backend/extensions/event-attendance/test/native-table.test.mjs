@@ -11,7 +11,8 @@ const source = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8')
 
 function load({ patch = async (_url, data) => ({ data: { data } }) } = {}) {
   const nativeState = { fields: { value: [] }, refreshCalls: 0, refresh() { this.refreshCalls++; } };
-  const native = { id: 'tabular', setup: () => nativeState };
+  let nativeProps, nativeContext;
+  const native = { id: 'tabular', setup: (props, context) => { nativeProps = props; nativeContext = context; return nativeState; } };
   const calls = [];
   const context = {
     defineLayout: value => value, defineComponent: value => value,
@@ -27,7 +28,7 @@ function load({ patch = async (_url, data) => ({ data: { data } }) } = {}) {
     h: (type, props, children) => ({ vnode: true, type, props, children }),
   };
   const exports = runInNewContext(`${source}\n({ layout, decorateTableTree, decorateNativeComponent });`, context);
-  return { ...exports, calls, nativeState };
+  return { ...exports, calls, nativeState, get nativeProps() { return nativeProps; }, get nativeContext() { return nativeContext; } };
 }
 
 test('attendance slot is a VNode array and preserves all other table slots and callbacks', () => {
@@ -104,4 +105,22 @@ test('read-only views and duplicate pending clicks cannot write attendance', asy
   props.readonly = true;
   await state.toggleAttendance(row);
   assert.equal(calls.length, 1);
+});
+
+test('attendance survives restoring an older user column list and returning to the view', () => {
+  const harness = load();
+  const props = { collection: 'events', readonly: true, layoutQuery: { fields: ['surname', 'company'], sort: ['-surname'], page: 2 } };
+  const emitted = [];
+  harness.layout.setup(props, { emit: (...args) => emitted.push(args) });
+  assert.deepEqual(Array.from(harness.nativeProps.layoutQuery.fields), ['attended', 'surname', 'company']);
+  assert.equal(harness.nativeProps.layoutQuery.page, 2);
+  assert.equal(harness.nativeProps.layoutQuery.sort, props.layoutQuery.sort);
+  assert.deepEqual(props.layoutQuery.fields, ['surname', 'company']);
+  props.layoutQuery = { fields: ['email', 'attended', 'name'], sort: ['email'] };
+  assert.deepEqual(Array.from(harness.nativeProps.layoutQuery.fields), ['email', 'attended', 'name']);
+  props.layoutQuery = { fields: ['company'] };
+  assert.deepEqual(Array.from(harness.nativeProps.layoutQuery.fields), ['attended', 'company']);
+  harness.nativeContext.emit('update:layoutQuery', { fields: ['name'], limit: 50 });
+  assert.deepEqual(Array.from(emitted[0][1].fields), ['attended', 'name']);
+  assert.equal(emitted[0][1].limit, 50);
 });

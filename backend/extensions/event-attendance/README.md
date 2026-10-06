@@ -37,8 +37,11 @@ z komponentem tabeli.
 Jeśli obie migracje zostały już wykonane, aktualizacja samego rozszerzenia
 wymaga jedynie pobrania jego plików, restartu Directusa i odświeżenia panelu.
 Przy pierwszym otwarciu domyślne kolumny obejmują obecność i dane uczestnika;
-wcześniej zapisany wybór kolumn jest zachowywany. Jeśli pole obecności zostało
-ukryte, można je dodać standardowym przyciskiem `+` w nagłówku tabeli.
+wcześniej zapisany wybór pozostałych kolumn jest zachowywany. Kolumna obecności
+jest stałym elementem tego układu: zostaje dołączona również przy przywróceniu
+starszego zestawu kolumn użytkownika po zmianie kolekcji lub zakładki.
+Jej zapisana pozycja jest zachowywana; gdy nie ma jej w ustawieniach, pojawia
+się jako pierwsza. Klasyczny układ `tabular` nadal pozwala swobodnie ukrywać pola.
 
 Sam push do repozytorium nie wykonuje migracji na innym środowisku.
 Nie dodawaj uprawnień roli publicznej. Osoby obsługujące wydarzenie potrzebują

@@ -77,6 +77,13 @@ function useNativeTable() {
   return computed(() => layouts.value.find(layout => layout.id === 'tabular'));
 }
 
+export function withAttendanceField(query = {}) {
+  const fields = Array.isArray(query.fields)
+    ? query.fields
+    : ['attended', 'name', 'surname', 'company', 'event', 'email'];
+  return { ...query, fields: fields.includes('attended') ? fields : ['attended', ...fields] };
+}
+
 const decoratedComponents = new WeakMap();
 const AttendanceTable = defineComponent({
   inheritAttrs: false,
@@ -119,10 +126,23 @@ export default defineLayout({
   setup(props, context) {
     const native = useNativeTable();
     if (!native.value) throw new Error('Nie znaleziono klasycznej tabeli Directusa.');
-    const state = native.value.setup(props, context);
-    if (props.collection === 'events' && !Array.isArray(props.layoutQuery?.fields)) {
-      state.fields.value = ['attended', 'name', 'surname', 'company', 'event', 'email'];
-    }
+    // Directus can restore a user's older column list when revisiting a bookmark.
+    // Attendance is essential in this layout; keep it in both restored and saved
+    // queries without changing the native tabular layout or any other options.
+    const query = computed(() => props.collection === 'events'
+      ? withAttendanceField(props.layoutQuery) : props.layoutQuery);
+    const nativeProps = new Proxy(props, {
+      get(target, key, receiver) {
+        return key === 'layoutQuery' ? query.value : Reflect.get(target, key, receiver);
+      },
+    });
+    const state = native.value.setup(nativeProps, {
+      ...context,
+      emit(event, value) {
+        context.emit(event, event === 'update:layoutQuery' && props.collection === 'events'
+          ? withAttendanceField(value) : value);
+      },
+    });
     const api = useApi();
     const attendancePending = ref(new Set()), attendanceError = ref('');
     const attendanceCanUpdate = ref(false);

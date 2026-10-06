@@ -21,6 +21,8 @@ const BLOCKED_FIELDS = [
   // rendered as a public form field where a visitor could choose another user.
   "salesperson",
   "salesperson_label",
+  // Attendance is managed by staff in Directus, never during public signup.
+  "attended",
 ];
 
 const LANG = "pl-PL";
