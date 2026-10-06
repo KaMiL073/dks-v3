@@ -124,3 +124,19 @@ test('attendance survives restoring an older user column list and returning to t
   assert.deepEqual(Array.from(emitted[0][1].fields), ['attended', 'name']);
   assert.equal(emitted[0][1].limit, 50);
 });
+
+test('empty saved settings for another user provide columns and allow resetting the view', () => {
+  for (const empty of [null, undefined]) {
+    const harness = load();
+    const props = { collection: 'events', readonly: true, layoutQuery: empty };
+    const emitted = [];
+    harness.layout.setup(props, { emit: (...args) => emitted.push(args) });
+    assert.deepEqual(Array.from(harness.nativeProps.layoutQuery.fields), ['attended', 'name', 'surname', 'company', 'event', 'email']);
+    props.layoutQuery = { fields: ['email'], sort: ['email'] };
+    assert.deepEqual(Array.from(harness.nativeProps.layoutQuery.fields), ['attended', 'email']);
+    props.layoutQuery = null;
+    assert.equal(harness.nativeProps.layoutQuery.fields[0], 'attended');
+    harness.nativeContext.emit('update:layoutQuery', null);
+    assert.equal(emitted[0][1].fields[0], 'attended');
+  }
+});

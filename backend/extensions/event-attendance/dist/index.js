@@ -78,6 +78,8 @@ function useNativeTable() {
 }
 
 export function withAttendanceField(query = {}) {
+  // Directus passes null when a user has not saved settings for this layout.
+  query = query ?? {};
   const fields = Array.isArray(query.fields)
     ? query.fields
     : ['attended', 'name', 'surname', 'company', 'event', 'email'];
