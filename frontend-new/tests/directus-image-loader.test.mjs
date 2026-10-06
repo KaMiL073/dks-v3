@@ -23,3 +23,16 @@ test('static files and external non-Directus images keep the default loader', ()
   assert.equal(isDirectusAsset('/static/homepage/Header.webp'), false);
   assert.equal(isDirectusAsset('https://example.com/image.jpg'), false);
 });
+test('Directus ids with image extensions use the Directus loader and retain the file path', () => {
+  for (const extension of ['webp', 'png', 'jpg', 'jpeg', 'avif', 'svg', 'WEBP']) {
+    const src = `/backend/assets/${id}.${extension}?fit=inside`;
+    assert.equal(isDirectusAsset(src), true);
+    assert.equal(isDirectusAsset(`https://dks.pl${src}`), true);
+    const result = new URL(directusImageLoader({ src, width: 640 }), 'https://dks.pl');
+    assert.equal(result.pathname, `/backend/assets/${id}.${extension}`);
+    assert.equal(result.searchParams.get('width'), '640');
+    assert.equal(result.searchParams.get('format'), 'webp');
+    assert.equal(result.searchParams.get('fit'), 'inside');
+  }
+  assert.equal(isDirectusAsset('/static/homepage/Header.webp'), false);
+});

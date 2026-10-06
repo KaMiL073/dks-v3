@@ -2,7 +2,9 @@
 export function isDirectusAsset(src) {
   try {
     const url = new URL(src, 'https://dks.pl');
-    return /\/assets\/[0-9a-f-]{36}(?:\/[^/]*)?$/i.test(url.pathname);
+    // CMS cards also store file ids with an image extension (e.g. UUID.webp).
+    // These are Directus assets too and must bypass Next's internal /backend route.
+    return /\/assets\/[0-9a-f-]{36}(?:\.(?:avif|webp|png|jpe?g|gif|svg|tiff?|bmp|ico))?(?:\/[^/]*)?$/i.test(url.pathname);
   } catch {
     return false;
   }
