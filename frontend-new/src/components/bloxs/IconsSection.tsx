@@ -1,3 +1,5 @@
+
+import { publicAssetUrl } from "@/lib/directusImageLoader.mjs";
 type IconItem = {
   id?: number | string | null;
   icon?: string | null;
@@ -82,7 +84,7 @@ export default function IconsSection({ item }: { item: IconsSectionItem }) {
                   // into the page DOM.
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
-                    src={svgUrl}
+                    src={publicAssetUrl(svgUrl)}
                     alt=""
                     className="h-full w-full object-contain"
                     aria-hidden="true"
