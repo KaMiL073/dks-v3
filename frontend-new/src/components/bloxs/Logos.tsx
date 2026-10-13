@@ -1,5 +1,7 @@
 "use client";
 
+import { publicAssetUrl } from "@/lib/directusImageLoader.mjs";
+
 import { useRef, useState, useEffect, useCallback } from "react";
 import { Heading2 } from "@/components/ui/Typography/Heading2";
 
@@ -138,7 +140,7 @@ export default function LogosSection({
         className="carousel flex w-full snap-x snap-mandatory gap-16 overflow-x-auto overflow-y-hidden scroll-smooth"
       >
         {logos.map((logo, i) => {
-          const src = `/backend/assets/${logo.directus_files_id}`;
+          const src = publicAssetUrl(`/backend/assets/${logo.directus_files_id}`);
 
           return (
             <div

@@ -6,7 +6,7 @@ const valid = { success: true, score: 0.9, action: "contact_form", hostname: "ww
 const check = (data, form = "ContactForm") => validateFormRecaptcha(data, form, ["dks.pl", "www.dks.pl"]);
 
 test("accepts valid tokens for each supported form", () => {
-  for (const [form, action] of Object.entries({ ContactForm: "contact_form", ServiceCallForm: "ServiceCallForm", CountersForm: "CountersForm", ConsumablesOrderForm: "ConsumablesOrderForm", DebtCollectionForm: "DebtCollectionForm" })) {
+  for (const [form, action] of Object.entries({ SurveyForm: "survey_submit", ContactForm: "contact_form", ServiceCallForm: "ServiceCallForm", CountersForm: "CountersForm", ConsumablesOrderForm: "ConsumablesOrderForm", DebtCollectionForm: "DebtCollectionForm" })) {
     assert.equal(check({ ...valid, action, score: 0.5 }, form), null);
   }
 });

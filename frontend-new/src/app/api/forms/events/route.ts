@@ -83,6 +83,9 @@ export async function POST(req: Request) {
     const formData = { ...body };
     delete formData.salespersonCode;
     delete formData.salesperson;
+    // Public registrations always start as absent. Ignore any client-supplied
+    // attendance value; staff update this field through Directus after arrival.
+    delete formData.attended;
     const directusPayload = {
       ...formData,
       ...(salespersonId ? { salesperson: salespersonId } : {}),

@@ -1,5 +1,7 @@
 "use client";
 
+import { publicAssetUrl } from "@/lib/directusImageLoader.mjs";
+
 import Image from "next/image";
 
 interface Consultant {
@@ -38,7 +40,7 @@ function getConsultantName(consultant: Consultant) {
 
 function getConsultantImage(image?: string | null) {
   if (!image) return null;
-  return `/backend/assets/${image}`;
+  return publicAssetUrl(`/backend/assets/${image}`);
 }
 
 export default function EventConsultantsSection({

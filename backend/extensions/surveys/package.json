@@ -1,0 +1,17 @@
+{
+  "name": "directus-extension-surveys",
+  "version": "1.0.0",
+  "type": "module",
+  "files": [
+    "src"
+  ],
+  "directus:extension": {
+    "type": "endpoint",
+    "path": "src/index.js",
+    "host": "^11.0.0",
+    "source": "src/index.js"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}
