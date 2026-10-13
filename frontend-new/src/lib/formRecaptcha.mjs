@@ -1,5 +1,6 @@
 /** @type {Record<string, string>} */
 const FORM_ACTIONS = {
+  SurveyForm: "survey_submit",
   ContactForm: "contact_form",
   ServiceCallForm: "ServiceCallForm",
   CountersForm: "CountersForm",
